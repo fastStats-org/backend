@@ -1,2 +1,2 @@
-rootProject.name = "fastStats"
+rootProject.name = "backend"
 include("backend")
