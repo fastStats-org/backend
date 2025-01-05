@@ -14,6 +14,9 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NullMarked
 public class DatabaseController {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseController.class);
@@ -64,5 +67,16 @@ public class DatabaseController {
         var projects = database.getCollection("projects");
         var project = new Document("projectId", projectId);
         return projects.deleteMany(project).getDeletedCount() > 0;
+    }
+
+    public List<JsonObject> getProjects(int offset, int limit) {
+        var projects = database.getCollection("projects");
+        return projects.find().skip(offset).limit(limit).map(document -> {
+            var project = new JsonObject();
+            project.addProperty("projectName", document.getString("projectName"));
+            project.addProperty("userId", document.getString("userId"));
+            project.addProperty("projectId", document.getInteger("projectId"));
+            return project;
+        }).into(new ArrayList<>());
     }
 }
