@@ -24,12 +24,12 @@ public class CreateRoute {
             var projectName = context.pathParam("projectName");
             var project = fastStats.database().createProject(userId, projectName);
 
-            if (project == null) {
-                context.status(409);
-            } else {
+            if (project != null) {
                 context.header("Content-Type", "application/json");
                 context.result(project.toString());
                 context.status(200);
+            } else {
+                context.status(409);
             }
         }));
     }
