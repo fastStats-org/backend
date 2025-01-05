@@ -5,19 +5,15 @@ import core.io.IO;
 import io.javalin.Javalin;
 import org.faststats.controller.DatabaseController;
 import org.faststats.model.Config;
-import org.faststats.route.project.CreateRoute;
 import org.faststats.route.MetricsRoute;
+import org.faststats.route.project.CreateRoute;
 import org.faststats.route.project.DeleteRoute;
 import org.faststats.route.project.ProjectsRoute;
 import org.jspecify.annotations.NullMarked;
 
-import java.io.File;
-
 @NullMarked
 public class FastStats {
-    private final File dataFolder = new File("data");
-
-    private final Config config = new GsonFile<>(IO.of(dataFolder, "config.json"), new Config(
+    private final Config config = new GsonFile<>(IO.of("data", "config.json"), new Config(
             3000, "mongodb://localhost:27017", "*"
     )).validate().save().getRoot();
 
@@ -37,10 +33,6 @@ public class FastStats {
 
     private void start() {
         javalin.start(Integer.getInteger("port", config.port()));
-    }
-
-    public File dataFolder() {
-        return dataFolder;
     }
 
     public Config config() {
