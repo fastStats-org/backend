@@ -1,5 +1,6 @@
 package org.faststats.controller;
 
+import com.google.gson.JsonObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerApi;
@@ -8,7 +9,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.faststats.FastStats;
-import org.faststats.model.Project;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -43,17 +43,21 @@ public class DatabaseController {
         logger.info("Successfully connected to MongoDB!");
     }
 
-    public @Nullable Project createProject(String userId, String projectName) {
+    public @Nullable JsonObject createProject(String userId, String projectName) {
         var projects = database.getCollection("projects");
         var id = (int) projects.countDocuments() + 1;
 
-        var project = new Document("projectName", projectName).append("userId", userId);
-        if (projects.find(project).first() != null) return null;
+        var document = new Document("projectName", projectName).append("userId", userId);
+        if (projects.find(document).first() != null) return null;
 
-        var result = projects.insertOne(project.append("projectId", id));
+        var result = projects.insertOne(document.append("projectId", id));
         if (!result.wasAcknowledged()) return null;
 
-        return new Project(projectName, userId, id);
+        var project = new JsonObject();
+        project.addProperty("projectId", id);
+        project.addProperty("projectName", projectName);
+        project.addProperty("userId", userId);
+        return project;
     }
 
     public boolean deleteProject(int projectId) {
