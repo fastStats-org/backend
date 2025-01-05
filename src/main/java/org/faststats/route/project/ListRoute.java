@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -17,30 +18,30 @@ public class ListRoute {
 
     public void register() {
         fastStats.javalin().get("/projects/{offset}/{limit}", this::projects);
-        fastStats.javalin().get("/projects/{userId}", this::userProjects);
+        fastStats.javalin().get("/projects/{offset}/{limit}/{userId}", this::userProjects);
     }
 
     private void projects(Context context) {
-        context.future(() -> CompletableFuture.runAsync(() -> {
-            try {
-                var limit = Integer.parseInt(context.pathParam("limit"));
-                var offset = Integer.parseInt(context.pathParam("offset"));
-                var projects = new JsonArray();
-                fastStats.database().getProjects(offset, limit)
-                        .forEach(projects::add);
-                context.header("Content-Type", "application/json");
-                context.result(projects.toString());
-                context.status(200);
-            } catch (NumberFormatException e) {
-                context.status(400);
-            }
-        }));
+        context.future(() -> CompletableFuture.runAsync(() ->
+                userProjects(context, null)));
     }
 
     private void userProjects(Context context) {
-        context.future(() -> {
-            context.status(200);
-            return null;
-        });
+        context.future(() -> CompletableFuture.runAsync(() ->
+                userProjects(context, context.pathParam("userId"))));
+    }
+
+    private void userProjects(Context context, @Nullable String userId) {
+        try {
+            var limit = Integer.parseInt(context.pathParam("limit"));
+            var offset = Integer.parseInt(context.pathParam("offset"));
+            var projects = new JsonArray();
+            fastStats.database().getProjects(offset, limit, userId)
+                    .forEach(projects::add);
+            context.header("Content-Type", "application/json");
+            context.result(projects.toString());
+        } catch (NumberFormatException e) {
+            context.status(400);
+        }
     }
 }
