@@ -37,11 +37,18 @@ public class MetricsRoute {
         context.future(() -> {
             try {
                 var data = decompressData(context.bodyAsBytes());
-                logger.info("received: {}", data);
+                var projectId = data.get("projectId").getAsInt();
+                var javaVersion = data.get("javaVersion").getAsString();
+                var osName = data.get("osName").getAsString();
+                var osArch = data.get("osArch").getAsString();
+                var osVersion = data.get("osVersion").getAsString();
+                var processors = data.get("processors").getAsInt();
+                var charts = data.get("charts").getAsJsonArray();
+
                 context.status(200);
                 return null;
-            } catch (IOException e) {
-                logger.error("error", e);
+            } catch (Exception e) {
+                logger.error("Received invalid metrics data", e);
                 context.status(400);
                 return null;
             }

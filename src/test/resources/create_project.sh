@@ -1,0 +1,1 @@
+curl -X POST -w "\n" -s -D - "http://localhost:3000/projects/new/AVeryCoolDude/MyCosolNewsProjectsss"

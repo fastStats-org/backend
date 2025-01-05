@@ -1,0 +1,1 @@
+curl -X DELETE -w "\n" -s -D - "http://localhost:3000/project/1"
