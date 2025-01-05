@@ -8,7 +8,7 @@ import org.faststats.model.Config;
 import org.faststats.route.MetricsRoute;
 import org.faststats.route.project.CreateRoute;
 import org.faststats.route.project.DeleteRoute;
-import org.faststats.route.project.ProjectsRoute;
+import org.faststats.route.project.ListRoute;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -28,7 +28,7 @@ public class FastStats {
         new CreateRoute(this).register();
         new DeleteRoute(this).register();
         new MetricsRoute(this).register();
-        new ProjectsRoute(this).register();
+        new ListRoute(this).register();
     }
 
     private void start() {

@@ -6,10 +6,10 @@ import org.faststats.FastStats;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ProjectsRoute {
+public class ListRoute {
     private final FastStats fastStats;
 
-    public ProjectsRoute(FastStats fastStats) {
+    public ListRoute(FastStats fastStats) {
         this.fastStats = fastStats;
     }
 
