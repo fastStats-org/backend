@@ -69,13 +69,15 @@ public class DatabaseController {
         return projects.deleteMany(project).getDeletedCount() > 0;
     }
 
-    public List<JsonObject> getProjects(int offset, int limit) {
+    public List<JsonObject> getProjects(int offset, int limit, @Nullable String userId) {
+        var filter = new Document();
+        if (userId != null) filter.append("userId", userId);
         var projects = database.getCollection("projects");
-        return projects.find().skip(offset).limit(limit).map(document -> {
+        return projects.find(filter).skip(offset).limit(limit).map(document -> {
             var project = new JsonObject();
+            project.addProperty("projectId", document.getString("projectId"));
             project.addProperty("projectName", document.getString("projectName"));
-            project.addProperty("userId", document.getString("userId"));
-            project.addProperty("projectId", document.getInteger("projectId"));
+            project.addProperty("userId", userId);
             return project;
         }).into(new ArrayList<>());
     }
