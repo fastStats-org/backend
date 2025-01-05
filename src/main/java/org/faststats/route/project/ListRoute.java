@@ -3,9 +3,11 @@ package org.faststats.route.project;
 import com.google.gson.JsonArray;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.concurrent.CompletableFuture;
 
+@NullMarked
 public class ListRoute {
     private final FastStats fastStats;
 

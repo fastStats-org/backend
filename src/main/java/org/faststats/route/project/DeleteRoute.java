@@ -2,9 +2,11 @@ package org.faststats.route.project;
 
 import io.javalin.http.Context;
 import org.faststats.FastStats;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.concurrent.CompletableFuture;
 
+@NullMarked
 public class DeleteRoute {
     private final FastStats fastStats;
 
