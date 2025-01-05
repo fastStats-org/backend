@@ -1,0 +1,1 @@
+curl -X GET -w "\n" -s -D - "http://localhost:3000/projects/0/10"
