@@ -75,9 +75,9 @@ public class DatabaseController {
         var projects = database.getCollection("projects");
         return projects.find(filter).skip(offset).limit(limit).map(document -> {
             var project = new JsonObject();
-            project.addProperty("projectId", document.getString("projectId"));
+            project.addProperty("projectId", document.getInteger("projectId"));
             project.addProperty("projectName", document.getString("projectName"));
-            project.addProperty("userId", userId);
+            project.addProperty("userId", document.getString("userId"));
             return project;
         }).into(new ArrayList<>());
     }
