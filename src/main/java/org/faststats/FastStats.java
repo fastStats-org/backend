@@ -9,7 +9,6 @@ import org.faststats.route.MetricsRoute;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.File;
-import java.sql.SQLException;
 
 @NullMarked
 public class FastStats {
@@ -20,11 +19,11 @@ public class FastStats {
     private final DatabaseController databaseController = new DatabaseController(this);
     private final Javalin javalin = Javalin.create(config -> config.showJavalinBanner = false);
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         new FastStats().start();
     }
 
-    public FastStats() throws SQLException {
+    public FastStats() {
         new MetricsRoute(this).register();
     }
 
