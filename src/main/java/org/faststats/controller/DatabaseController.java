@@ -10,6 +10,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import org.bson.Document;
 import org.faststats.FastStats;
+import org.faststats.model.ProjectSettings;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -103,6 +104,21 @@ public class DatabaseController {
 
         var update = new Document("$set", new Document("projectName", projectName));
         var result = projects.updateOne(filter, update);
+        return result.getModifiedCount() > 0;
+    }
+
+    public @Nullable Boolean updateProject(int projectId, ProjectSettings settings) {
+        var projects = database.getCollection("projects");
+        var filter = new Document("projectId", projectId);
+
+        var project = projects.find(filter).first();
+        if (project == null) return null;
+
+        var update = new Document();
+
+        if (settings.isPrivate() != null) update.append("private", settings.isPrivate());
+
+        var result = projects.updateOne(filter, new Document("$set", update));
         return result.getModifiedCount() > 0;
     }
 }
