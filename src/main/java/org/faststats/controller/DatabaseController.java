@@ -81,4 +81,20 @@ public class DatabaseController {
             return project;
         }).into(new ArrayList<>());
     }
+
+    public @Nullable Boolean renameProject(int projectId, String projectName) {
+        var projects = database.getCollection("projects");
+        var filter = new Document("projectId", projectId);
+
+        var project = projects.find(filter).first();
+        if (project == null) return null;
+
+        var userId = project.getString("userId");
+        var duplicate = new Document("userId", userId).append("projectName", projectName);
+        if (projects.find(duplicate).first() != null) return false;
+
+        var update = new Document("$set", new Document("projectName", projectName));
+        var result = projects.updateMany(filter, update);
+        return result.getModifiedCount() > 0;
+    }
 }
