@@ -2,5 +2,19 @@ PUT http://localhost:3000/projects/1
 Content-Type: application/json
 
 {
-  "private": true
+  "private": true,
+  "layout": [
+    {
+      "id": "online_players",
+      "name": "Online Players",
+      "type": "line_chart",
+      "color": "#1da1f2"
+    },
+    {
+      "id": "online_mode",
+      "name": "Online Mode",
+      "type": "pie_chart"
+
+    }
+  ]
 }
