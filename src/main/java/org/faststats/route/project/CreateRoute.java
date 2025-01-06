@@ -15,7 +15,7 @@ public class CreateRoute {
     }
 
     public void register() {
-        fastStats.javalin().post("/projects/new/{userId}/{projectName}", this::create);
+        fastStats.javalin().post("/projects/{userId}/{projectName}", this::create);
     }
 
     private void create(Context context) {

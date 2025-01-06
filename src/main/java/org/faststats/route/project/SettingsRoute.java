@@ -18,7 +18,7 @@ public class SettingsRoute {
     }
 
     public void register() {
-        fastStats.javalin().put("/project/{projectId}", this::settings);
+        fastStats.javalin().put("/projects/{projectId}", this::settings);
     }
 
     private void settings(Context context) {
