@@ -7,6 +7,7 @@ import com.mongodb.ServerApi;
 import com.mongodb.ServerApiVersion;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.IndexOptions;
 import org.bson.Document;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
@@ -43,12 +44,16 @@ public class DatabaseController {
         database.createCollection("projects");
         database.createCollection("consumers");
 
+        var projects = database.getCollection("projects");
+        projects.createIndex(new Document("projectId", 1), new IndexOptions().unique(true));
+
         logger.info("Successfully connected to MongoDB!");
     }
 
     public @Nullable JsonObject createProject(String userId, String projectName) {
         var projects = database.getCollection("projects");
-        var id = (int) projects.countDocuments() + 1;
+        var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
+        var id = first != null ? first.getInteger("projectId") + 1 : 1;
 
         var document = new Document("projectName", projectName).append("userId", userId);
         if (projects.find(document).first() != null) return null;
@@ -73,6 +78,7 @@ public class DatabaseController {
         var filter = new Document();
         if (userId != null) filter.append("userId", userId);
         var projects = database.getCollection("projects");
+
         return projects.find(filter).skip(offset).limit(limit).map(document -> {
             var project = new JsonObject();
             project.addProperty("projectId", document.getInteger("projectId"));
