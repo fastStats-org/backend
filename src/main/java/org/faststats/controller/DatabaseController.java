@@ -62,6 +62,7 @@ public class DatabaseController {
         if (!result.wasAcknowledged()) return null;
 
         var project = new JsonObject();
+        project.addProperty("private", false);
         project.addProperty("projectId", id);
         project.addProperty("projectName", projectName);
         project.addProperty("userId", userId);
@@ -81,6 +82,7 @@ public class DatabaseController {
 
         return projects.find(filter).skip(offset).limit(limit).map(document -> {
             var project = new JsonObject();
+            project.addProperty("private", document.getBoolean("private", false));
             project.addProperty("projectId", document.getInteger("projectId"));
             project.addProperty("projectName", document.getString("projectName"));
             project.addProperty("userId", document.getString("userId"));
