@@ -100,11 +100,11 @@ public class DatabaseController {
 
         var userId = project.getString("userId");
         var duplicate = new Document("userId", userId).append("projectName", projectName);
-        if (projects.find(duplicate).first() != null) return 304;
+        if (projects.find(duplicate).first() != null) return 409;
 
         var update = new Document("$set", new Document("projectName", projectName));
         var result = projects.updateOne(filter, update);
-        return result.getModifiedCount() > 0 ? 200 : 309;
+        return result.getModifiedCount() > 0 ? 200 : 304;
     }
 
     public int updateProject(int projectId, ProjectSettings settings) {
@@ -121,6 +121,6 @@ public class DatabaseController {
         if (settings.isPrivate() != null) update.append("private", settings.isPrivate());
 
         var result = projects.updateOne(filter, new Document("$set", update));
-        return result.getModifiedCount() > 0 ? 200 : 309;
+        return result.getModifiedCount() > 0 ? 200 : 304;
     }
 }
