@@ -31,8 +31,7 @@ public class SettingsRoute {
                         body.has("private") ? body.get("private").getAsBoolean() : null
                 );
 
-                var updated = fastStats.database().updateProject(projectId, settings);
-                context.status(updated == null ? 404 : updated ? 200 : 409);
+                context.status(fastStats.database().updateProject(projectId, settings));
             } catch (JsonSyntaxException | NumberFormatException e) {
                 context.status(400);
             }

@@ -23,8 +23,7 @@ public class RenameRoute {
             try {
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
                 var projectName = context.pathParam("projectName");
-                var renamed = fastStats.database().renameProject(projectId, projectName);
-                context.status(renamed == null ? 404 : renamed ? 200 : 409);
+                context.status(fastStats.database().renameProject(projectId, projectName));
             } catch (NumberFormatException e) {
                 context.status(400);
             }

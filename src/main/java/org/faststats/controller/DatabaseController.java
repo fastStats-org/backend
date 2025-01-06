@@ -91,34 +91,36 @@ public class DatabaseController {
         }).into(new ArrayList<>());
     }
 
-    public @Nullable Boolean renameProject(int projectId, String projectName) {
+    public int renameProject(int projectId, String projectName) {
         var projects = database.getCollection("projects");
         var filter = new Document("projectId", projectId);
 
         var project = projects.find(filter).first();
-        if (project == null) return null;
+        if (project == null) return 404;
 
         var userId = project.getString("userId");
         var duplicate = new Document("userId", userId).append("projectName", projectName);
-        if (projects.find(duplicate).first() != null) return false;
+        if (projects.find(duplicate).first() != null) return 304;
 
         var update = new Document("$set", new Document("projectName", projectName));
         var result = projects.updateOne(filter, update);
-        return result.getModifiedCount() > 0;
+        return result.getModifiedCount() > 0 ? 200 : 309;
     }
 
-    public @Nullable Boolean updateProject(int projectId, ProjectSettings settings) {
+    public int updateProject(int projectId, ProjectSettings settings) {
+        if (settings.isEmpty()) return 304;
+
         var projects = database.getCollection("projects");
         var filter = new Document("projectId", projectId);
 
         var project = projects.find(filter).first();
-        if (project == null) return null;
+        if (project == null) return 404;
 
         var update = new Document();
 
         if (settings.isPrivate() != null) update.append("private", settings.isPrivate());
 
         var result = projects.updateOne(filter, new Document("$set", update));
-        return result.getModifiedCount() > 0;
+        return result.getModifiedCount() > 0 ? 200 : 309;
     }
 }
