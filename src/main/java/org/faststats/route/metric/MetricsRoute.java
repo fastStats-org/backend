@@ -1,12 +1,10 @@
-package org.faststats.route;
+package org.faststats.route.metric;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -15,8 +13,6 @@ import java.util.zip.GZIPInputStream;
 
 @NullMarked
 public class MetricsRoute {
-    private static final Logger logger = LoggerFactory.getLogger(MetricsRoute.class);
-
     private final FastStats fastStats;
 
     public MetricsRoute(FastStats fastStats) {
@@ -48,7 +44,6 @@ public class MetricsRoute {
                 context.status(200);
                 return null;
             } catch (Exception e) {
-                logger.error("Received invalid metrics data", e);
                 context.status(400);
                 return null;
             }

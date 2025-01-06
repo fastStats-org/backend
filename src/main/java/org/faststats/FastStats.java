@@ -5,7 +5,7 @@ import core.io.IO;
 import io.javalin.Javalin;
 import org.faststats.controller.DatabaseController;
 import org.faststats.model.Config;
-import org.faststats.route.MetricsRoute;
+import org.faststats.route.metric.MetricsRoute;
 import org.faststats.route.project.CreateRoute;
 import org.faststats.route.project.DeleteRoute;
 import org.faststats.route.project.ListRoute;
