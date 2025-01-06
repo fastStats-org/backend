@@ -72,7 +72,7 @@ public class DatabaseController {
     public boolean deleteProject(int projectId) {
         var projects = database.getCollection("projects");
         var project = new Document("projectId", projectId);
-        return projects.deleteMany(project).getDeletedCount() > 0;
+        return projects.deleteOne(project).getDeletedCount() > 0;
     }
 
     public List<JsonObject> getProjects(int offset, int limit, @Nullable String userId) {
@@ -102,7 +102,7 @@ public class DatabaseController {
         if (projects.find(duplicate).first() != null) return false;
 
         var update = new Document("$set", new Document("projectName", projectName));
-        var result = projects.updateMany(filter, update);
+        var result = projects.updateOne(filter, update);
         return result.getModifiedCount() > 0;
     }
 }
