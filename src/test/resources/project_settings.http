@@ -3,18 +3,26 @@ Content-Type: application/json
 
 {
   "private": true,
-  "layout": [
-    {
-      "id": "online_players",
-      "name": "Online Players",
+  "layout": {
+    "total_servers": {
+      "name": "Total Servers",
       "type": "line_chart",
       "color": "#1da1f2"
     },
-    {
-      "id": "online_mode",
+    "total_players": {
+      "name": "Total Players",
+      "type": "line_chart",
+      "color": "#1da1f2"
+    },
+    "online_mode": {
       "name": "Online Mode",
-      "type": "pie_chart"
-
+      "type": "pie_chart",
+      "color": "#ffffff"
+    },
+    "server_software": {
+      "name": "Server Software",
+      "type": "pie_chart",
+      "color": "#123456"
     }
-  ]
+  }
 }
