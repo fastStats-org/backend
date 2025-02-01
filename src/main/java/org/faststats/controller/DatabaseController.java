@@ -76,9 +76,10 @@ public class DatabaseController {
         return projects.deleteOne(project).getDeletedCount() > 0;
     }
 
-    public List<JsonObject> getProjects(int offset, int limit, @Nullable String userId) {
+    public List<JsonObject> getProjects(int offset, int limit, @Nullable String userId, @Nullable Boolean publicOnly) {
         var filter = new Document();
         if (userId != null) filter.append("userId", userId);
+        if (publicOnly != null) filter.append("private", !publicOnly);
         var projects = database.getCollection("projects");
 
         return projects.find(filter).skip(offset).limit(limit).map(document -> {

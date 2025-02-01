@@ -1,4 +1,0 @@
-GET http://localhost:3000/projects/0/2
-
-### List 10 projects from given user
-GET http://localhost:3000/projects/0/10/testUser
