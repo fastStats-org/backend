@@ -21,8 +21,8 @@ services:
     restart: always
     volumes:
       - mongodb:/data/db
-    ports:
-      - "27017:27017"
+    # ports:
+    #   - "27017:27017"
     environment:
       MONGODB_INITDB_ROOT_USERNAME: user
       MONGODB_INITDB_ROOT_PASSWORD: password
