@@ -30,3 +30,9 @@ dependencies {
 tasks.shadowJar {
     minimize()
 }
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "org.faststats.FastStats"
+    }
+}
