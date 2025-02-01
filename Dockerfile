@@ -12,4 +12,4 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/backend.jar
-RUN ["java", "-Xms256M", "-Xmx512M", "-jar", "/app/backend.jar"]
+ENTRYPOINT ["java", "-Xms256M", "-Xmx512M", "-jar", "/app/backend.jar"]
