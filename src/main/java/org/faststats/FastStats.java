@@ -16,7 +16,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class FastStats {
     private final Config config = new GsonFile<>(IO.of("data", "config.json"), new Config(
-            3000, "mongodb://localhost:27017", "*"
+            3000, "mongodb://user:password@mongodb:27017/", "*"
     )).validate().save().getRoot();
 
     private final DatabaseController databaseController = new DatabaseController(this);
