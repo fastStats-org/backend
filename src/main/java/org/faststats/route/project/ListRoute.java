@@ -1,11 +1,12 @@
 package org.faststats.route.project;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -23,23 +24,23 @@ public class ListRoute {
 
     private void projects(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
-            var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            var publicOnly = body.has("publicOnly") ? body.get("publicOnly").getAsBoolean() : null;
-            var userId = body.has("userId") ? body.get("userId").getAsString() : null;
-            userProjects(context, userId, publicOnly);
-        }));
-    }
+            try {
+                var body = context.body();
+                var root = body.isBlank() ? new JsonObject() : JsonParser.parseString(body).getAsJsonObject();
 
-    private void userProjects(Context context, @Nullable String userId, @Nullable Boolean publicOnly) {
-        try {
-            var limit = Integer.parseInt(context.pathParam("limit"));
-            var offset = Integer.parseInt(context.pathParam("offset"));
-            var projects = new JsonArray();
-            fastStats.database().getProjects(offset, limit, userId, publicOnly).forEach(projects::add);
-            context.header("Content-Type", "application/json");
-            context.result(projects.toString());
-        } catch (NumberFormatException e) {
-            context.status(400);
-        }
+                var publicOnly = root.has("publicOnly") ? root.get("publicOnly").getAsBoolean() : null;
+                var userId = root.has("userId") ? root.get("userId").getAsString() : null;
+
+                var limit = Integer.parseInt(context.pathParam("limit"));
+                var offset = Integer.parseInt(context.pathParam("offset"));
+
+                var projects = new JsonArray();
+                fastStats.database().getProjects(offset, limit, userId, publicOnly).forEach(projects::add);
+                context.header("Content-Type", "application/json");
+                context.result(projects.toString());
+            } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
+                context.status(400);
+            }
+        }));
     }
 }
