@@ -1,0 +1,18 @@
+services:
+  backend:
+    stdin_open: true
+    tty: true
+    build: .
+    environment:
+      - MONGODB_URL=mongodb://user:password@mongo:27017/
+      - SERVER_PORT=3000
+    command: '/bin/bash -c "sleep 5; mongosh $$MONGODB_URL --eval \"show dbs;\""'
+    restart: always
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: user
+      MONGODB_INITDB_ROOT_PASSWORD: password
