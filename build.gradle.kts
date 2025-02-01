@@ -27,10 +27,6 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-sync:5.2.1")
 }
 
-tasks.shadowJar {
-    minimize()
-}
-
 tasks.jar {
     manifest {
         attributes["Main-Class"] = "org.faststats.FastStats"
