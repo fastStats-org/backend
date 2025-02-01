@@ -80,6 +80,10 @@ Updates the settings for a project, such as visibility and layout configurations
 
 ### Example
 
+> ![IMPORTANT]
+> This route is not finished yet<br>
+> the `private` setting does work but `layout` doesn't
+
 ```http
 PUT http://localhost:3000/projects/1
 Content-Type: application/json
