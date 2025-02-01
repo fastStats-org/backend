@@ -135,6 +135,8 @@ Lists projects based on filters such as public/private visibility, user, and pag
       if `false` only **private** projects, and if omitted
       both **public and private** projects are listed
     - If `userId` is undefined projects of all users are be listed
+    - `offset` defines how many projects should be skipped (allowing pagination)
+    - `limit` defines how many projects may be listed at max
 
 ### Examples
 
