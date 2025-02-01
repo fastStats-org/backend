@@ -10,7 +10,6 @@ services:
       - SERVER_PORT=3000
     ports:
       - "3000:3000"
-    command: '/bin/bash -c "sleep 5; mongosh $$MONGODB_URL --eval \"show dbs;\""'
     restart: always
     links:
       - mongodb
@@ -23,6 +22,12 @@ services:
       - mongodb:/data/db
     # ports:
     #   - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     environment:
       MONGODB_INITDB_ROOT_USERNAME: user
       MONGODB_INITDB_ROOT_PASSWORD: password
