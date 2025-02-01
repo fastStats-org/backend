@@ -181,7 +181,7 @@ Lists projects based on filters such as public/private visibility, user, and pag
   Content-Type: application/json
 
   {
-    "publicOnly": false
+    "publicOnly": false,
     "userId": "testUser"
   }
   ```
