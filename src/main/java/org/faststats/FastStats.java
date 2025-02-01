@@ -36,7 +36,9 @@ public class FastStats {
     }
 
     private void start() {
-        javalin.start(Integer.getInteger("port", config.port()));
+        var env = System.getenv("SERVER_PORT");
+        var port = env != null ? Integer.decode(env) : config.port();
+        javalin.start(port);
     }
 
     public Config config() {

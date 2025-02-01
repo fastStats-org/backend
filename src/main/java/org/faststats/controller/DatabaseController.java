@@ -30,9 +30,9 @@ public class DatabaseController {
                 .version(ServerApiVersion.V1)
                 .build();
 
-        var connectionString = new ConnectionString(
-                fastStats.config().connectionString()
-        );
+        var env = System.getenv("MONGODB_URL");
+        var url = env != null ? env : fastStats.config().connectionString();
+        var connectionString = new ConnectionString(url);
 
         var settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
