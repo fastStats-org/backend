@@ -3,8 +3,8 @@ GET http://localhost:3000/projects/0/100
 
 ### List 10 public only projects from given user
 GET http://localhost:3000/projects/0/10
-
 Content-Type: application/json
+
 {
   "publicOnly": true,
   "userId": "testUser"
@@ -12,8 +12,8 @@ Content-Type: application/json
 
 ### List 10 private only projects from given user
 GET http://localhost:3000/projects/0/10
-
 Content-Type: application/json
+
 {
   "publicOnly": false,
   "userId": "testUser"
@@ -21,8 +21,8 @@ Content-Type: application/json
 
 ### List 10 private and public projects from given user
 GET http://localhost:3000/projects/0/10
-
 Content-Type: application/json
+
 {
   "userId": "testUser"
 }
