@@ -130,6 +130,11 @@ Lists projects based on filters such as public/private visibility, user, and pag
     - **400**: Malformed offset, limit, or body
 - **Body** (optional):
     - Specify filters in JSON (`publicOnly`, `userId`).
+- **Details**:
+    - If `publicOnly` is `true` only **public** projects will be listed,
+      if `false` only **private** projects, and if omitted
+      both **public and private** projects are listed
+    - If `userId` is undefined projects of all users are be listed
 
 ### Examples
 
