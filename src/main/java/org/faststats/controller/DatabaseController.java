@@ -70,10 +70,11 @@ public class DatabaseController {
         return project;
     }
 
-    public boolean deleteProject(int projectId) {
+    public boolean deleteProject(int projectId, @Nullable String userId) {
         var projects = database.getCollection("projects");
-        var project = new Document("projectId", projectId);
-        return projects.deleteOne(project).getDeletedCount() > 0;
+        var filter = new Document("projectId", projectId);
+        if (userId != null) filter.append("userId", userId);
+        return projects.deleteOne(filter).getDeletedCount() > 0;
     }
 
     public List<JsonObject> getProjects(int offset, int limit, @Nullable String userId, @Nullable Boolean publicOnly) {
