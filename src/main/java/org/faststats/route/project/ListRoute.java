@@ -1,8 +1,6 @@
 package org.faststats.route.project;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
@@ -25,11 +23,8 @@ public class ListRoute {
     private void projects(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var body = context.body();
-                var root = body.isBlank() ? new JsonObject() : JsonParser.parseString(body).getAsJsonObject();
-
-                var publicOnly = root.has("publicOnly") ? root.get("publicOnly").getAsBoolean() : null;
-                var userId = root.has("userId") ? root.get("userId").getAsString() : null;
+                var publicOnly = Boolean.parseBoolean(context.queryParam("publicOnly"));
+                var userId = context.queryParam("userId");
 
                 var limit = Integer.parseInt(context.pathParam("limit"));
                 var offset = Integer.parseInt(context.pathParam("offset"));
