@@ -23,7 +23,8 @@ public class ListRoute {
     private void projects(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var publicOnly = Boolean.parseBoolean(context.queryParam("publicOnly"));
+                var param = context.queryParam("publicOnly");
+                var publicOnly = param != null ? Boolean.parseBoolean(param) : null;
                 var userId = context.queryParam("userId");
 
                 var limit = Integer.parseInt(context.pathParam("limit"));
