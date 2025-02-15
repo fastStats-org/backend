@@ -133,13 +133,12 @@ Lists projects based on filters such as public/private visibility, user, and pag
 
 - **Method**: `GET`
 - **URL**: `http://localhost:3000/projects/{offset}/{limit}`
-- **Headers**:
-    - `Content-Type: application/json` (optional, required for filtering based on project visibility and user).
 - **Response Codes**:
     - **200**: Successfully listed
     - **400**: Malformed offset, limit, or body
-- **Body** (optional):
-    - Specify filters in JSON (`publicOnly`, `userId`).
+- **Query Parameters** (optional):
+    - **publicOnly**: list projects by visibility
+    - **userId**: list projects by a specific user
 - **Details**:
     - If `publicOnly` is `true` only **public** projects will be listed,
       if `false` only **private** projects, and if omitted
@@ -204,14 +203,24 @@ Deletes a project by its ID.
 - **Response Codes**:
     - **200**: Successfully deleted project
     - **404**: Project not found
+- **Query Parameters**
+    - **userId**: only delete the project if it is owned by the specified user
 - **Details**:
     - Replace `{projectId}` with the ID of the project to delete.
 
 ### Example
 
-```http
-DELETE http://localhost:3000/projects/1
-```
+- Delete the project with id 1 if it is owned by a specific user
+
+  ```http
+  DELETE http://localhost:3000/projects/1?userId=AVeryCoolDude
+  ```
+
+- Delete the project with id 1
+
+  ```http
+  DELETE http://localhost:3000/projects/1
+  ```
 
 ---
 
