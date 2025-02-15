@@ -153,47 +153,25 @@ Lists projects based on filters such as public/private visibility, user, and pag
 - List 20 public projects skipping the first 10:
 
   ```http
-  GET http://localhost:3000/projects/10/20
-  Content-Type: application/json
-
-  {
-    "publicOnly": true
-  }
+  GET http://localhost:3000/projects/10/20?publicOnly=true
   ```
 
 - List 10 public projects by a specific user:
 
   ```http
-  GET http://localhost:3000/projects/0/10
-  Content-Type: application/json
-
-  {
-    "publicOnly": true,
-    "userId": "testUser"
-  }
+  GET http://localhost:3000/projects/0/10?publicOnly=true&userId=testUser
   ```
 
 - List 10 public and private projects by a specific user:
 
   ```http
-  GET http://localhost:3000/projects/0/10
-  Content-Type: application/json
-
-  {
-    "userId": "testUser"
-  }
+  GET http://localhost:3000/projects/0/10?userId=testUser
   ```
 
 - List 10 private projects by a specific user:
 
   ```http
-  GET http://localhost:3000/projects/0/10
-  Content-Type: application/json
-
-  {
-    "publicOnly": false,
-    "userId": "testUser"
-  }
+  GET http://localhost:3000/projects/0/10?publicOnly=false&userId=testUser
   ```
 
 ### Example Response
