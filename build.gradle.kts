@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation("ch.qos.logback:logback-classic:1.5.15")
+    implementation("ch.qos.logback:logback-classic:1.5.16")
     implementation("com.google.code.gson:gson:2.12.1")
     implementation("io.javalin:javalin:6.4.0")
     implementation("net.thenextlvl.core:files:2.0.1")
