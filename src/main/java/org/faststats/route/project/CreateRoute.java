@@ -1,5 +1,6 @@
 package org.faststats.route.project;
 
+import com.google.gson.JsonParser;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
@@ -22,7 +23,9 @@ public class CreateRoute {
         context.future(() -> CompletableFuture.runAsync(() -> {
             var userId = context.pathParam("userId");
             var projectName = context.pathParam("projectName");
-            var project = fastStats.database().createProject(userId, projectName);
+            var body = JsonParser.parseString(context.body()).getAsJsonObject();
+            var isPrivate = body.has("private") && body.get("private").getAsBoolean();
+            var project = fastStats.database().createProject(userId, projectName, isPrivate);
 
             if (project != null) {
                 context.header("Content-Type", "application/json");

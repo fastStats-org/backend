@@ -51,7 +51,7 @@ public class DatabaseController {
         logger.info("Successfully connected to MongoDB!");
     }
 
-    public @Nullable JsonObject createProject(String userId, String projectName) {
+    public @Nullable JsonObject createProject(String userId, String projectName, boolean isPrivate) {
         var projects = database.getCollection("projects");
         var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
         var id = first != null ? first.getInteger("projectId") + 1 : 1;
@@ -63,7 +63,7 @@ public class DatabaseController {
         if (!result.wasAcknowledged()) return null;
 
         var project = new JsonObject();
-        project.addProperty("private", false);
+        project.addProperty("private", isPrivate);
         project.addProperty("projectId", id);
         project.addProperty("projectName", projectName);
         project.addProperty("userId", userId);

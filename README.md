@@ -12,17 +12,27 @@ Creates a new project with a specified owner and name.
 
 - **Method**: `POST`
 - **URL**: `http://localhost:3000/projects/{owner}/{projectName}`
+- **Headers**:
+    - `Content-Type: application/json`
 - **Response Codes**:
     - **200**: Successfully created project
     - **409**: Duplicate project
 - **Details**:
     - Replace `{owner}` with the username of the project owner.
     - Replace `{projectName}` with the desired project name.
+- **Body**:
+    - Use JSON to specify the initial visibility of the project.
+    - if `private` is `true` the project will not be visible
 
 ### Example
 
 ```http
 POST http://localhost:3000/projects/AVeryCoolDude/MyCoolNewProject
+Content-Type: application/json
+
+{
+  "private": false
+}
 ```
 
 ### Example Response

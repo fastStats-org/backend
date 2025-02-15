@@ -1,1 +1,6 @@
 POST http://localhost:3000/projects/AVeryCoolDude/MyCosolNewsProjectsss
+Content-Type: application/json
+
+{
+  "private": true
+}
