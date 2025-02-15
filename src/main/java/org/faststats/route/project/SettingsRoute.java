@@ -32,7 +32,7 @@ public class SettingsRoute {
                 );
 
                 context.status(fastStats.database().updateProject(projectId, settings));
-            } catch (JsonSyntaxException | NumberFormatException e) {
+            } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
                 context.status(400);
             }
         }));
