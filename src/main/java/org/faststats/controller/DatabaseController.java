@@ -109,11 +109,12 @@ public class DatabaseController {
         return result.getModifiedCount() > 0 ? 200 : 304;
     }
 
-    public int updateProject(int projectId, ProjectSettings settings) {
+    public int updateProject(int projectId, ProjectSettings settings, @Nullable String userId) {
         if (settings.isEmpty()) return 304;
 
         var projects = database.getCollection("projects");
         var filter = new Document("projectId", projectId);
+        if (userId != null) filter.append("userId", userId);
 
         var project = projects.find(filter).first();
         if (project == null) return 404;

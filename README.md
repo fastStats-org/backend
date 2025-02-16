@@ -85,6 +85,8 @@ Updates the settings for a project, such as visibility and layout configurations
     - **304**: Settings didn't change
     - **400**: Malformed project id or body
     - **404**: Project not found
+- **Query Parameters** (optional):
+    - **userId**: only update the project if it is owned by the specified user
 - **Body**:
     - Use JSON to specify settings like `private` visibility and the layout configuration of charts.
 
@@ -94,36 +96,49 @@ Updates the settings for a project, such as visibility and layout configurations
 > This route is not finished yet<br>
 > the `private` setting does work but `layout` doesn't
 
-```http
-PUT http://localhost:3000/projects/1
-Content-Type: application/json
+- Update settings of a project with id 1 by the specified user
 
-{
- "private": true,
- "layout": {
-   "total_servers": {
-     "name": "Total Servers",
-     "type": "line_chart",
-     "color": "#1da1f2"
-   },
-   "total_players": {
-     "name": "Total Players",
-     "type": "line_chart",
-     "color": "#1da1f2"
-   },
-   "online_mode": {
-     "name": "Online Mode",
-     "type": "pie_chart",
-     "color": "#ffffff"
-   },
-   "server_software": {
-     "name": "Server Software",
-     "type": "pie_chart",
-     "color": "#123456"
+  ```http
+  PUT http://localhost:3000/projects/1?userId=test
+  Content-Type: application/json
+  
+  {
+   "private": true,
+   "layout": {
+     "total_servers": {
+       "name": "Total Servers",
+       "type": "line_chart",
+       "color": "#1da1f2"
+     },
+     "total_players": {
+       "name": "Total Players",
+       "type": "line_chart",
+       "color": "#1da1f2"
+     },
+     "online_mode": {
+       "name": "Online Mode",
+       "type": "pie_chart",
+       "color": "#ffffff"
+     },
+     "server_software": {
+       "name": "Server Software",
+       "type": "pie_chart",
+       "color": "#123456"
+     }
    }
- }
-}
-```
+  }
+  ```
+
+- Update settings of a project with id 1
+
+  ```http
+  PUT http://localhost:3000/projects/1
+  Content-Type: application/json
+  
+  {
+    "private": false
+  }
+  ```
 
 ---
 

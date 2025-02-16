@@ -1,4 +1,5 @@
-PUT http://localhost:3000/projects/1
+### Update settings of a project with id 1 by the specified user
+PUT http://localhost:3000/projects/1?userId=test
 Content-Type: application/json
 
 {
@@ -25,4 +26,12 @@ Content-Type: application/json
       "color": "#123456"
     }
   }
+}
+
+### Update settings of a project with id 1
+PUT http://localhost:3000/projects/1
+Content-Type: application/json
+
+{
+  "private": false
 }
