@@ -19,15 +19,6 @@ public record ProjectSettings(
         return previewChart == null || layout == null || layout.charts().containsKey(previewChart);
     }
 
-    public JsonObject toJson() {
-        var object = new JsonObject();
-        if (isPrivate != null) object.addProperty("private", isPrivate);
-        if (layout != null) object.add("layout", layout.toJson());
-        if (previewChart != null) object.addProperty("preview_chart", previewChart);
-        if (projectUrl != null) object.addProperty("project_url", projectUrl);
-        return object;
-    }
-
     public static @Nullable ProjectSettings fromJson(JsonObject settings) {
         try {
             var isPrivate = settings.has("private") ? settings.get("private").getAsBoolean() : null;
