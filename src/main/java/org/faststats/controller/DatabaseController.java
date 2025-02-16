@@ -82,17 +82,8 @@ public class DatabaseController {
         if (userId != null) filter.append("userId", userId);
         if (publicOnly != null) filter.append("private", !publicOnly);
         var projects = database.getCollection("projects");
-
-        return projects.find(filter).skip(offset).limit(limit).map(document -> {
-            var project = new JsonObject();
-            project.addProperty("private", document.getBoolean("private", false));
-            project.addProperty("projectId", document.getInteger("projectId"));
-            project.addProperty("projectName", document.getString("projectName"));
-            project.addProperty("userId", document.getString("userId"));
-            if (document.containsKey("preview_chart"))
-                project.addProperty("preview_chart", document.getString("preview_chart"));
-            return project;
-        }).into(new ArrayList<>());
+        return projects.find(filter).skip(offset).limit(limit)
+                .map(this::getProject).into(new ArrayList<>());
     }
 
     public int renameProject(int projectId, String projectName, @Nullable String userId) {
@@ -132,11 +123,53 @@ public class DatabaseController {
         var update = new Document();
 
         if (settings.isPrivate() != null) update.append("private", settings.isPrivate());
-        if (settings.layout() != null) update.append("layout", settings.layout().toBson());
+        if (settings.layout() != null) update.append("layout", settings.layout().toDocument());
         if (settings.previewChart() != null) update.append("preview_chart", settings.previewChart());
         if (settings.projectUrl() != null) update.append("project_url", settings.projectUrl());
 
         var result = projects.updateOne(filter, new Document("$set", update));
         return result.getModifiedCount() > 0 ? 200 : 304;
+    }
+
+    public @Nullable JsonObject getProject(int projectId, @Nullable String userId) {
+        var projects = database.getCollection("projects");
+        var document = projects.find(new Document("projectId", projectId)).first();
+        if (document == null) return null;
+
+        var project = getProject(document);
+        if (project.has("private") && project.get("private").getAsBoolean()) {
+            var owner = project.get("userId").getAsString();
+            if (userId == null || !userId.equals(owner)) return null;
+        }
+
+        if (document.containsKey("layout")) project.add("layout",
+                getLayout(document.get("layout", Document.class)));
+        return project;
+    }
+
+    private JsonObject getLayout(Document document) {
+        var layout = new JsonObject();
+        document.keySet().forEach(chartId -> {
+            var chart = new JsonObject();
+            var options = document.get(chartId, Document.class);
+            chart.addProperty("name", options.getString("name"));
+            chart.addProperty("type", options.getString("type"));
+            chart.addProperty("color", options.getString("color"));
+            if (options.containsKey("icon")) chart.addProperty("icon", options.getString("icon"));
+            if (options.containsKey("size")) chart.addProperty("size", options.getInteger("size"));
+            layout.add(chartId, chart);
+        });
+        return layout;
+    }
+
+    private JsonObject getProject(Document document) {
+        var project = new JsonObject();
+        project.addProperty("private", document.getBoolean("private", false));
+        project.addProperty("projectId", document.getInteger("projectId"));
+        project.addProperty("projectName", document.getString("projectName"));
+        project.addProperty("userId", document.getString("userId"));
+        if (document.containsKey("preview_chart"))
+            project.addProperty("preview_chart", document.getString("preview_chart"));
+        return project;
     }
 }

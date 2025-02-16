@@ -1,8 +1,7 @@
 package org.faststats.model;
 
 import com.google.gson.JsonObject;
-import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
+import org.bson.Document;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -17,10 +16,10 @@ public record Layout(Map<String, Options> charts) {
         return object;
     }
 
-    public BSONObject toBson() {
-        var object = new BasicBSONObject();
-        charts.forEach((key, value) -> object.put(key, value.toBson()));
-        return object;
+    public Document toDocument() {
+        var document = new Document();
+        charts.forEach((key, value) -> document.put(key, value.toDocument()));
+        return document;
     }
 
     public record Options(String name, String type, String color, @Nullable String icon, @Nullable Integer size) {
@@ -34,14 +33,14 @@ public record Layout(Map<String, Options> charts) {
             return object;
         }
 
-        public BSONObject toBson() {
-            var object = new BasicBSONObject();
-            if (icon != null) object.put("icon", icon);
-            if (size != null) object.put("size", size);
-            object.put("color", color);
-            object.put("name", name);
-            object.put("type", type);
-            return object;
+        public Document toDocument() {
+            var document = new Document();
+            if (icon != null) document.put("icon", icon);
+            if (size != null) document.put("size", size);
+            document.put("color", color);
+            document.put("name", name);
+            document.put("type", type);
+            return document;
         }
 
         public static Options fromJson(JsonObject options) {
