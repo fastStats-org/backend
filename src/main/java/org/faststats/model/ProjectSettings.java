@@ -9,10 +9,11 @@ public record ProjectSettings(
         @Nullable Boolean isPrivate,
         @Nullable Layout layout,
         @Nullable String previewChart,
-        @Nullable String projectUrl
+        @Nullable String projectUrl,
+        @Nullable String icon
 ) {
     public boolean isEmpty() {
-        return isPrivate == null && previewChart == null && layout == null && projectUrl == null;
+        return isPrivate == null && previewChart == null && layout == null && projectUrl == null && icon == null;
     }
 
     public boolean isValid() {
@@ -25,7 +26,8 @@ public record ProjectSettings(
             var layout = settings.has("layout") ? Layout.fromJson(settings.getAsJsonObject("layout")) : null;
             var previewChart = settings.has("preview_chart") ? settings.get("preview_chart").getAsString() : null;
             var projectUrl = settings.has("project_url") ? settings.get("project_url").getAsString() : null;
-            return new ProjectSettings(isPrivate, layout, previewChart, projectUrl);
+            var icon = settings.has("icon") ? settings.get("icon").getAsString() : null;
+            return new ProjectSettings(isPrivate, layout, previewChart, projectUrl, icon);
         } catch (Exception e) {
             return null;
         }

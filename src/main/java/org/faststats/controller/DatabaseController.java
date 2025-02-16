@@ -126,6 +126,7 @@ public class DatabaseController {
         if (settings.layout() != null) update.append("layout", settings.layout().toDocument());
         if (settings.previewChart() != null) update.append("preview_chart", settings.previewChart());
         if (settings.projectUrl() != null) update.append("project_url", settings.projectUrl());
+        if (settings.icon() != null) update.append("icon", settings.icon());
 
         var result = projects.updateOne(filter, new Document("$set", update));
         return result.getModifiedCount() > 0 ? 200 : 304;
@@ -170,6 +171,8 @@ public class DatabaseController {
         project.addProperty("userId", document.getString("userId"));
         if (document.containsKey("preview_chart"))
             project.addProperty("preview_chart", document.getString("preview_chart"));
+        if (document.containsKey("icon")) project.addProperty("icon", document.getString("icon"));
+        if (document.containsKey("project_url")) project.addProperty("project_url", document.getString("project_url"));
         return project;
     }
 }
