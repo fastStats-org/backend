@@ -219,7 +219,57 @@ Lists projects based on filters such as public/private visibility, user, and pag
 
 ---
 
-## 5. **Delete a Project**
+## 5. **Retrieve a Project**
+
+Retrieve a project by its ID.
+
+- **Method**: `GET`
+- **URL**: `http://localhost:3000/project/{projectId}`
+- **Response Codes**:
+    - **200**: Successfully retrieved project
+    - **400**: Malformed project id
+    - **404**: Project not found
+- **Query Parameters** (optional):
+    - **userId**: retrieve the project only if it is owned by the specified user
+- **Details**:
+    - Replace `{projectId}` with the ID of the project to retrieve.
+
+### Example
+
+- Retrieve the project with id 1 if it is owned by a specific user
+
+  ```http
+  GET http://localhost:3000/project/1?userId=AVeryCoolDude
+  ```
+
+- Retrieve the project with id 1
+
+  ```http
+  GET http://localhost:3000/project/1
+  ```  
+
+### Example Response
+
+```json
+{
+  "private": false,
+  "projectId": 1,
+  "projectName": "MyCoolNewsProjects",
+  "userId": "AVeryCoolDude",
+  "preview_chart": "total_servers",
+  "layout": {
+    "total_servers": {
+      "name": "Total Servers",
+      "type": "line_chart",
+      "color": "#1da1f2"
+    }
+  }
+}
+```
+
+---
+
+## 6. **Delete a Project**
 
 Deletes a project by its ID.
 
