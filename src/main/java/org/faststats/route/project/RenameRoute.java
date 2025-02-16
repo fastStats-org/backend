@@ -21,9 +21,10 @@ public class RenameRoute {
     private void rename(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
+                var userId = context.queryParam("userId");
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
                 var projectName = context.pathParam("projectName");
-                context.status(fastStats.database().renameProject(projectId, projectName));
+                context.status(fastStats.database().renameProject(projectId, projectName, userId));
             } catch (NumberFormatException e) {
                 context.status(400);
             }

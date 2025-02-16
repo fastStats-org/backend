@@ -1,1 +1,5 @@
+### rename project with id 1 if it is owned by a specific user
+PUT http://localhost:3000/projects/1/test test test?userId=test
+
+### rename project with id 1
 PUT http://localhost:3000/projects/1/test test test

@@ -60,15 +60,25 @@ Renames an existing project by its ID.
     - **400**: Malformed project id
     - **404**: Project not found
     - **409**: Duplicate project
+- **Query Parameters** (optional):
+    - **userId**: only rename the project if it is owned by the specified user
 - **Details**:
     - Replace `{projectId}` with the ID of the project to rename.
     - Replace `{newName}` with the new name for the project.
 
 ### Example
 
-```http
-POST http://localhost:3000/projects/1/test test test
-```
+- Rename project with id 1 by the specified user
+
+  ```http
+  POST http://localhost:3000/projects/1/test test test?userId=test
+  ```
+
+- Rename project with id 1
+
+  ```http
+  POST http://localhost:3000/projects/1/test test test
+  ```
 
 ---
 

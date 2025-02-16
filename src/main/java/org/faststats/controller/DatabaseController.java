@@ -93,15 +93,16 @@ public class DatabaseController {
         }).into(new ArrayList<>());
     }
 
-    public int renameProject(int projectId, String projectName) {
+    public int renameProject(int projectId, String projectName, @Nullable String userId) {
         var projects = database.getCollection("projects");
         var filter = new Document("projectId", projectId);
+        if (userId != null) filter.append("userId", userId);
 
         var project = projects.find(filter).first();
         if (project == null) return 404;
 
-        var userId = project.getString("userId");
-        var duplicate = new Document("userId", userId).append("projectName", projectName);
+        var duplicateUserId = project.getString("userId");
+        var duplicate = new Document("userId", duplicateUserId).append("projectName", projectName);
         if (projects.find(duplicate).first() != null) return 409;
 
         var update = new Document("$set", new Document("projectName", projectName));
