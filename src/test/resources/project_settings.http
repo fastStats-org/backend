@@ -6,6 +6,7 @@ Content-Type: application/json
   "private": true,
   "preview_chart": "total_servers",
   "project_url": "https://project.example.com",
+  "icon": "gem",
   "layout": {
     "total_servers": {
       "name": "Total Servers",

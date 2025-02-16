@@ -114,6 +114,8 @@ Updates the settings for a project, such as visibility and layout configurations
   
   {
    "private": true,
+   "project_url": "https://project.example.com",
+   "icon": "gem",
    "layout": {
      "total_servers": {
        "name": "Total Servers",
@@ -257,6 +259,8 @@ Retrieve a project by its ID.
   "projectName": "MyCoolNewsProjects",
   "userId": "AVeryCoolDude",
   "preview_chart": "total_servers",
+  "project_url": "https://project.example.com",
+  "icon": "gem",
   "layout": {
     "total_servers": {
       "name": "Total Servers",
