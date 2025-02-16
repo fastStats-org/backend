@@ -89,6 +89,8 @@ public class DatabaseController {
             project.addProperty("projectId", document.getInteger("projectId"));
             project.addProperty("projectName", document.getString("projectName"));
             project.addProperty("userId", document.getString("userId"));
+            if (document.containsKey("preview_chart"))
+                project.addProperty("preview_chart", document.getString("preview_chart"));
             return project;
         }).into(new ArrayList<>());
     }
@@ -110,8 +112,9 @@ public class DatabaseController {
         return result.getModifiedCount() > 0 ? 200 : 304;
     }
 
-    public int updateProject(int projectId, ProjectSettings settings, @Nullable String userId) {
-        if (settings.isEmpty()) return 304;
+    public int updateProject(int projectId, @Nullable ProjectSettings settings, @Nullable String userId) {
+        if (settings == null || settings.isEmpty()) return 304;
+        if (!settings.isValid()) return 400;
 
         var projects = database.getCollection("projects");
         var filter = new Document("projectId", projectId);
@@ -120,9 +123,18 @@ public class DatabaseController {
         var project = projects.find(filter).first();
         if (project == null) return 404;
 
+        if (settings.previewChart() != null && settings.layout() == null) {
+            if (!project.containsKey("layout")) return 400;
+            var layout = project.get("layout", Document.class);
+            if (!layout.containsKey(settings.previewChart())) return 400;
+        }
+
         var update = new Document();
 
         if (settings.isPrivate() != null) update.append("private", settings.isPrivate());
+        if (settings.layout() != null) update.append("layout", settings.layout().toBson());
+        if (settings.previewChart() != null) update.append("preview_chart", settings.previewChart());
+        if (settings.projectUrl() != null) update.append("project_url", settings.projectUrl());
 
         var result = projects.updateOne(filter, new Document("$set", update));
         return result.getModifiedCount() > 0 ? 200 : 304;

@@ -4,11 +4,14 @@ Content-Type: application/json
 
 {
   "private": true,
+  "preview_chart": "total_servers",
+  "project_url": "https://project.example.com",
   "layout": {
     "total_servers": {
       "name": "Total Servers",
       "type": "line_chart",
-      "color": "#1da1f2"
+      "color": "#1da1f2",
+      "size": 2
     },
     "total_players": {
       "name": "Total Players",
@@ -18,12 +21,14 @@ Content-Type: application/json
     "online_mode": {
       "name": "Online Mode",
       "type": "pie_chart",
-      "color": "#ffffff"
+      "color": "#ffffff",
+      "size": 1
     },
     "server_software": {
       "name": "Server Software",
       "type": "pie_chart",
-      "color": "#123456"
+      "color": "#123456",
+      "icon": "arrow-up"
     }
   }
 }

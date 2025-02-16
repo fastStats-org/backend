@@ -26,12 +26,8 @@ public class SettingsRoute {
             try {
                 var userId = context.queryParam("userId");
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var body = JsonParser.parseString(context.body()).getAsJsonObject();
-
-                var settings = new ProjectSettings(
-                        body.has("private") ? body.get("private").getAsBoolean() : null
-                );
-
+                var body = JsonParser.parseString(context.body());
+                var settings = body.isJsonObject() ? ProjectSettings.fromJson(body.getAsJsonObject()) : null;
                 context.status(fastStats.database().updateProject(projectId, settings, userId));
             } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
                 context.status(400);
