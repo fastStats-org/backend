@@ -1,6 +1,5 @@
 package org.faststats.route.project;
 
-import com.google.gson.JsonSyntaxException;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
@@ -33,7 +32,7 @@ public class ProjectRoute {
                 } else {
                     context.status(404);
                 }
-            } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 context.status(400);
             }
         }));
