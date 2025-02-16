@@ -11,7 +11,7 @@ and additional details like headers and body (if applicable).
 Creates a new project with a specified owner and name.
 
 - **Method**: `POST`
-- **URL**: `http://localhost:3000/projects/{owner}/{projectName}`
+- **URL**: `http://localhost:3000/project/new/{owner}/{projectName}`
 - **Headers**:
     - `Content-Type: application/json`
 - **Response Codes**:
@@ -27,7 +27,7 @@ Creates a new project with a specified owner and name.
 ### Example
 
 ```http
-POST http://localhost:3000/projects/AVeryCoolDude/MyCoolNewProject
+POST http://localhost:3000/project/new/AVeryCoolDude/MyCoolNewProject
 Content-Type: application/json
 
 {
@@ -53,7 +53,7 @@ Content-Type: application/json
 Renames an existing project by its ID.
 
 - **Method**: `PUT`
-- **URL**: `http://localhost:3000/projects/{projectId}/{newName}`
+- **URL**: `http://localhost:3000/project/rename/{projectId}/{newName}`
 - **Response Codes**:
     - **200**: Successfully renamed project
     - **304**: Name didn't change
@@ -71,13 +71,13 @@ Renames an existing project by its ID.
 - Rename project with id 1 by the specified user
 
   ```http
-  POST http://localhost:3000/projects/1/test test test?userId=test
+  POST http://localhost:3000/project/rename/1/test test test?userId=test
   ```
 
 - Rename project with id 1
 
   ```http
-  POST http://localhost:3000/projects/1/test test test
+  POST http://localhost:3000/project/rename/1/test test test
   ```
 
 ---
@@ -87,7 +87,7 @@ Renames an existing project by its ID.
 Updates the settings for a project, such as visibility and layout configurations.
 
 - **Method**: `PUT`
-- **URL**: `http://localhost:3000/projects/{projectId}`
+- **URL**: `http://localhost:3000/project/settings/{projectId}`
 - **Headers**:
     - `Content-Type: application/json`
 - **Response Codes**:
@@ -109,7 +109,7 @@ Updates the settings for a project, such as visibility and layout configurations
 - Update settings of a project with id 1 by the specified user
 
   ```http
-  PUT http://localhost:3000/projects/1?userId=test
+  PUT http://localhost:3000/project/settings/1?userId=test
   Content-Type: application/json
   
   {
@@ -142,7 +142,7 @@ Updates the settings for a project, such as visibility and layout configurations
 - Update settings of a project with id 1
 
   ```http
-  PUT http://localhost:3000/projects/1
+  PUT http://localhost:3000/project/settings/1
   Content-Type: application/json
   
   {
@@ -157,7 +157,7 @@ Updates the settings for a project, such as visibility and layout configurations
 Lists projects based on filters such as public/private visibility, user, and pagination.
 
 - **Method**: `GET`
-- **URL**: `http://localhost:3000/projects/{offset}/{limit}`
+- **URL**: `http://localhost:3000/project/list/{offset}/{limit}`
 - **Response Codes**:
     - **200**: Successfully listed
     - **400**: Malformed offset, limit, or body
@@ -177,25 +177,25 @@ Lists projects based on filters such as public/private visibility, user, and pag
 - List 20 public projects skipping the first 10:
 
   ```http
-  GET http://localhost:3000/projects/10/20?publicOnly=true
+  GET http://localhost:3000/project/list/10/20?publicOnly=true
   ```
 
 - List 10 public projects by a specific user:
 
   ```http
-  GET http://localhost:3000/projects/0/10?publicOnly=true&userId=testUser
+  GET http://localhost:3000/project/list/0/10?publicOnly=true&userId=testUser
   ```
 
 - List 10 public and private projects by a specific user:
 
   ```http
-  GET http://localhost:3000/projects/0/10?userId=testUser
+  GET http://localhost:3000/project/list/0/10?userId=testUser
   ```
 
 - List 10 private projects by a specific user:
 
   ```http
-  GET http://localhost:3000/projects/0/10?publicOnly=false&userId=testUser
+  GET http://localhost:3000/project/list/0/10?publicOnly=false&userId=testUser
   ```
 
 ### Example Response
@@ -224,7 +224,7 @@ Lists projects based on filters such as public/private visibility, user, and pag
 Deletes a project by its ID.
 
 - **Method**: `DELETE`
-- **URL**: `http://localhost:3000/projects/{projectId}`
+- **URL**: `http://localhost:3000/project/delete/{projectId}`
 - **Response Codes**:
     - **200**: Successfully deleted project
     - **404**: Project not found
@@ -238,13 +238,13 @@ Deletes a project by its ID.
 - Delete the project with id 1 if it is owned by a specific user
 
   ```http
-  DELETE http://localhost:3000/projects/1?userId=AVeryCoolDude
+  DELETE http://localhost:3000/project/delete/1?userId=AVeryCoolDude
   ```
 
 - Delete the project with id 1
 
   ```http
-  DELETE http://localhost:3000/projects/1
+  DELETE http://localhost:3000/project/delete/1
   ```
 
 ---

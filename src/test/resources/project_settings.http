@@ -1,5 +1,5 @@
 ### Update settings of a project with id 1 by the specified user
-PUT http://localhost:3000/projects/1?userId=test
+PUT http://localhost:3000/project/settings/1?userId=test
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ### Update settings of a project with id 1
-PUT http://localhost:3000/projects/1
+PUT http://localhost:3000/project/settings/1
 Content-Type: application/json
 
 {

@@ -15,7 +15,7 @@ public class RenameRoute {
     }
 
     public void register() {
-        fastStats.javalin().put("/projects/{projectId}/{projectName}", this::rename);
+        fastStats.javalin().put("/project/rename/{projectId}/{projectName}", this::rename);
     }
 
     private void rename(Context context) {

@@ -17,7 +17,7 @@ public class ListRoute {
     }
 
     public void register() {
-        fastStats.javalin().get("/projects/{offset}/{limit}", this::projects);
+        fastStats.javalin().get("/project/list/{offset}/{limit}", this::projects);
     }
 
     private void projects(Context context) {

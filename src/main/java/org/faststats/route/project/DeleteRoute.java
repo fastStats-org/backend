@@ -15,7 +15,7 @@ public class DeleteRoute {
     }
 
     public void register() {
-        fastStats.javalin().delete("/projects/{projectId}", this::delete);
+        fastStats.javalin().delete("/project/delete/{projectId}", this::delete);
     }
 
     private void delete(Context context) {
