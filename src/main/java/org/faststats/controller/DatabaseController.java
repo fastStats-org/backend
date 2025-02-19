@@ -100,7 +100,7 @@ public class DatabaseController {
 
         var update = new Document("$set", new Document("projectName", projectName));
         var result = projects.updateOne(filter, update);
-        return result.getModifiedCount() > 0 ? 200 : 304;
+        return result.getModifiedCount() > 0 ? 204 : 304;
     }
 
     public int updateProject(int projectId, @Nullable ProjectSettings settings, @Nullable String userId) {
@@ -129,7 +129,7 @@ public class DatabaseController {
         if (settings.icon() != null) update.append("icon", settings.icon());
 
         var result = projects.updateOne(filter, new Document("$set", update));
-        return result.getModifiedCount() > 0 ? 200 : 304;
+        return result.getModifiedCount() > 0 ? 204 : 304;
     }
 
     public @Nullable JsonObject getProject(int projectId, @Nullable String userId) {

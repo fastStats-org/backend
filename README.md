@@ -55,7 +55,7 @@ Renames an existing project by its ID.
 - **Method**: `PUT`
 - **URL**: `http://localhost:3000/project/rename/{projectId}/{newName}`
 - **Response Codes**:
-    - **200**: Successfully renamed project
+    - **204**: Successfully renamed project
     - **304**: Name didn't change
     - **400**: Malformed project id
     - **404**: Project not found
@@ -91,7 +91,7 @@ Updates the settings for a project, such as visibility and layout configurations
 - **Headers**:
     - `Content-Type: application/json`
 - **Response Codes**:
-    - **200**: Successfully updated project
+    - **204**: Successfully updated project
     - **304**: Settings didn't change
     - **400**: Malformed project id or body
     - **404**: Project not found
@@ -283,7 +283,7 @@ Deletes a project by its ID.
 - **Method**: `DELETE`
 - **URL**: `http://localhost:3000/project/delete/{projectId}`
 - **Response Codes**:
-    - **200**: Successfully deleted project
+    - **204**: Successfully deleted project
     - **404**: Project not found
 - **Query Parameters**
     - **userId**: only delete the project if it is owned by the specified user
