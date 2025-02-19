@@ -7,9 +7,10 @@ services:
     build: .
     environment:
       - MONGODB_URL=mongodb://user:password@mongodb:27017/
-      - SERVER_PORT=3000
+      - API_PORT=3000 # REST server for internal use
+      - METRICS_PORT=5000 # public metrics server
     ports:
-      - "3000:3000"
+      - "5000:5000"
     restart: always
     links:
       - mongodb
