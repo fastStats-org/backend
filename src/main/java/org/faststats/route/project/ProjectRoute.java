@@ -10,15 +10,15 @@ import java.util.concurrent.CompletableFuture;
 @NullMarked
 public class ProjectRoute {
     public static void register(Javalin javalin) {
-        javalin.get("/project/{projectId}", ProjectRoute::handle);
+        javalin.get("/project/{slug}", ProjectRoute::handle);
     }
 
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var userId = context.queryParam("userId");
-                var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var project = FastStats.DATABASE.getProject(projectId, userId);
+                var slug = context.pathParam("slug");
+                var project = FastStats.DATABASE.getProject(slug, userId);
 
                 if (project != null) {
                     context.header("Content-Type", "application/json");

@@ -126,9 +126,9 @@ public class DatabaseController {
         return result.getModifiedCount() > 0 ? 204 : 304;
     }
 
-    public @Nullable JsonObject getProject(int projectId, @Nullable String userId) {
+    public @Nullable JsonObject getProject(String slug, @Nullable String userId) {
         var projects = database.getCollection("projects");
-        var document = projects.find(new Document("projectId", projectId)).first();
+        var document = projects.find(new Document("slug", slug)).first();
         if (document == null) return null;
 
         var project = getProject(document);
@@ -162,12 +162,12 @@ public class DatabaseController {
         project.addProperty("private", document.getBoolean("private", false));
         project.addProperty("projectId", document.getInteger("projectId"));
         project.addProperty("projectName", document.getString("projectName"));
+        project.addProperty("slug", document.getString("slug"));
         project.addProperty("userId", document.getString("userId"));
         if (document.containsKey("preview_chart"))
             project.addProperty("preview_chart", document.getString("preview_chart"));
         if (document.containsKey("icon")) project.addProperty("icon", document.getString("icon"));
         if (document.containsKey("project_url")) project.addProperty("project_url", document.getString("project_url"));
-        if (document.containsKey("slug")) project.addProperty("slug", document.getString("slug"));
         return project;
     }
 }
