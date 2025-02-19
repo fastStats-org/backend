@@ -28,7 +28,7 @@ Creates a new project with a specified owner and name.
 ### Example
 
 ```http
-POST http://localhost:3000/project/new/AVeryCoolDude/MyCoolNewProject
+POST http://localhost:3000/project/new/AVeryCoolDude/MyCoolNewProject/cool-project
 Content-Type: application/json
 
 {
@@ -43,7 +43,8 @@ Content-Type: application/json
   "private": false,
   "projectId": 211,
   "projectName": "MyCoolNewProject",
-  "userId": "AVeryCoolDude"
+  "userId": "AVeryCoolDude",
+  "slug": "cool-project"
 }
 ```
 
@@ -117,6 +118,7 @@ Updates the settings for a project, such as visibility and layout configurations
    "private": true,
    "project_url": "https://project.example.com",
    "icon": "gem",
+   "slug": "test",
    "layout": {
      "total_servers": {
        "name": "Total Servers",
@@ -211,14 +213,16 @@ Lists projects based on filters such as public/private visibility, user, and pag
     "projectName": "MyCoolNewsProjects",
     "userId": "AVeryCoolDude",
     "project_url": "https://project.example.com",
-    "icon": "gem"
+    "icon": "gem",
+    "slug": "cool-project"
   },
   {
     "private": true,
     "projectId": 4,
     "projectName": "test test test",
     "userId": "AVeryCoolDude",
-    "icon": "white-flag"
+    "icon": "white-flag",
+    "slug": "test"
   }
 ]
 ```
@@ -265,6 +269,7 @@ Retrieve a project by its ID.
   "preview_chart": "total_servers",
   "project_url": "https://project.example.com",
   "icon": "gem",
+  "slug": "cool-project",
   "layout": {
     "total_servers": {
       "name": "Total Servers",

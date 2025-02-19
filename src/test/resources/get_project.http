@@ -1,2 +1,2 @@
 ### get the data of project with id 1 by a specific user
-GET http://localhost:3000/project/coolproject?userId=AVeryCoolDude
+GET http://localhost:3000/project/cool-project?userId=AVeryCoolDude
