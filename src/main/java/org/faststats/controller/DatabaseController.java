@@ -99,12 +99,12 @@ public class DatabaseController {
         var filter = new Document("projectId", projectId);
         if (userId != null) filter.append("userId", userId);
 
-        var project = projects.find(filter).first();
+        var project = projects.find(filter).limit(1).first();
         if (project == null) return 404;
 
         var duplicateUserId = project.getString("userId");
         var duplicate = new Document("userId", duplicateUserId).append("projectName", projectName);
-        if (projects.find(duplicate).first() != null) return 409;
+        if (projects.find(duplicate).limit(1).first() != null) return 409;
 
         var update = new Document("$set", new Document("projectName", projectName));
         var result = projects.updateOne(filter, update);
@@ -119,7 +119,7 @@ public class DatabaseController {
         var filter = new Document("projectId", projectId);
         if (userId != null) filter.append("userId", userId);
 
-        var project = projects.find(filter).first();
+        var project = projects.find(filter).limit(1).first();
         if (project == null) return 404;
 
         if (settings.previewChart() != null && settings.layout() == null) {
