@@ -56,7 +56,8 @@ public class DatabaseController {
         var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
         var id = first != null ? first.getInteger("projectId") + 1 : 1;
 
-        var document = new Document("projectName", projectName).append("userId", userId);
+        var document = new Document("projectName", projectName)
+                .append("userId", userId).append("slug", slug);
         if (projects.find(document).first() != null) return null;
 
         var result = projects.insertOne(document.append("projectId", id));
@@ -66,6 +67,7 @@ public class DatabaseController {
         project.addProperty("private", isPrivate);
         project.addProperty("projectId", id);
         project.addProperty("projectName", projectName);
+        project.addProperty("slug", slug);
         project.addProperty("userId", userId);
         return project;
     }

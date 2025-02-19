@@ -11,15 +11,16 @@ and additional details like headers and body (if applicable).
 Creates a new project with a specified owner and name.
 
 - **Method**: `POST`
-- **URL**: `http://localhost:3000/project/new/{userId}/{projectName}`
+- **URL**: `http://localhost:3000/project/new/{userId}/{projectName}/{slug}`
 - **Headers**:
     - `Content-Type: application/json`
 - **Response Codes**:
     - **200**: Successfully created project
-    - **409**: Duplicate project
+    - **409**: Duplicate project or slug
 - **Details**:
     - Replace `{userId}` with the username of the project owner.
     - Replace `{projectName}` with the desired project name.
+    - Replace `{slug}` with the desired project slug.
 - **Body**:
     - Use JSON to specify the initial visibility of the project.
     - if `private` is `true` the project will not be visible
