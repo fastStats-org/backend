@@ -25,13 +25,13 @@ public class DatabaseController {
     private final MongoDatabase database;
 
     @SuppressWarnings("resource")
-    public DatabaseController(FastStats fastStats) {
+    public DatabaseController() {
         var server = ServerApi.builder()
                 .version(ServerApiVersion.V1)
                 .build();
 
         var env = System.getenv("MONGODB_URL");
-        var url = env != null ? env : fastStats.config().connectionString();
+        var url = env != null ? env : FastStats.CONFIG.connectionString();
         var connectionString = new ConnectionString(url);
 
         var settings = MongoClientSettings.builder()
