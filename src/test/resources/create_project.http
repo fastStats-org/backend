@@ -1,4 +1,4 @@
-POST http://localhost:3000/project/new/AVeryCoolDude/MyCosolNewsProjectsss
+POST http://localhost:3000/project/new/AVeryCoolDude/MyCosolNewsProjectsss/coolproject
 Content-Type: application/json
 
 {
