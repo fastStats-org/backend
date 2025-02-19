@@ -51,7 +51,7 @@ public class DatabaseController {
         logger.info("Successfully connected to MongoDB!");
     }
 
-    public @Nullable JsonObject createProject(String userId, String projectName, boolean isPrivate) {
+    public @Nullable JsonObject createProject(String userId, String projectName, String slug, boolean isPrivate) {
         var projects = database.getCollection("projects");
         var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
         var id = first != null ? first.getInteger("projectId") + 1 : 1;
@@ -120,15 +120,7 @@ public class DatabaseController {
             if (!layout.containsKey(settings.previewChart())) return 400;
         }
 
-        var update = new Document();
-
-        if (settings.isPrivate() != null) update.append("private", settings.isPrivate());
-        if (settings.layout() != null) update.append("layout", settings.layout().toDocument());
-        if (settings.previewChart() != null) update.append("preview_chart", settings.previewChart());
-        if (settings.projectUrl() != null) update.append("project_url", settings.projectUrl());
-        if (settings.icon() != null) update.append("icon", settings.icon());
-
-        var result = projects.updateOne(filter, new Document("$set", update));
+        var result = projects.updateOne(filter, new Document("$set", settings.toDocument()));
         return result.getModifiedCount() > 0 ? 204 : 304;
     }
 
@@ -173,6 +165,7 @@ public class DatabaseController {
             project.addProperty("preview_chart", document.getString("preview_chart"));
         if (document.containsKey("icon")) project.addProperty("icon", document.getString("icon"));
         if (document.containsKey("project_url")) project.addProperty("project_url", document.getString("project_url"));
+        if (document.containsKey("slug")) project.addProperty("slug", document.getString("slug"));
         return project;
     }
 }
