@@ -208,13 +208,16 @@ Lists projects based on filters such as public/private visibility, user, and pag
     "private": false,
     "projectId": 1,
     "projectName": "MyCoolNewsProjects",
-    "userId": "AVeryCoolDude"
+    "userId": "AVeryCoolDude",
+    "project_url": "https://project.example.com",
+    "icon": "gem"
   },
   {
     "private": true,
     "projectId": 4,
     "projectName": "test test test",
-    "userId": "AVeryCoolDude"
+    "userId": "AVeryCoolDude",
+    "icon": "white-flag"
   }
 ]
 ```
