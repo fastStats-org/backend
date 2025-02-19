@@ -53,14 +53,20 @@ public class DatabaseController {
 
     public @Nullable JsonObject createProject(String userId, String projectName, String slug, boolean isPrivate) {
         var projects = database.getCollection("projects");
+
+        var document1 = new Document("slug", slug);
+        if (projects.find(document1).limit(1).first() != null) return null;
+
+        var document2 = new Document("projectName", projectName).append("userId", userId);
+        if (projects.find(document2).limit(1).first() != null) return null;
+
         var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
         var id = first != null ? first.getInteger("projectId") + 1 : 1;
 
-        var document = new Document("projectName", projectName)
-                .append("userId", userId).append("slug", slug);
-        if (projects.find(document).first() != null) return null;
-
-        var result = projects.insertOne(document.append("projectId", id));
+        var result = projects.insertOne(new Document("slug", slug)
+                .append("projectName", projectName)
+                .append("private", isPrivate)
+                .append("userId", userId));
         if (!result.wasAcknowledged()) return null;
 
         var project = new JsonObject();
