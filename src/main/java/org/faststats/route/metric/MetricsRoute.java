@@ -2,8 +2,8 @@ package org.faststats.route.metric;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.ByteArrayInputStream;
@@ -13,15 +13,9 @@ import java.util.zip.GZIPInputStream;
 
 @NullMarked
 public class MetricsRoute {
-    private final FastStats fastStats;
-
-    public MetricsRoute(FastStats fastStats) {
-        this.fastStats = fastStats;
-    }
-
-    public void register() {
-        fastStats.javalin().post("/metrics", this::post);
-        fastStats.javalin().options("/metrics", context -> {
+    public static void register(Javalin javalin) {
+        javalin.post("/metrics", MetricsRoute::handle);
+        javalin.options("/metrics", context -> {
             context.header("Access-Control-Allow-Headers", "Content-Type, Content-Encoding");
             context.header("Access-Control-Allow-Methods", "POST");
             context.header("Access-Control-Allow-Origin", "*");
@@ -29,7 +23,7 @@ public class MetricsRoute {
         });
     }
 
-    private void post(Context context) {
+    private static void handle(Context context) {
         context.future(() -> {
             try {
                 var data = decompressData(context.bodyAsBytes());
@@ -50,7 +44,7 @@ public class MetricsRoute {
         });
     }
 
-    private JsonObject decompressData(byte[] data) throws IOException {
+    private static JsonObject decompressData(byte[] data) throws IOException {
         try (var input = new GZIPInputStream(new ByteArrayInputStream(data))) {
             var decompressed = new String(input.readAllBytes(), StandardCharsets.UTF_8);
             return JsonParser.parseString(decompressed).getAsJsonObject();

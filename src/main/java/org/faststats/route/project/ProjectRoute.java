@@ -1,5 +1,6 @@
 package org.faststats.route.project;
 
+import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
@@ -8,22 +9,16 @@ import java.util.concurrent.CompletableFuture;
 
 @NullMarked
 public class ProjectRoute {
-    private final FastStats fastStats;
-
-    public ProjectRoute(FastStats fastStats) {
-        this.fastStats = fastStats;
+    public static void register(Javalin javalin) {
+        javalin.get("/project/{projectId}", ProjectRoute::handle);
     }
 
-    public void register() {
-        fastStats.javalin().get("/project/{projectId}", this::get);
-    }
-
-    private void get(Context context) {
+    private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var userId = context.queryParam("userId");
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var project = fastStats.database().getProject(projectId, userId);
+                var project = FastStats.DATABASE.getProject(projectId, userId);
 
                 if (project != null) {
                     context.header("Content-Type", "application/json");
