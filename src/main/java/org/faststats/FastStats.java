@@ -2,56 +2,34 @@ package org.faststats;
 
 import core.file.format.GsonFile;
 import core.io.IO;
-import io.javalin.Javalin;
 import org.faststats.controller.DatabaseController;
 import org.faststats.model.Config;
-import org.faststats.route.metric.MetricsRoute;
-import org.faststats.route.project.CreateRoute;
-import org.faststats.route.project.DeleteRoute;
-import org.faststats.route.project.ListRoute;
-import org.faststats.route.project.ProjectRoute;
-import org.faststats.route.project.RenameRoute;
-import org.faststats.route.project.SettingsRoute;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class FastStats {
-    private final Config config = new GsonFile<>(IO.of("data", "config.json"), new Config(
-            3000, "mongodb://user:password@mongodb:27017/", "*"
+    public static final Config CONFIG = new GsonFile<>(IO.of("data", "config.json"), new Config(
+            3000, 5000, "mongodb://user:password@mongodb:27017/", "*"
     )).validate().save().getRoot();
 
-    private final DatabaseController databaseController = new DatabaseController(this);
-    private final Javalin javalin = Javalin.create(config -> config.showJavalinBanner = false);
+    public static final DatabaseController DATABASE = new DatabaseController();
+
+    private static final APIServer API_SERVER = new APIServer();
+    private static final MetricsServer METRICS_SERVER = new MetricsServer();
 
     public static void main(String[] args) {
-        new FastStats().start();
+        var fastStats = new FastStats();
+        fastStats.registerRoutes();
+        fastStats.start();
     }
 
-    public FastStats() {
-        new CreateRoute(this).register();
-        new DeleteRoute(this).register();
-        new ListRoute(this).register();
-        new MetricsRoute(this).register();
-        new ProjectRoute(this).register();
-        new RenameRoute(this).register();
-        new SettingsRoute(this).register();
+    private void registerRoutes() {
+        API_SERVER.registerRoutes();
+        METRICS_SERVER.registerRoutes();
     }
 
     private void start() {
-        var env = System.getenv("SERVER_PORT");
-        var port = env != null ? Integer.decode(env) : config.port();
-        javalin.start(port);
-    }
-
-    public Config config() {
-        return config;
-    }
-
-    public DatabaseController database() {
-        return databaseController;
-    }
-
-    public Javalin javalin() {
-        return javalin;
+        API_SERVER.start();
+        METRICS_SERVER.start();
     }
 }
