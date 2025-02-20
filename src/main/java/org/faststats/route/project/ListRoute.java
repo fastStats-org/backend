@@ -29,6 +29,7 @@ public class ListRoute {
                 FastStats.DATABASE.getProjects(offset, limit, ownerId, publicOnly).forEach(projects::add);
                 context.header("Content-Type", "application/json");
                 context.result(projects.toString());
+                context.status(200);
             } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
                 context.status(400);
             }
