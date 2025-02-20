@@ -84,6 +84,26 @@ Renames an existing project by its ID.
 
 ---
 
+## Check Slug Availability
+
+Checks if a project slug is available for use.
+
+- **Method**: `HEAD`
+- **URL**: `http://localhost:3000/project/slug/{slug}`
+- **Response Codes**:
+    - **204**: Slug is available
+    - **409**: Slug is already in use
+- **Details**:
+    - Replace `{slug}` with the project slug to check
+
+### Example
+
+```http
+HEAD http://localhost:3000/project/slug/my-cool-project
+```
+
+---
+
 ## Update Project Settings
 
 Updates the settings for a project, such as visibility and layout configurations.

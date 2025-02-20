@@ -132,6 +132,11 @@ public class DatabaseController {
         return result.getModifiedCount() > 0 ? 204 : 304;
     }
 
+    public boolean isSlugUsed(String slug) {
+        var projects = database.getCollection("projects");
+        return projects.find(new Document("slug", slug)).limit(1).first() != null;
+    }
+
     public @Nullable JsonObject getProject(String slug, @Nullable String ownerId) {
         var projects = database.getCollection("projects");
         var document = projects.find(new Document("slug", slug)).first();
