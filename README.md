@@ -182,7 +182,7 @@ Updates the settings for a project, such as visibility and layout configurations
 Lists projects based on filters such as public/private visibility, user, and pagination.
 
 - **Method**: `GET`
-- **URL**: `http://localhost:3000/project/list/{offset}/{limit}`
+- **URL**: `http://localhost:3000/projects/list/{offset}/{limit}`
 - **Response Codes**:
     - **200**: Successfully listed
     - **400**: Malformed offset, limit, or body
@@ -202,25 +202,25 @@ Lists projects based on filters such as public/private visibility, user, and pag
 - List 20 public projects skipping the first 10:
 
   ```http
-  GET http://localhost:3000/project/list/10/20?publicOnly=true
+  GET http://localhost:3000/projects/list/10/20?publicOnly=true
   ```
 
 - List 10 public projects by a specific user:
 
   ```http
-  GET http://localhost:3000/project/list/0/10?publicOnly=true&ownerId=testUser
+  GET http://localhost:3000/projects/list/0/10?publicOnly=true&ownerId=testUser
   ```
 
 - List 10 public and private projects by a specific user:
 
   ```http
-  GET http://localhost:3000/project/list/0/10?ownerId=testUser
+  GET http://localhost:3000/projects/list/0/10?ownerId=testUser
   ```
 
 - List 10 private projects by a specific user:
 
   ```http
-  GET http://localhost:3000/project/list/0/10?publicOnly=false&ownerId=testUser
+  GET http://localhost:3000/projects/list/0/10?publicOnly=false&ownerId=testUser
   ```
 
 ### Example Response

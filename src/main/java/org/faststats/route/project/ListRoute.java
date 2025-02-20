@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 @NullMarked
 public class ListRoute {
     public static void register(Javalin javalin) {
-        javalin.get("/project/list/{offset}/{limit}", ListRoute::projects);
+        javalin.get("/projects/list/{offset}/{limit}", ListRoute::projects);
     }
 
     private static void projects(Context context) {

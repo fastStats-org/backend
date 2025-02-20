@@ -1,0 +1,11 @@
+### List 100 public projects
+GET http://localhost:3000/projects/list/0/100
+
+### List 10 public only projects from given user/org
+GET http://localhost:3000/projects/list/0/10?publicOnly=true&ownerId=testUser
+
+### List 10 private only projects from given user/org
+GET http://localhost:3000/projects/list/0/10?publicOnly=false&ownerId=testUser
+
+### List 10 private and public projects from given user/org
+GET http://localhost:3000/projects/list/0/10?ownerId=testUser
