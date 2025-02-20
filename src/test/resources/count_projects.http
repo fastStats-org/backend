@@ -1,0 +1,5 @@
+### count all projects from the given owner
+GET http://localhost:3000/projects/count?ownerId=test
+
+### count all projects
+GET http://localhost:3000/projects/count

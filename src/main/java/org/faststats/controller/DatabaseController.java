@@ -153,6 +153,13 @@ public class DatabaseController {
         return project;
     }
 
+    public long countProjects(@Nullable String ownerId) {
+        var projects = database.getCollection("projects");
+        var filter = new Document();
+        if (ownerId != null) filter.append("ownerId", ownerId);
+        return projects.countDocuments(filter);
+    }
+
     private JsonObject getLayout(Document document) {
         var layout = new JsonObject();
         document.keySet().forEach(chartId -> {
