@@ -1,6 +1,9 @@
-POST http://localhost:3000/project/new/AVeryCoolDude/MyCosolNewsProjectsss/cool-project
+POST http://localhost:3000/project/new
 Content-Type: application/json
 
 {
-  "private": true
+  "private": true,
+  "ownerId": "FastStats",
+  "name": "backend",
+  "slug": "faststats-backend"
 }

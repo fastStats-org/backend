@@ -12,17 +12,20 @@ import java.util.concurrent.CompletableFuture;
 @NullMarked
 public class CreateRoute {
     public static void register(Javalin javalin) {
-        javalin.post("/project/new/{ownerId}/{projectName}/{slug}", CreateRoute::handle);
+        javalin.post("/project/new", CreateRoute::handle);
     }
 
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var slug = context.pathParam("slug");
-                var ownerId = context.pathParam("ownerId");
-                var projectName = context.pathParam("projectName");
                 var body = JsonParser.parseString(context.body()).getAsJsonObject();
+                if (!body.has("name") || !body.has("slug") || !body.has("ownerId"))
+                    throw new IllegalStateException();
+
                 var isPrivate = body.has("private") && body.get("private").getAsBoolean();
+                var ownerId = body.get("ownerId").getAsString();
+                var projectName = body.get("name").getAsString();
+                var slug = body.get("slug").getAsString();
                 var project = FastStats.DATABASE.createProject(ownerId, projectName, slug, isPrivate);
 
                 if (project != null) {

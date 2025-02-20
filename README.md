@@ -11,16 +11,13 @@ and additional details like headers and body (if applicable).
 Creates a new project with a specified owner and name.
 
 - **Method**: `POST`
-- **URL**: `http://localhost:3000/project/new/{ownerId}/{projectName}/{slug}`
+- **URL**: `http://localhost:3000/project/new`
 - **Headers**:
     - `Content-Type: application/json`
 - **Response Codes**:
     - **200**: Successfully created project
+    - **400**: Malformed body
     - **409**: Duplicate project or slug
-- **Details**:
-    - Replace `{ownerId}` with the id of the project owner.
-    - Replace `{projectName}` with the desired project name.
-    - Replace `{slug}` with the desired project slug.
 - **Body**:
     - Use JSON to specify the initial visibility of the project.
     - if `private` is `true` the project will not be visible
@@ -28,11 +25,14 @@ Creates a new project with a specified owner and name.
 ### Example
 
 ```http
-POST http://localhost:3000/project/new/AVeryCoolDude/MyCoolNewProject/cool-project
+POST http://localhost:3000/project/new
 Content-Type: application/json
 
 {
-  "private": false
+  "private": false,
+  "ownerId": "AVeryCoolDude",
+  "name": "MyCoolNewProject",
+  "slug": "cool-project"
 }
 ```
 
