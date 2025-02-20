@@ -86,9 +86,7 @@ public class DatabaseController {
         final var tidy = transformed.toLowerCase().replace(" ", "-").replace("_", "-");
         var slug = tidy;
         var index = 0;
-        while (isSlugUsed(slug)) {
-            slug = tidy + "-" + ++index;
-        }
+        while (isSlugUsed(slug)) slug = tidy + "-" + ++index;
         return slug;
     }
 
