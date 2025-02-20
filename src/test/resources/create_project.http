@@ -4,6 +4,5 @@ Content-Type: application/json
 {
   "private": true,
   "ownerId": "FastStats",
-  "name": "backend",
-  "slug": "faststats-backend"
+  "name": "backend"
 }

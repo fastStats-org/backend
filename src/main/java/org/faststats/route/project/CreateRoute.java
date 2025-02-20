@@ -19,14 +19,12 @@ public class CreateRoute {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var body = JsonParser.parseString(context.body()).getAsJsonObject();
-                if (!body.has("name") || !body.has("slug") || !body.has("ownerId"))
-                    throw new IllegalStateException();
+                if (!body.has("name") || !body.has("ownerId")) throw new IllegalStateException();
 
                 var isPrivate = body.has("private") && body.get("private").getAsBoolean();
                 var ownerId = body.get("ownerId").getAsString();
                 var projectName = body.get("name").getAsString();
-                var slug = body.get("slug").getAsString();
-                var project = FastStats.DATABASE.createProject(ownerId, projectName, slug, isPrivate);
+                var project = FastStats.DATABASE.createProject(ownerId, projectName, isPrivate);
 
                 if (project != null) {
                     context.header("Content-Type", "application/json");

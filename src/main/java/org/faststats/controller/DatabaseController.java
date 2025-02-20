@@ -11,13 +11,16 @@ import com.mongodb.client.model.IndexOptions;
 import org.bson.Document;
 import org.faststats.FastStats;
 import org.faststats.model.ProjectSettings;
+import org.faststats.model.chart.Chart;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @NullMarked
 public class DatabaseController {
@@ -51,17 +54,16 @@ public class DatabaseController {
         logger.info("Successfully connected to MongoDB!");
     }
 
-    public @Nullable JsonObject createProject(String ownerId, String projectName, String slug, boolean isPrivate) {
+    public @Nullable JsonObject createProject(String ownerId, String projectName, boolean isPrivate) {
         var projects = database.getCollection("projects");
-
-        var document1 = new Document("slug", slug);
-        if (projects.find(document1).limit(1).first() != null) return null;
 
         var document2 = new Document("projectName", projectName).append("ownerId", ownerId);
         if (projects.find(document2).limit(1).first() != null) return null;
 
         var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
         var id = first != null && first.containsKey("projectId") ? first.getInteger("projectId") + 1 : 1;
+
+        var slug = generateNewSlug(projectName);
 
         var result = projects.insertOne(new Document("slug", slug)
                 .append("projectName", projectName)
@@ -77,6 +79,17 @@ public class DatabaseController {
         project.addProperty("slug", slug);
         project.addProperty("ownerId", ownerId);
         return project;
+    }
+
+    private String generateNewSlug(String projectName) {
+        final var transformed = projectName.charAt(0) + projectName.substring(1).replaceAll("([A-Z])", "-$1");
+        final var tidy = transformed.toLowerCase().replace(" ", "-").replace("_", "-");
+        var slug = tidy;
+        var index = 0;
+        while (isSlugUsed(slug)) {
+            slug = tidy + "-" + ++index;
+        }
+        return slug;
     }
 
     public boolean deleteProject(int projectId, @Nullable String ownerId) {

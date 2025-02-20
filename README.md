@@ -31,8 +31,7 @@ Content-Type: application/json
 {
   "private": false,
   "ownerId": "AVeryCoolDude",
-  "name": "MyCoolNewProject",
-  "slug": "cool-project"
+  "name": "MyCoolNewProject"
 }
 ```
 
@@ -44,7 +43,7 @@ Content-Type: application/json
   "projectId": 211,
   "projectName": "MyCoolNewProject",
   "ownerId": "AVeryCoolDude",
-  "slug": "cool-project"
+  "slug": "my-cool-new-project"
 }
 ```
 
