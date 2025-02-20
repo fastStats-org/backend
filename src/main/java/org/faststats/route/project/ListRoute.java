@@ -20,13 +20,13 @@ public class ListRoute {
             try {
                 var param = context.queryParam("publicOnly");
                 var publicOnly = param != null ? Boolean.parseBoolean(param) : null;
-                var userId = context.queryParam("userId");
+                var ownerId = context.queryParam("ownerId");
 
                 var limit = Integer.parseInt(context.pathParam("limit"));
                 var offset = Integer.parseInt(context.pathParam("offset"));
 
                 var projects = new JsonArray();
-                FastStats.DATABASE.getProjects(offset, limit, userId, publicOnly).forEach(projects::add);
+                FastStats.DATABASE.getProjects(offset, limit, ownerId, publicOnly).forEach(projects::add);
                 context.header("Content-Type", "application/json");
                 context.result(projects.toString());
             } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {

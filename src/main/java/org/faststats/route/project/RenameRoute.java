@@ -16,10 +16,10 @@ public class RenameRoute {
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var userId = context.queryParam("userId");
+                var ownerId = context.queryParam("ownerId");
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
                 var projectName = context.pathParam("projectName");
-                context.status(FastStats.DATABASE.renameProject(projectId, projectName, userId));
+                context.status(FastStats.DATABASE.renameProject(projectId, projectName, ownerId));
             } catch (NumberFormatException e) {
                 context.status(400);
             }

@@ -1,5 +1,5 @@
-### delete project with id 1 if it is owned by a specific user
-DELETE http://localhost:3000/project/delete/1?userId=AVeryCoolDude
+### delete project with id 1 if it is owned by a specific user/org
+DELETE http://localhost:3000/project/delete/1?ownerId=AVeryCoolDude
 
 ### delete project with id 1
 DELETE http://localhost:3000/project/delete/1

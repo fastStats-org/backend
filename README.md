@@ -11,14 +11,14 @@ and additional details like headers and body (if applicable).
 Creates a new project with a specified owner and name.
 
 - **Method**: `POST`
-- **URL**: `http://localhost:3000/project/new/{userId}/{projectName}/{slug}`
+- **URL**: `http://localhost:3000/project/new/{ownerId}/{projectName}/{slug}`
 - **Headers**:
     - `Content-Type: application/json`
 - **Response Codes**:
     - **200**: Successfully created project
     - **409**: Duplicate project or slug
 - **Details**:
-    - Replace `{userId}` with the username of the project owner.
+    - Replace `{ownerId}` with the id of the project owner.
     - Replace `{projectName}` with the desired project name.
     - Replace `{slug}` with the desired project slug.
 - **Body**:
@@ -43,7 +43,7 @@ Content-Type: application/json
   "private": false,
   "projectId": 211,
   "projectName": "MyCoolNewProject",
-  "userId": "AVeryCoolDude",
+  "ownerId": "AVeryCoolDude",
   "slug": "cool-project"
 }
 ```
@@ -63,7 +63,7 @@ Renames an existing project by its ID.
     - **404**: Project not found
     - **409**: Duplicate project
 - **Query Parameters** (optional):
-    - **userId**: only rename the project if it is owned by the specified user
+    - **ownerId**: only rename the project if it is owned by the specified user/org
 - **Details**:
     - Replace `{projectId}` with the ID of the project to rename.
     - Replace `{newName}` with the new name for the project.
@@ -73,7 +73,7 @@ Renames an existing project by its ID.
 - Rename project with id 1 by the specified user
 
   ```http
-  POST http://localhost:3000/project/rename/1/test test test?userId=test
+  POST http://localhost:3000/project/rename/1/test test test?ownerId=test
   ```
 
 - Rename project with id 1
@@ -98,7 +98,7 @@ Updates the settings for a project, such as visibility and layout configurations
     - **400**: Malformed project id or body
     - **404**: Project not found
 - **Query Parameters** (optional):
-    - **userId**: only update the project if it is owned by the specified user
+    - **ownerId**: only update the project if it is owned by the specified user/org
 - **Body**:
     - Use JSON to specify settings like `private` visibility and the layout configuration of charts.
 
@@ -111,7 +111,7 @@ Updates the settings for a project, such as visibility and layout configurations
 - Update settings of a project with id 1 by the specified user
 
   ```http
-  PUT http://localhost:3000/project/settings/1?userId=test
+  PUT http://localhost:3000/project/settings/1?ownerId=test
   Content-Type: application/json
   
   {
@@ -168,12 +168,12 @@ Lists projects based on filters such as public/private visibility, user, and pag
     - **400**: Malformed offset, limit, or body
 - **Query Parameters** (optional):
     - **publicOnly**: list projects by visibility
-    - **userId**: list projects by a specific user
+    - **ownerId**: list projects by a specific user/org
 - **Details**:
     - If `publicOnly` is `true` only **public** projects will be listed,
       if `false` only **private** projects, and if omitted
       both **public and private** projects are listed
-    - If `userId` is undefined projects of all users are be listed
+    - If `ownerId` is undefined projects of all users and orgs are listed
     - `offset` defines how many projects should be skipped (allowing pagination)
     - `limit` defines how many projects may be listed at max
 
@@ -188,19 +188,19 @@ Lists projects based on filters such as public/private visibility, user, and pag
 - List 10 public projects by a specific user:
 
   ```http
-  GET http://localhost:3000/project/list/0/10?publicOnly=true&userId=testUser
+  GET http://localhost:3000/project/list/0/10?publicOnly=true&ownerId=testUser
   ```
 
 - List 10 public and private projects by a specific user:
 
   ```http
-  GET http://localhost:3000/project/list/0/10?userId=testUser
+  GET http://localhost:3000/project/list/0/10?ownerId=testUser
   ```
 
 - List 10 private projects by a specific user:
 
   ```http
-  GET http://localhost:3000/project/list/0/10?publicOnly=false&userId=testUser
+  GET http://localhost:3000/project/list/0/10?publicOnly=false&ownerId=testUser
   ```
 
 ### Example Response
@@ -211,7 +211,7 @@ Lists projects based on filters such as public/private visibility, user, and pag
     "private": false,
     "projectId": 1,
     "projectName": "MyCoolNewsProjects",
-    "userId": "AVeryCoolDude",
+    "ownerId": "AVeryCoolDude",
     "project_url": "https://project.example.com",
     "icon": "gem",
     "slug": "cool-project"
@@ -220,7 +220,7 @@ Lists projects based on filters such as public/private visibility, user, and pag
     "private": true,
     "projectId": 4,
     "projectName": "test test test",
-    "userId": "AVeryCoolDude",
+    "ownerId": "AVeryCoolDude",
     "icon": "white-flag",
     "slug": "test"
   }
@@ -240,7 +240,7 @@ Retrieve a project by its ID.
     - **400**: Malformed project id
     - **404**: Project not found
 - **Query Parameters** (optional):
-    - **userId**: retrieve the project only if it is owned by the specified user
+    - **ownerId**: retrieve the project only if it is owned by the specified user/org
 - **Details**:
     - Replace `{projectId}` with the ID of the project to retrieve.
 
@@ -249,7 +249,7 @@ Retrieve a project by its ID.
 - Retrieve the project with id 1 if it is owned by a specific user
 
   ```http
-  GET http://localhost:3000/project/1?userId=AVeryCoolDude
+  GET http://localhost:3000/project/1?ownerId=AVeryCoolDude
   ```
 
 - Retrieve the project with id 1
@@ -265,7 +265,7 @@ Retrieve a project by its ID.
   "private": false,
   "projectId": 1,
   "projectName": "MyCoolNewsProjects",
-  "userId": "AVeryCoolDude",
+  "ownerId": "AVeryCoolDude",
   "preview_chart": "total_servers",
   "project_url": "https://project.example.com",
   "icon": "gem",
@@ -292,7 +292,7 @@ Deletes a project by its ID.
     - **204**: Successfully deleted project
     - **404**: Project not found
 - **Query Parameters**
-    - **userId**: only delete the project if it is owned by the specified user
+    - **ownerId**: only delete the project if it is owned by the specified user/org
 - **Details**:
     - Replace `{projectId}` with the ID of the project to delete.
 
@@ -301,7 +301,7 @@ Deletes a project by its ID.
 - Delete the project with id 1 if it is owned by a specific user
 
   ```http
-  DELETE http://localhost:3000/project/delete/1?userId=AVeryCoolDude
+  DELETE http://localhost:3000/project/delete/1?ownerId=AVeryCoolDude
   ```
 
 - Delete the project with id 1

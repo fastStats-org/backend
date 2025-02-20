@@ -1,5 +1,5 @@
-### Update settings of a project with id 1 by the specified user
-PUT http://localhost:3000/project/settings/1?userId=test
+### Update settings of a project with id 1 by the specified user/org
+PUT http://localhost:3000/project/settings/1?ownerId=test
 Content-Type: application/json
 
 {

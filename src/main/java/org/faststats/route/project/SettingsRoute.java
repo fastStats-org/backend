@@ -19,11 +19,11 @@ public class SettingsRoute {
     private static void settings(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var userId = context.queryParam("userId");
+                var ownerId = context.queryParam("ownerId");
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
                 var body = JsonParser.parseString(context.body());
                 var settings = body.isJsonObject() ? ProjectSettings.fromJson(body.getAsJsonObject()) : null;
-                context.status(FastStats.DATABASE.updateProject(projectId, settings, userId));
+                context.status(FastStats.DATABASE.updateProject(projectId, settings, ownerId));
             } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
                 context.status(400);
             }

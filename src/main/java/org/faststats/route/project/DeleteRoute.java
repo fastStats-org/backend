@@ -16,9 +16,9 @@ public class DeleteRoute {
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var userId = context.queryParam("userId");
+                var ownerId = context.queryParam("ownerId");
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var deleted = FastStats.DATABASE.deleteProject(projectId, userId);
+                var deleted = FastStats.DATABASE.deleteProject(projectId, ownerId);
                 context.status(deleted ? 204 : 404);
             } catch (NumberFormatException e) {
                 context.status(400);

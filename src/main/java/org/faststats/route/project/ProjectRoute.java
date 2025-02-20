@@ -16,9 +16,9 @@ public class ProjectRoute {
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var userId = context.queryParam("userId");
+                var ownerId = context.queryParam("ownerId");
                 var slug = context.pathParam("slug");
-                var project = FastStats.DATABASE.getProject(slug, userId);
+                var project = FastStats.DATABASE.getProject(slug, ownerId);
 
                 if (project != null) {
                     context.header("Content-Type", "application/json");

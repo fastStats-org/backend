@@ -51,13 +51,13 @@ public class DatabaseController {
         logger.info("Successfully connected to MongoDB!");
     }
 
-    public @Nullable JsonObject createProject(String userId, String projectName, String slug, boolean isPrivate) {
+    public @Nullable JsonObject createProject(String ownerId, String projectName, String slug, boolean isPrivate) {
         var projects = database.getCollection("projects");
 
         var document1 = new Document("slug", slug);
         if (projects.find(document1).limit(1).first() != null) return null;
 
-        var document2 = new Document("projectName", projectName).append("userId", userId);
+        var document2 = new Document("projectName", projectName).append("ownerId", ownerId);
         if (projects.find(document2).limit(1).first() != null) return null;
 
         var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
@@ -66,7 +66,7 @@ public class DatabaseController {
         var result = projects.insertOne(new Document("slug", slug)
                 .append("projectName", projectName)
                 .append("private", isPrivate)
-                .append("userId", userId));
+                .append("ownerId", ownerId));
         if (!result.wasAcknowledged()) return null;
 
         var project = new JsonObject();
@@ -74,36 +74,36 @@ public class DatabaseController {
         project.addProperty("projectId", id);
         project.addProperty("projectName", projectName);
         project.addProperty("slug", slug);
-        project.addProperty("userId", userId);
+        project.addProperty("ownerId", ownerId);
         return project;
     }
 
-    public boolean deleteProject(int projectId, @Nullable String userId) {
+    public boolean deleteProject(int projectId, @Nullable String ownerId) {
         var projects = database.getCollection("projects");
         var filter = new Document("projectId", projectId);
-        if (userId != null) filter.append("userId", userId);
+        if (ownerId != null) filter.append("ownerId", ownerId);
         return projects.deleteOne(filter).getDeletedCount() > 0;
     }
 
-    public List<JsonObject> getProjects(int offset, int limit, @Nullable String userId, @Nullable Boolean publicOnly) {
+    public List<JsonObject> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) {
         var filter = new Document();
-        if (userId != null) filter.append("userId", userId);
+        if (ownerId != null) filter.append("ownerId", ownerId);
         if (publicOnly != null) filter.append("private", !publicOnly);
         var projects = database.getCollection("projects");
         return projects.find(filter).skip(offset).limit(limit)
                 .map(this::getProject).into(new ArrayList<>());
     }
 
-    public int renameProject(int projectId, String projectName, @Nullable String userId) {
+    public int renameProject(int projectId, String projectName, @Nullable String ownerId) {
         var projects = database.getCollection("projects");
         var filter = new Document("projectId", projectId);
-        if (userId != null) filter.append("userId", userId);
+        if (ownerId != null) filter.append("ownerId", ownerId);
 
         var project = projects.find(filter).limit(1).first();
         if (project == null) return 404;
 
-        var duplicateUserId = project.getString("userId");
-        var duplicate = new Document("userId", duplicateUserId).append("projectName", projectName);
+        var duplicateOwnerId = project.getString("ownerId");
+        var duplicate = new Document("ownerId", duplicateOwnerId).append("projectName", projectName);
         if (projects.find(duplicate).limit(1).first() != null) return 409;
 
         var update = new Document("$set", new Document("projectName", projectName));
@@ -111,13 +111,13 @@ public class DatabaseController {
         return result.getModifiedCount() > 0 ? 204 : 304;
     }
 
-    public int updateProject(int projectId, @Nullable ProjectSettings settings, @Nullable String userId) {
+    public int updateProject(int projectId, @Nullable ProjectSettings settings, @Nullable String ownerId) {
         if (settings == null || settings.isEmpty()) return 304;
         if (!settings.isValid()) return 400;
 
         var projects = database.getCollection("projects");
         var filter = new Document("projectId", projectId);
-        if (userId != null) filter.append("userId", userId);
+        if (ownerId != null) filter.append("ownerId", ownerId);
 
         var project = projects.find(filter).limit(1).first();
         if (project == null) return 404;
@@ -132,15 +132,15 @@ public class DatabaseController {
         return result.getModifiedCount() > 0 ? 204 : 304;
     }
 
-    public @Nullable JsonObject getProject(String slug, @Nullable String userId) {
+    public @Nullable JsonObject getProject(String slug, @Nullable String ownerId) {
         var projects = database.getCollection("projects");
         var document = projects.find(new Document("slug", slug)).first();
         if (document == null) return null;
 
         var project = getProject(document);
         if (project.has("private") && project.get("private").getAsBoolean()) {
-            var owner = project.get("userId").getAsString();
-            if (userId == null || !userId.equals(owner)) return null;
+            var owner = project.get("ownerId").getAsString();
+            if (ownerId == null || !ownerId.equals(owner)) return null;
         }
 
         if (document.containsKey("layout")) project.add("layout",
@@ -169,7 +169,7 @@ public class DatabaseController {
         project.addProperty("projectId", document.getInteger("projectId"));
         project.addProperty("projectName", document.getString("projectName"));
         project.addProperty("slug", document.getString("slug"));
-        project.addProperty("userId", document.getString("userId"));
+        project.addProperty("ownerId", document.getString("ownerId"));
         if (document.containsKey("preview_chart"))
             project.addProperty("preview_chart", document.getString("preview_chart"));
         if (document.containsKey("icon")) project.addProperty("icon", document.getString("icon"));
