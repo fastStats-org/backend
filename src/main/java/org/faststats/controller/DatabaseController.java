@@ -61,7 +61,7 @@ public class DatabaseController {
         if (projects.find(document2).limit(1).first() != null) return null;
 
         var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
-        var id = first != null ? first.getInteger("projectId") + 1 : 1;
+        var id = first != null && first.containsKey("projectId") ? first.getInteger("projectId") + 1 : 1;
 
         var result = projects.insertOne(new Document("slug", slug)
                 .append("projectName", projectName)
