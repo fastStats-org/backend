@@ -66,7 +66,8 @@ public class DatabaseController {
         var result = projects.insertOne(new Document("slug", slug)
                 .append("projectName", projectName)
                 .append("private", isPrivate)
-                .append("ownerId", ownerId));
+                .append("ownerId", ownerId)
+                .append("projectId", id));
         if (!result.wasAcknowledged()) return null;
 
         var project = new JsonObject();
