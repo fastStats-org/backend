@@ -4,11 +4,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import org.faststats.model.Metric;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
 import java.util.zip.GZIPInputStream;
 
 @NullMarked
@@ -24,24 +26,16 @@ public class MetricsRoute {
     }
 
     private static void handle(Context context) {
-        context.future(() -> {
+        context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var data = decompressData(context.bodyAsBytes());
-                var projectId = data.get("projectId").getAsInt();
-                var javaVersion = data.get("javaVersion").getAsString();
-                var osName = data.get("osName").getAsString();
-                var osArch = data.get("osArch").getAsString();
-                var osVersion = data.get("osVersion").getAsString();
-                var processors = data.get("processors").getAsInt();
-                var charts = data.get("charts").getAsJsonArray();
+                Metric.fromJson(data);
 
                 context.status(200);
-                return null;
-            } catch (Exception e) {
+            } catch (IOException | IllegalStateException e) {
                 context.status(400);
-                return null;
             }
-        });
+        }));
     }
 
     private static JsonObject decompressData(byte[] data) throws IOException {

@@ -172,6 +172,19 @@ public class DatabaseController {
         return projects.countDocuments(filter);
     }
 
+    public Map<String, Chart.Type> getChartTypes(int projectId) {
+        var charts = database.getCollection("projects");
+        var document = charts.find(new Document("projectId", projectId)).limit(1).first();
+        if (document == null || !document.containsKey("layout")) return Map.of();
+        var chartTypes = new HashMap<String, Chart.Type>();
+        var layout = document.get("layout", Document.class);
+        layout.keySet().forEach(key -> {
+            var type = Chart.Type.valueOf(layout.getString("type"));
+            chartTypes.put(key, type);
+        });
+        return chartTypes;
+    }
+
     private JsonObject getLayout(Document document) {
         var layout = new JsonObject();
         document.keySet().forEach(chartId -> {
