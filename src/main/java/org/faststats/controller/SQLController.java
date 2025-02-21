@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class SQLController {
     private static final String COUNT_PROJECTS = statement("sql/query/count_projects.sql");
     private static final String CREATE_PROJECT = statement("sql/create_project.sql");
+    private static final String GET_PROJECT = statement("sql/query/get_project.sql");
     private static final String SLUG_USED = statement("sql/query/slug_used.sql");
 
     private final Connection connection;
@@ -63,10 +64,14 @@ public class SQLController {
         executeUpdate(statement("sql/index/metrics.sql"));
     }
 
-    public @Nullable Project createProject(String name, String ownerId, boolean isPrivate) throws SQLException {
+    public @Nullable Project createProject(String name, String owner, boolean isPrivate) throws SQLException {
         var slug = generateUniqueSlug(name);
-        var id = executeUpdate(CREATE_PROJECT, ownerId, name, slug, isPrivate);
-        return new Project(name, ownerId, slug, id, isPrivate, null, null, null, null);
+        var id = executeUpdate(CREATE_PROJECT, owner, name, slug, isPrivate);
+        return new Project(name, owner, slug, id, isPrivate, null, null, null, null);
+    }
+
+    public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
+        return executeQuery(GET_PROJECT, this::getProject, slug, owner);
     }
 
     private String generateUniqueSlug(String name) throws SQLException {
@@ -86,6 +91,19 @@ public class SQLController {
     public long countProjects(@Nullable String ownerId) throws SQLException {
         var projects = executeQuery(COUNT_PROJECTS, resultSet -> resultSet.next() ? resultSet.getLong(1) : 0, ownerId);
         return projects != null ? projects : 0;
+    }
+
+    private @Nullable Project getProject(ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) return null;
+        var id = resultSet.getInt("id");
+        var owner = resultSet.getString("owner");
+        var name = resultSet.getString("name");
+        var slug = resultSet.getString("slug");
+        var isPrivate = resultSet.getBoolean("private");
+        var icon = resultSet.getString("icon");
+        var previewChart = resultSet.getString("preview_chart");
+        var projectUrl = resultSet.getString("project_url");
+        return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
     }
 
     private static String statement(String file) {
