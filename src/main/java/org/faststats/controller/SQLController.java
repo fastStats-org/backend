@@ -102,7 +102,7 @@ public class SQLController {
         var isPrivate = resultSet.getBoolean("private");
         var icon = resultSet.getString("icon");
         var previewChart = resultSet.getString("preview_chart");
-        var projectUrl = resultSet.getString("project_url");
+        var projectUrl = resultSet.getString("url");
         return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
     }
 
