@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS layouts
 (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
-    layout_id INTEGER NOT NULL UNIQUE,
-    FOREIGN KEY (layout_id) REFERENCES layout_options (id) ON DELETE CASCADE
+    options_id INTEGER NOT NULL UNIQUE,
+    FOREIGN KEY (options_id) REFERENCES layout_options (id) ON DELETE CASCADE
 )
