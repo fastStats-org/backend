@@ -10,6 +10,12 @@ import java.util.Map;
 
 @NullMarked
 public record Layout(Map<String, Options> charts) {
+    public JsonObject toJson() {
+        var layout = new JsonObject();
+        charts.forEach((id, options) -> layout.add(id, options.toJson()));
+        return layout;
+    }
+
     public Document toDocument() {
         var document = new Document();
         charts.forEach((key, value) -> document.put(key, value.toDocument()));
@@ -25,6 +31,16 @@ public record Layout(Map<String, Options> charts) {
             document.put("name", name);
             document.put("type", type);
             return document;
+        }
+
+        public JsonObject toJson() {
+            var options = new JsonObject();
+            if (icon != null) options.addProperty("icon", icon);
+            if (size != null) options.addProperty("size", size);
+            options.addProperty("color", color);
+            options.addProperty("name", name);
+            options.addProperty("type", type);
+            return options;
         }
 
         public static Options fromJson(JsonObject options) {
