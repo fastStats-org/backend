@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_metrics ON metrics (server_id, project_id, timestamp)
