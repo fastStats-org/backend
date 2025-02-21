@@ -1,0 +1,1 @@
+SELECT * FROM projects WHERE slug = ? AND owner = coalesce(?, owner)
