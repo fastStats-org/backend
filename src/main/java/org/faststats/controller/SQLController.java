@@ -24,16 +24,17 @@ import java.util.stream.Collectors;
 @NullMarked
 class SQLController {
     protected static final String COUNT_PROJECTS = statement("sql/query/count_projects.sql");
-    protected static final String CREATE_PROJECT = statement("sql/create_project.sql");
-    protected static final String DELETE_PROJECT = statement("sql/delete_project.sql");
+    protected static final String CREATE_PROJECT = statement("sql/update/create_project.sql");
+    protected static final String DELETE_PROJECT = statement("sql/update/delete_project.sql");
     protected static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
     protected static final String GET_PROJECT = statement("sql/query/get_project.sql");
     protected static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
-    protected static final String RENAME_PROJECT = statement("sql/rename_project.sql");
+    protected static final String RENAME_PROJECT = statement("sql/update/rename_project.sql");
     protected static final String SLUG_USED = statement("sql/query/slug_used.sql");
+    protected static final String UPDATE_ICON = statement("sql/update/update_icon.sql");
     @Deprecated(forRemoval = true)
-    protected static final String UPDATE_PROJECT = statement("sql/update_project.sql");
-    protected static final String UPDATE_SLUG = statement("sql/update_slug.sql");
+    protected static final String UPDATE_PROJECT = statement("sql/update/update_project.sql");
+    protected static final String UPDATE_SLUG = statement("sql/update/update_slug.sql");
 
     protected final Connection connection;
 
