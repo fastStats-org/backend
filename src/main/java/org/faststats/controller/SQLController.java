@@ -29,6 +29,7 @@ public class SQLController {
     private static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
     private static final String GET_PROJECT = statement("sql/query/get_project.sql");
     private static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
+    private static final String RENAME_PROJECT = statement("sql/rename_project.sql");
     private static final String SLUG_USED = statement("sql/query/slug_used.sql");
 
     private final Connection connection;
@@ -70,6 +71,10 @@ public class SQLController {
         var slug = generateUniqueSlug(name);
         var id = executeUpdate(CREATE_PROJECT, owner, name, slug, isPrivate);
         return new Project(name, owner, slug, id, isPrivate, null, null, null, null);
+    }
+
+    public boolean renameProject(int projectId, String name, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(RENAME_PROJECT, name, projectId, ownerId) > 0;
     }
 
     public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {

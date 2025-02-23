@@ -1,0 +1,1 @@
+UPDATE projects SET name = ? WHERE id = ? AND owner = coalesce(?, owner)

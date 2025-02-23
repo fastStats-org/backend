@@ -59,8 +59,7 @@ Renames an existing project by its ID.
     - **204**: Successfully renamed project
     - **304**: Name didn't change
     - **400**: Malformed project id
-    - **404**: Project not found
-    - **409**: Duplicate project
+    - **409**: Duplicate or unknown project
 - **Query Parameters** (optional):
     - **ownerId**: only rename the project if it is owned by the specified user/org
 - **Details**:
