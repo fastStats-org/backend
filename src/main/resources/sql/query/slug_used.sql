@@ -1,1 +1,1 @@
-SELECT EXISTS(SELECT 1 FROM projects WHERE slug = ?);
+SELECT EXISTS(SELECT 1 FROM projects WHERE slug = ?)
