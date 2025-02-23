@@ -1,4 +1,4 @@
-package org.faststats.route.project;
+package org.faststats.route.project.settings;
 
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
