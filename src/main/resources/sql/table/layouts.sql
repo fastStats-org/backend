@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS layout_options
+CREATE TABLE IF NOT EXISTS layouts
 (
     id    INTEGER PRIMARY KEY NOT NULL,
     name  TEXT                NOT NULL,
