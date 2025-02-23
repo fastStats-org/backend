@@ -1,3 +1,1 @@
-SELECT COUNT(*)
-FROM projects
-WHERE owner = coalesce(?, owner);
+SELECT COUNT(*) FROM projects WHERE owner = coalesce(?, owner);
