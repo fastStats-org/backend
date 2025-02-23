@@ -16,7 +16,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @NullMarked
@@ -25,6 +27,7 @@ public class SQLController {
     private static final String CREATE_PROJECT = statement("sql/create_project.sql");
     private static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
     private static final String GET_PROJECT = statement("sql/query/get_project.sql");
+    private static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
     private static final String SLUG_USED = statement("sql/query/slug_used.sql");
 
     private final Connection connection;
@@ -75,6 +78,18 @@ public class SQLController {
 
     public @Nullable Layout getLayout(int projectId) throws SQLException {
         return executeQuery(GET_LAYOUT, this::getLayout, projectId);
+    }
+
+    public List<Project> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) throws SQLException {
+        var projects = executeQuery(GET_PROJECTS, this::getProjects, ownerId, publicOnly, limit, offset);
+        return projects != null ? projects : List.of();
+    }
+
+    private List<Project> getProjects(ResultSet resultSet) throws SQLException {
+        Project project;
+        var projects = new ArrayList<Project>();
+        while ((project = getProject(resultSet)) != null) projects.add(project);
+        return projects;
     }
 
     private String generateUniqueSlug(String name) throws SQLException {
