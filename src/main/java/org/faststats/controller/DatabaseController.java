@@ -27,7 +27,7 @@ public class DatabaseController extends SQLController {
     }
 
     public boolean updateSlug(int projectId, String slug, @Nullable String ownerId) throws SQLException {
-        if (!ProjectSettings.isValidSlug(slug)) throw new IllegalArgumentException("Invalid slug: " + slug);
+        if (!Project.isValidSlug(slug)) throw new IllegalArgumentException("Invalid slug: " + slug);
         return executeUpdate(UPDATE_SLUG, slug, projectId, ownerId) > 0;
     }
 
