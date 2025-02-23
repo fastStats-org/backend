@@ -1,4 +1,4 @@
-package org.faststats.route.project;
+package org.faststats.route.project.settings;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -9,19 +9,20 @@ import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
-public class DeleteRoute {
+public class SlugSettingsRoute {
     public static void register(Javalin javalin) {
-        javalin.delete("/project/delete/{projectId}", DeleteRoute::handle);
+        javalin.put("/project/settings/slug/{projectId}/{slug}", SlugSettingsRoute::settings);
     }
 
-    private static void handle(Context context) {
+    private static void settings(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var ownerId = context.queryParam("ownerId");
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var deleted = FastStats.DATABASE.deleteProject(projectId, ownerId);
-                context.status(deleted ? 204 : 404);
-            } catch (NumberFormatException | SQLException e) {
+                var slug = context.pathParam("slug");
+                var updated = FastStats.DATABASE.updateSlug(projectId, slug, ownerId);
+                context.status(updated ? 204 : 304);
+            } catch (IllegalArgumentException | SQLException e) {
                 context.result(e.getMessage());
                 context.status(400);
             }

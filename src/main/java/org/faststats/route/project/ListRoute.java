@@ -5,8 +5,10 @@ import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
+import org.faststats.model.Project;
 import org.jspecify.annotations.NullMarked;
 
+import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
@@ -26,11 +28,13 @@ public class ListRoute {
                 var offset = Integer.parseInt(context.pathParam("offset"));
 
                 var projects = new JsonArray();
-                FastStats.DATABASE.getProjects(offset, limit, ownerId, publicOnly).forEach(projects::add);
+                FastStats.DATABASE.getProjects(offset, limit, ownerId, publicOnly)
+                        .stream().map(Project::toJson).forEach(projects::add);
                 context.header("Content-Type", "application/json");
                 context.result(projects.toString());
                 context.status(200);
-            } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
+            } catch (IllegalStateException | JsonSyntaxException | SQLException | NumberFormatException e) {
+                context.result(e.getMessage());
                 context.status(400);
             }
         }));

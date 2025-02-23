@@ -1,216 +1,72 @@
 package org.faststats.controller;
 
-import com.google.gson.JsonObject;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.ServerApi;
-import com.mongodb.ServerApiVersion;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.IndexOptions;
-import org.bson.Document;
-import org.faststats.FastStats;
+import org.faststats.model.Layout;
+import org.faststats.model.Project;
 import org.faststats.model.ProjectSettings;
-import org.faststats.model.chart.Chart;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @NullMarked
-public class DatabaseController {
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseController.class);
-    private final MongoDatabase database;
-
-    @SuppressWarnings("resource")
-    public DatabaseController() {
-        var server = ServerApi.builder()
-                .version(ServerApiVersion.V1)
-                .build();
-
-        var env = System.getenv("MONGODB_URL");
-        var url = env != null ? env : FastStats.CONFIG.connectionString();
-        var connectionString = new ConnectionString(url);
-
-        var settings = MongoClientSettings.builder()
-                .applyConnectionString(connectionString)
-                .serverApi(server)
-                .build();
-
-        var client = MongoClients.create(settings);
-        this.database = client.getDatabase("fastStats");
-
-        database.createCollection("projects");
-        database.createCollection("consumers");
-
-        var projects = database.getCollection("projects");
-        projects.createIndex(new Document("projectId", 1), new IndexOptions().unique(true));
-
-        logger.info("Successfully connected to MongoDB!");
+public class DatabaseController extends SQLController {
+    public Project createProject(String name, String owner, boolean isPrivate) throws SQLException {
+        var slug = generateUniqueSlug(name);
+        var id = executeUpdate(CREATE_PROJECT, owner, name, slug, isPrivate);
+        return new Project(name, owner, slug, id, isPrivate, null, null, null, null);
     }
 
-    public @Nullable JsonObject createProject(String ownerId, String projectName, boolean isPrivate) {
-        var projects = database.getCollection("projects");
-
-        var document2 = new Document("projectName", projectName).append("ownerId", ownerId);
-        if (projects.find(document2).limit(1).first() != null) return null;
-
-        var first = projects.find().sort(new Document("projectId", -1)).limit(1).first();
-        var id = first != null && first.containsKey("projectId") ? first.getInteger("projectId") + 1 : 1;
-
-        var slug = generateNewSlug(projectName);
-
-        var result = projects.insertOne(new Document("slug", slug)
-                .append("projectName", projectName)
-                .append("private", isPrivate)
-                .append("ownerId", ownerId)
-                .append("projectId", id));
-        if (!result.wasAcknowledged()) return null;
-
-        var project = new JsonObject();
-        project.addProperty("private", isPrivate);
-        project.addProperty("projectId", id);
-        project.addProperty("projectName", projectName);
-        project.addProperty("slug", slug);
-        project.addProperty("ownerId", ownerId);
-        return project;
+    public boolean renameProject(int projectId, String name, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(RENAME_PROJECT, name, projectId, ownerId) > 0;
     }
 
-    private String generateNewSlug(String projectName) {
-        final var transformed = projectName.charAt(0) + projectName.substring(1).replaceAll("([A-Z])", "-$1");
-        final var tidy = transformed.toLowerCase().replace(" ", "-").replace("_", "-");
-        var slug = tidy;
-        var index = 0;
-        while (isSlugUsed(slug)) slug = tidy + "-" + ++index;
-        return slug;
+    public boolean updateSlug(int projectId, String slug, @Nullable String ownerId) throws SQLException {
+        if (!ProjectSettings.isValidSlug(slug)) throw new IllegalArgumentException("Invalid slug: " + slug);
+        return executeUpdate(UPDATE_SLUG, slug, projectId, ownerId) > 0;
     }
 
-    public boolean deleteProject(int projectId, @Nullable String ownerId) {
-        var projects = database.getCollection("projects");
-        var filter = new Document("projectId", projectId);
-        if (ownerId != null) filter.append("ownerId", ownerId);
-        return projects.deleteOne(filter).getDeletedCount() > 0;
+    @Deprecated(forRemoval = true)
+    public boolean updateProject(int projectId, ProjectSettings settings, @Nullable String ownerId) throws SQLException {
+        return !settings.isEmpty() && settings.isValid() && executeUpdate(UPDATE_PROJECT,
+                settings.isPrivate(), settings.icon(), settings.previewChart(),
+                settings.url(), settings.slug(), projectId, ownerId) > 0;
     }
 
-    public List<JsonObject> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) {
-        var filter = new Document();
-        if (ownerId != null) filter.append("ownerId", ownerId);
-        if (publicOnly != null) filter.append("private", !publicOnly);
-        var projects = database.getCollection("projects");
-        return projects.find(filter).skip(offset).limit(limit)
-                .map(this::getProject).into(new ArrayList<>());
+    public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
+        var project = executeQuery(GET_PROJECT, this::getProject, slug, owner);
+        return project != null ? project.withLayout(getLayout(project.id())) : null;
     }
 
-    public int renameProject(int projectId, String projectName, @Nullable String ownerId) {
-        var projects = database.getCollection("projects");
-        var filter = new Document("projectId", projectId);
-        if (ownerId != null) filter.append("ownerId", ownerId);
-
-        var project = projects.find(filter).limit(1).first();
-        if (project == null) return 404;
-
-        var duplicateOwnerId = project.getString("ownerId");
-        var duplicate = new Document("ownerId", duplicateOwnerId).append("projectName", projectName);
-        if (projects.find(duplicate).limit(1).first() != null) return 409;
-
-        var update = new Document("$set", new Document("projectName", projectName));
-        var result = projects.updateOne(filter, update);
-        return result.getModifiedCount() > 0 ? 204 : 304;
+    public @Nullable Layout getLayout(int projectId) throws SQLException {
+        return executeQuery(GET_LAYOUT, this::getLayout, projectId);
     }
 
-    public int updateProject(int projectId, @Nullable ProjectSettings settings, @Nullable String ownerId) {
-        if (settings == null || settings.isEmpty()) return 304;
-        if (!settings.isValid()) return 400;
-
-        var projects = database.getCollection("projects");
-        var filter = new Document("projectId", projectId);
-        if (ownerId != null) filter.append("ownerId", ownerId);
-
-        var project = projects.find(filter).limit(1).first();
-        if (project == null) return 404;
-
-        if (settings.previewChart() != null && settings.layout() == null) {
-            if (!project.containsKey("layout")) return 400;
-            var layout = project.get("layout", Document.class);
-            if (!layout.containsKey(settings.previewChart())) return 400;
-        }
-
-        var result = projects.updateOne(filter, new Document("$set", settings.toDocument()));
-        return result.getModifiedCount() > 0 ? 204 : 304;
+    public boolean deleteProject(int projectId, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(DELETE_PROJECT, projectId, ownerId) > 0;
     }
 
-    public boolean isSlugUsed(String slug) {
-        var projects = database.getCollection("projects");
-        return projects.find(new Document("slug", slug)).limit(1).first() != null;
+    public List<Project> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) throws SQLException {
+        var projects = executeQuery(GET_PROJECTS, this::getProjects, ownerId, publicOnly, limit, offset);
+        return projects != null ? projects : List.of();
     }
 
-    public @Nullable JsonObject getProject(String slug, @Nullable String ownerId) {
-        var projects = database.getCollection("projects");
-        var document = projects.find(new Document("slug", slug)).first();
-        if (document == null) return null;
-
-        var project = getProject(document);
-        if (project.has("private") && project.get("private").getAsBoolean()) {
-            var owner = project.get("ownerId").getAsString();
-            if (ownerId == null || !ownerId.equals(owner)) return null;
-        }
-
-        if (document.containsKey("layout")) project.add("layout",
-                getLayout(document.get("layout", Document.class)));
-        return project;
+    public boolean isSlugUsed(String slug) throws SQLException {
+        return Boolean.TRUE.equals(executeQuery(SLUG_USED, resultSet ->
+                resultSet.next() && resultSet.getBoolean(1), slug));
     }
 
-    public long countProjects(@Nullable String ownerId) {
-        var projects = database.getCollection("projects");
-        var filter = new Document();
-        if (ownerId != null) filter.append("ownerId", ownerId);
-        return projects.countDocuments(filter);
+    public String generateUniqueSlug(String name) throws SQLException {
+        var base = name.replaceAll("([A-Z])", "-$1").replaceAll("[^a-zA-Z0-9]", "-")
+                .replaceAll("-+", "-").replaceAll("^-|-$", "").toLowerCase();
+        var unique = base;
+        var counter = 1;
+        while (isSlugUsed(unique)) unique = base + "-" + counter++;
+        return unique;
     }
 
-    public Map<String, Chart.Type> getChartTypes(int projectId) {
-        var charts = database.getCollection("projects");
-        var document = charts.find(new Document("projectId", projectId)).limit(1).first();
-        if (document == null || !document.containsKey("layout")) return Map.of();
-        var chartTypes = new HashMap<String, Chart.Type>();
-        var layout = document.get("layout", Document.class);
-        layout.keySet().forEach(key -> {
-            var type = Chart.Type.valueOf(layout.getString("type"));
-            chartTypes.put(key, type);
-        });
-        return chartTypes;
-    }
-
-    private JsonObject getLayout(Document document) {
-        var layout = new JsonObject();
-        document.keySet().forEach(chartId -> {
-            var chart = new JsonObject();
-            var options = document.get(chartId, Document.class);
-            chart.addProperty("name", options.getString("name"));
-            chart.addProperty("type", options.getString("type"));
-            chart.addProperty("color", options.getString("color"));
-            if (options.containsKey("icon")) chart.addProperty("icon", options.getString("icon"));
-            if (options.containsKey("size")) chart.addProperty("size", options.getInteger("size"));
-            layout.add(chartId, chart);
-        });
-        return layout;
-    }
-
-    private JsonObject getProject(Document document) {
-        var project = new JsonObject();
-        project.addProperty("private", document.getBoolean("private", false));
-        project.addProperty("projectId", document.getInteger("projectId"));
-        project.addProperty("projectName", document.getString("projectName"));
-        project.addProperty("slug", document.getString("slug"));
-        project.addProperty("ownerId", document.getString("ownerId"));
-        if (document.containsKey("preview_chart"))
-            project.addProperty("preview_chart", document.getString("preview_chart"));
-        if (document.containsKey("icon")) project.addProperty("icon", document.getString("icon"));
-        if (document.containsKey("project_url")) project.addProperty("project_url", document.getString("project_url"));
-        return project;
+    public long countProjects(@Nullable String ownerId) throws SQLException {
+        var projects = executeQuery(COUNT_PROJECTS, resultSet -> resultSet.next() ? resultSet.getLong(1) : 0, ownerId);
+        return projects != null ? projects : 0;
     }
 }

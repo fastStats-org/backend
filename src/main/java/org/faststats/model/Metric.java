@@ -1,7 +1,6 @@
 package org.faststats.model;
 
 import com.google.gson.JsonObject;
-import org.faststats.FastStats;
 import org.faststats.model.chart.Chart;
 import org.jspecify.annotations.Nullable;
 
@@ -30,13 +29,14 @@ public record Metric(
         var locale = metric.has("locale") ? Locale.forLanguageTag(metric.get("locale").getAsString()) : null;
         var processors = metric.has("processors") ? metric.get("processors").getAsInt() : null;
         var charts = new HashMap<String, Chart>();
-        var chartTypes = FastStats.DATABASE.getChartTypes(projectId);
-        metric.getAsJsonObject("charts").entrySet().forEach(entry -> {
-            var chartType = chartTypes.get(entry.getKey());
-            if (chartType == null) return;
-            var chart = Chart.fromJson(chartType, entry.getValue());
-            charts.put(entry.getKey(), chart);
-        });
+        // todo: add charts
+        // var chartTypes = FastStats.DATABASE_M.getChartTypes(projectId);
+        // metric.getAsJsonObject("charts").entrySet().forEach(entry -> {
+        //     var chartType = chartTypes.get(entry.getKey());
+        //     if (chartType == null) return;
+        //     var chart = Chart.fromJson(chartType, entry.getValue());
+        //     charts.put(entry.getKey(), chart);
+        // });
         return new Metric(projectId, consumerId, osName, osArch, osVersion, locale, processors, charts);
     }
 }

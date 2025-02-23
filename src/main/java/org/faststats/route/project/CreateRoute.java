@@ -7,6 +7,7 @@ import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
 
+import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
@@ -23,8 +24,8 @@ public class CreateRoute {
 
                 var isPrivate = body.has("private") && body.get("private").getAsBoolean();
                 var ownerId = body.get("ownerId").getAsString();
-                var projectName = body.get("name").getAsString();
-                var project = FastStats.DATABASE.createProject(ownerId, projectName, isPrivate);
+                var name = body.get("name").getAsString();
+                var project = FastStats.DATABASE.createProject(name, ownerId, isPrivate);
 
                 if (project != null) {
                     context.header("Content-Type", "application/json");
@@ -33,7 +34,8 @@ public class CreateRoute {
                 } else {
                     context.status(409);
                 }
-            } catch (IllegalStateException | JsonSyntaxException e) {
+            } catch (IllegalStateException | JsonSyntaxException | SQLException e) {
+                context.result(e.getMessage());
                 context.status(400);
             }
         }));

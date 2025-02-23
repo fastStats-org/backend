@@ -5,6 +5,7 @@ import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
 
+import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
@@ -27,7 +28,8 @@ public class ProjectRoute {
                 } else {
                     context.status(404);
                 }
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException | SQLException e) {
+                context.result(e.getMessage());
                 context.status(400);
             }
         }));

@@ -20,12 +20,10 @@ repositories {
 }
 
 dependencies {
-    // implementation("com.maxmind.geoip2:geoip2:4.2.1")
     implementation("ch.qos.logback:logback-classic:1.5.16")
     implementation("com.google.code.gson:gson:2.12.1")
     implementation("io.javalin:javalin:6.4.0")
     implementation("net.thenextlvl.core:files:2.0.1")
-    implementation("org.mongodb:mongodb-driver-sync:5.3.1")
     implementation("org.xerial:sqlite-jdbc:3.49.1.0")
 }
 

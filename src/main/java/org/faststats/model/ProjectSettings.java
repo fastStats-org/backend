@@ -1,7 +1,6 @@
 package org.faststats.model;
 
 import com.google.gson.JsonObject;
-import org.bson.Document;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -11,28 +10,22 @@ public record ProjectSettings(
         @Nullable Layout layout,
         @Nullable String icon,
         @Nullable String previewChart,
-        @Nullable String projectUrl,
+        @Nullable String url,
         @Nullable String slug
 ) {
     public boolean isEmpty() {
         return isPrivate == null && previewChart == null
-               && layout == null && projectUrl == null
+               && layout == null && url == null
                && icon == null && slug == null;
     }
 
-    public Document toDocument() {
-        var document = new Document();
-        if (isPrivate != null) document.put("private", isPrivate);
-        if (layout != null) document.put("layout", layout.toDocument());
-        if (icon != null) document.put("icon", icon);
-        if (previewChart != null) document.put("preview_chart", previewChart);
-        if (projectUrl != null) document.put("project_url", projectUrl);
-        if (slug != null) document.put("slug", slug);
-        return document;
+    public boolean isValid() {
+        return (previewChart == null || layout == null || layout.charts().containsKey(previewChart))
+               && (slug == null || isValidSlug(slug));
     }
 
-    public boolean isValid() {
-        return previewChart == null || layout == null || layout.charts().containsKey(previewChart);
+    public static boolean isValidSlug(String slug) {
+        return slug.matches("^(?=.{3,32}$)[a-z0-9]+(-[a-z0-9]+)*$");
     }
 
     public static @Nullable ProjectSettings fromJson(JsonObject settings) {

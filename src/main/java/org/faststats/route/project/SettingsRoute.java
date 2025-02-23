@@ -8,6 +8,7 @@ import org.faststats.FastStats;
 import org.faststats.model.ProjectSettings;
 import org.jspecify.annotations.NullMarked;
 
+import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
@@ -23,8 +24,19 @@ public class SettingsRoute {
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
                 var body = JsonParser.parseString(context.body());
                 var settings = body.isJsonObject() ? ProjectSettings.fromJson(body.getAsJsonObject()) : null;
-                context.status(FastStats.DATABASE.updateProject(projectId, settings, ownerId));
-            } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
+
+                if (settings == null || settings.isEmpty()) {
+                    context.status(400);
+                    return;
+                }
+                if (!settings.isValid()) {
+                    context.status(400);
+                    return;
+                }
+
+                var updated = FastStats.DATABASE.updateProject(projectId, settings, ownerId);
+                context.status(updated ? 204 : 304);
+            } catch (IllegalStateException | JsonSyntaxException | NumberFormatException | SQLException e) {
                 context.status(400);
             }
         }));

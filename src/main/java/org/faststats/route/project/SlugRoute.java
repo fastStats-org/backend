@@ -4,6 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 
+import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 public class SlugRoute {
@@ -13,9 +14,14 @@ public class SlugRoute {
 
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
-            var slug = context.pathParam("slug");
-            var slugUsed = FastStats.DATABASE.isSlugUsed(slug);
-            context.status(slugUsed ? 409 : 204);
+            try {
+                var slug = context.pathParam("slug");
+                var slugUsed = FastStats.DATABASE.isSlugUsed(slug);
+                context.status(slugUsed ? 409 : 204);
+            } catch (SQLException e) {
+                context.result(e.getMessage());
+                context.status(400);
+            }
         }));
     }
 }

@@ -23,16 +23,19 @@ import java.util.stream.Collectors;
 
 @NullMarked
 public class SQLController {
-    private static final String COUNT_PROJECTS = statement("sql/query/count_projects.sql");
-    private static final String CREATE_PROJECT = statement("sql/create_project.sql");
-    private static final String DELETE_PROJECT = statement("sql/delete_project.sql");
-    private static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
-    private static final String GET_PROJECT = statement("sql/query/get_project.sql");
-    private static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
-    private static final String RENAME_PROJECT = statement("sql/rename_project.sql");
-    private static final String SLUG_USED = statement("sql/query/slug_used.sql");
+    protected static final String COUNT_PROJECTS = statement("sql/query/count_projects.sql");
+    protected static final String CREATE_PROJECT = statement("sql/create_project.sql");
+    protected static final String DELETE_PROJECT = statement("sql/delete_project.sql");
+    protected static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
+    protected static final String GET_PROJECT = statement("sql/query/get_project.sql");
+    protected static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
+    protected static final String RENAME_PROJECT = statement("sql/rename_project.sql");
+    protected static final String SLUG_USED = statement("sql/query/slug_used.sql");
+    @Deprecated(forRemoval = true)
+    protected static final String UPDATE_PROJECT = statement("sql/update_project.sql");
+    protected static final String UPDATE_SLUG = statement("sql/update_slug.sql");
 
-    private final Connection connection;
+    protected final Connection connection;
 
     public SQLController() {
         try {
@@ -67,61 +70,14 @@ public class SQLController {
         executeUpdate(statement("sql/index/metrics.sql"));
     }
 
-    public Project createProject(String name, String owner, boolean isPrivate) throws SQLException {
-        var slug = generateUniqueSlug(name);
-        var id = executeUpdate(CREATE_PROJECT, owner, name, slug, isPrivate);
-        return new Project(name, owner, slug, id, isPrivate, null, null, null, null);
-    }
-
-    public boolean renameProject(int projectId, String name, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(RENAME_PROJECT, name, projectId, ownerId) > 0;
-    }
-
-    public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
-        var project = executeQuery(GET_PROJECT, this::getProject, slug, owner);
-        return project != null ? project.withLayout(getLayout(project.id())) : null;
-    }
-
-    public @Nullable Layout getLayout(int projectId) throws SQLException {
-        return executeQuery(GET_LAYOUT, this::getLayout, projectId);
-    }
-
-    public boolean deleteProject(int projectId, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(DELETE_PROJECT, projectId, ownerId) > 0;
-    }
-
-    public List<Project> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) throws SQLException {
-        var projects = executeQuery(GET_PROJECTS, this::getProjects, ownerId, publicOnly, limit, offset);
-        return projects != null ? projects : List.of();
-    }
-
-    private List<Project> getProjects(ResultSet resultSet) throws SQLException {
+    protected List<Project> getProjects(ResultSet resultSet) throws SQLException {
         Project project;
         var projects = new ArrayList<Project>();
         while ((project = getProject(resultSet)) != null) projects.add(project);
         return projects;
     }
 
-    private String generateUniqueSlug(String name) throws SQLException {
-        var base = name.replaceAll("([A-Z])", "-$1").replaceAll("[^a-zA-Z0-9]", "-")
-                .replaceAll("-+", "-").replaceAll("^-|-$", "").toLowerCase();
-        var unique = base;
-        var counter = 1;
-        while (isSlugUsed(unique)) unique = base + "-" + counter++;
-        return unique;
-    }
-
-    public boolean isSlugUsed(String slug) throws SQLException {
-        return Boolean.TRUE.equals(executeQuery(SLUG_USED, resultSet ->
-                resultSet.next() && resultSet.getBoolean(1), slug));
-    }
-
-    public long countProjects(@Nullable String ownerId) throws SQLException {
-        var projects = executeQuery(COUNT_PROJECTS, resultSet -> resultSet.next() ? resultSet.getLong(1) : 0, ownerId);
-        return projects != null ? projects : 0;
-    }
-
-    private @Nullable Project getProject(ResultSet resultSet) throws SQLException {
+    protected @Nullable Project getProject(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) return null;
         var id = resultSet.getInt("id");
         var owner = resultSet.getString("owner");
@@ -134,7 +90,7 @@ public class SQLController {
         return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
     }
 
-    private @Nullable Layout getLayout(ResultSet resultSet) throws SQLException {
+    protected @Nullable Layout getLayout(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) return null;
         var charts = new HashMap<String, Layout.Options>();
         do {

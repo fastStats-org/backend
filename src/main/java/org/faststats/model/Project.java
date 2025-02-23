@@ -26,7 +26,7 @@ public record Project(
         if (layout != null) object.add("layout", layout.toJson());
         if (icon != null) object.addProperty("icon", icon);
         if (previewChart != null) object.addProperty("previewChart", previewChart);
-        if (projectUrl != null) object.addProperty("projectUrl", projectUrl);
+        if (projectUrl != null) object.addProperty("url", projectUrl);
         return object;
     }
 

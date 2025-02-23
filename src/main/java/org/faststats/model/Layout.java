@@ -1,7 +1,6 @@
 package org.faststats.model;
 
 import com.google.gson.JsonObject;
-import org.bson.Document;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -16,23 +15,7 @@ public record Layout(Map<String, Options> charts) {
         return layout;
     }
 
-    public Document toDocument() {
-        var document = new Document();
-        charts.forEach((key, value) -> document.put(key, value.toDocument()));
-        return document;
-    }
-
     public record Options(String name, String type, String color, @Nullable String icon, @Nullable Integer size) {
-        public Document toDocument() {
-            var document = new Document();
-            if (icon != null) document.put("icon", icon);
-            if (size != null) document.put("size", size);
-            document.put("color", color);
-            document.put("name", name);
-            document.put("type", type);
-            return document;
-        }
-
         public JsonObject toJson() {
             var options = new JsonObject();
             if (icon != null) options.addProperty("icon", icon);
