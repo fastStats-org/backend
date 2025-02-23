@@ -8,8 +8,8 @@ import org.faststats.route.project.NoticeRoute;
 import org.faststats.route.project.ProjectRoute;
 import org.faststats.route.project.ProjectsRoute;
 import org.faststats.route.project.RenameRoute;
-import org.faststats.route.project.SettingsRoute;
 import org.faststats.route.project.SlugRoute;
+import org.faststats.route.project.settings.IconSettingsRoute;
 import org.faststats.route.project.settings.SlugSettingsRoute;
 
 public class APIServer {
@@ -26,8 +26,9 @@ public class APIServer {
         ProjectRoute.register(javalin);
         ProjectsRoute.register(javalin);
         RenameRoute.register(javalin);
-        SettingsRoute.register(javalin);
         SlugRoute.register(javalin);
+
+        IconSettingsRoute.register(javalin);
         SlugSettingsRoute.register(javalin);
     }
 

@@ -11,6 +11,11 @@ import java.util.List;
 
 @NullMarked
 public class DatabaseController extends SQLController {
+
+    public static void main(String[] args) throws SQLException {
+        var database = new DatabaseController();
+    }
+
     public Project createProject(String name, String owner, boolean isPrivate) throws SQLException {
         var slug = generateUniqueSlug(name);
         var id = executeUpdate(CREATE_PROJECT, owner, name, slug, isPrivate);
@@ -24,6 +29,10 @@ public class DatabaseController extends SQLController {
     public boolean updateSlug(int projectId, String slug, @Nullable String ownerId) throws SQLException {
         if (!ProjectSettings.isValidSlug(slug)) throw new IllegalArgumentException("Invalid slug: " + slug);
         return executeUpdate(UPDATE_SLUG, slug, projectId, ownerId) > 0;
+    }
+
+    public boolean updateIcon(int projectId, @Nullable String icon, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(UPDATE_ICON, icon, projectId, ownerId) > 0;
     }
 
     @Deprecated(forRemoval = true)
