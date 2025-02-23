@@ -1,5 +1,6 @@
 package org.faststats.controller;
 
+import org.faststats.model.Layout;
 import org.faststats.model.Project;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -15,12 +16,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @NullMarked
 public class SQLController {
     private static final String COUNT_PROJECTS = statement("sql/query/count_projects.sql");
     private static final String CREATE_PROJECT = statement("sql/create_project.sql");
+    private static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
     private static final String GET_PROJECT = statement("sql/query/get_project.sql");
     private static final String SLUG_USED = statement("sql/query/slug_used.sql");
 
@@ -29,7 +32,6 @@ public class SQLController {
     public SQLController() {
         try {
             this.connection = DriverManager.getConnection("jdbc:sqlite:" + new File("data", "saves.db"));
-            createLayoutOptionsTable();
             createLayoutsTable();
             createMetricsTable();
             createProjectsTable();
@@ -38,10 +40,6 @@ public class SQLController {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to connect or setup database", e);
         }
-    }
-
-    private void createLayoutOptionsTable() throws SQLException {
-        executeUpdate(statement("sql/table/layout_options.sql"));
     }
 
     private void createLayoutsTable() throws SQLException {
@@ -74,6 +72,10 @@ public class SQLController {
         return executeQuery(GET_PROJECT, this::getProject, slug, owner);
     }
 
+    public @Nullable Layout getLayout(int projectId) throws SQLException {
+        return executeQuery(GET_LAYOUT, this::getLayout, projectId);
+    }
+
     private String generateUniqueSlug(String name) throws SQLException {
         var base = name.replaceAll("([A-Z0-9])", "-$1").replaceAll("[^a-zA-Z0-9-]", "-")
                 .replaceAll("-+", "-").replaceAll("^-|-$", "").toLowerCase();
@@ -104,6 +106,20 @@ public class SQLController {
         var previewChart = resultSet.getString("preview_chart");
         var projectUrl = resultSet.getString("url");
         return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
+    }
+
+    private @Nullable Layout getLayout(ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) return null;
+        var charts = new HashMap<String, Layout.Options>();
+        do {
+            var name = resultSet.getString("name");
+            var type = resultSet.getString("type");
+            var color = resultSet.getString("color");
+            var icon = resultSet.getString("icon");
+            var size = resultSet.getInt("size");
+            charts.put(name, new Layout.Options(name, type, color, icon, size));
+        } while (resultSet.next());
+        return new Layout(charts);
     }
 
     private static String statement(String file) {
