@@ -35,6 +35,14 @@ public class DatabaseController extends SQLController {
         return executeUpdate(UPDATE_ICON, icon, projectId, ownerId) > 0;
     }
 
+    public boolean updatePreviewChart(int projectId, @Nullable String chart, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(UPDATE_PREVIEW_CHART, chart, projectId, ownerId) > 0;
+    }
+
+    public boolean updateUrl(int projectId, @Nullable String url, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(UPDATE_URL, url, projectId, ownerId) > 0;
+    }
+
     public boolean updateVisibility(int projectId, boolean isPrivate, @Nullable String ownerId) throws SQLException {
         return executeUpdate(UPDATE_VISIBILITY, isPrivate, projectId, ownerId) > 0;
     }

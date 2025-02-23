@@ -1,0 +1,1 @@
+UPDATE projects SET preview_chart = ? WHERE id = ? AND owner = coalesce(?, owner)
