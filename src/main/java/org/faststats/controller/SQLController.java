@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @NullMarked
-public class SQLController {
+class SQLController {
     protected static final String COUNT_PROJECTS = statement("sql/query/count_projects.sql");
     protected static final String CREATE_PROJECT = statement("sql/create_project.sql");
     protected static final String DELETE_PROJECT = statement("sql/delete_project.sql");
@@ -37,47 +37,27 @@ public class SQLController {
 
     protected final Connection connection;
 
-    public SQLController() {
+    protected SQLController() {
         try {
             this.connection = DriverManager.getConnection("jdbc:sqlite:" + new File("data", "saves.db"));
-            createLayoutsTable();
-            createMetricsTable();
-            createProjectsTable();
-            createServersTable();
-            createIndex();
+            executeUpdate(statement("sql/table/layouts.sql"));
+            executeUpdate(statement("sql/table/metrics.sql"));
+            executeUpdate(statement("sql/table/projects.sql"));
+            executeUpdate(statement("sql/table/servers.sql"));
+            executeUpdate(statement("sql/index/metrics.sql"));
         } catch (SQLException e) {
             throw new RuntimeException("Failed to connect or setup database", e);
         }
     }
 
-    private void createLayoutsTable() throws SQLException {
-        executeUpdate(statement("sql/table/layouts.sql"));
-    }
-
-    private void createMetricsTable() throws SQLException {
-        executeUpdate(statement("sql/table/metrics.sql"));
-    }
-
-    private void createProjectsTable() throws SQLException {
-        executeUpdate(statement("sql/table/projects.sql"));
-    }
-
-    private void createServersTable() throws SQLException {
-        executeUpdate(statement("sql/table/servers.sql"));
-    }
-
-    private void createIndex() throws SQLException {
-        executeUpdate(statement("sql/index/metrics.sql"));
-    }
-
-    protected List<Project> getProjects(ResultSet resultSet) throws SQLException {
+    protected List<Project> readProjects(ResultSet resultSet) throws SQLException {
         Project project;
         var projects = new ArrayList<Project>();
-        while ((project = getProject(resultSet)) != null) projects.add(project);
+        while ((project = readProject(resultSet)) != null) projects.add(project);
         return projects;
     }
 
-    protected @Nullable Project getProject(ResultSet resultSet) throws SQLException {
+    protected @Nullable Project readProject(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) return null;
         var id = resultSet.getInt("id");
         var owner = resultSet.getString("owner");
@@ -90,7 +70,7 @@ public class SQLController {
         return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
     }
 
-    protected @Nullable Layout getLayout(ResultSet resultSet) throws SQLException {
+    protected @Nullable Layout readLayout(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) return null;
         var charts = new HashMap<String, Layout.Options>();
         do {
@@ -102,17 +82,6 @@ public class SQLController {
             charts.put(name, new Layout.Options(name, type, color, icon, size));
         } while (resultSet.next());
         return new Layout(charts);
-    }
-
-    private static String statement(String file) {
-        try (var resource = SQLController.class.getClassLoader().getResourceAsStream(file)) {
-            if (resource == null) throw new FileNotFoundException("Resource not found: " + file);
-            try (var reader = new BufferedReader(new InputStreamReader(resource, StandardCharsets.UTF_8))) {
-                return reader.lines().collect(Collectors.joining("\n"));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     @SuppressWarnings("SqlSourceToSinkFlow")
@@ -139,8 +108,19 @@ public class SQLController {
         }
     }
 
+    private static String statement(String file) {
+        try (var resource = SQLController.class.getClassLoader().getResourceAsStream(file)) {
+            if (resource == null) throw new FileNotFoundException("Resource not found: " + file);
+            try (var reader = new BufferedReader(new InputStreamReader(resource, StandardCharsets.UTF_8))) {
+                return reader.lines().collect(Collectors.joining("\n"));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     @FunctionalInterface
-    protected interface ThrowingFunction<T, R> {
+    interface ThrowingFunction<T, R> {
         @Nullable
         R apply(T t) throws SQLException;
 

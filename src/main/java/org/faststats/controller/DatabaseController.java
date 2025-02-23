@@ -34,12 +34,12 @@ public class DatabaseController extends SQLController {
     }
 
     public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
-        var project = executeQuery(GET_PROJECT, this::getProject, slug, owner);
+        var project = executeQuery(GET_PROJECT, this::readProject, slug, owner);
         return project != null ? project.withLayout(getLayout(project.id())) : null;
     }
 
     public @Nullable Layout getLayout(int projectId) throws SQLException {
-        return executeQuery(GET_LAYOUT, this::getLayout, projectId);
+        return executeQuery(GET_LAYOUT, this::readLayout, projectId);
     }
 
     public boolean deleteProject(int projectId, @Nullable String ownerId) throws SQLException {
@@ -47,7 +47,7 @@ public class DatabaseController extends SQLController {
     }
 
     public List<Project> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) throws SQLException {
-        var projects = executeQuery(GET_PROJECTS, this::getProjects, ownerId, publicOnly, limit, offset);
+        var projects = executeQuery(GET_PROJECTS, this::readProjects, ownerId, publicOnly, limit, offset);
         return projects != null ? projects : List.of();
     }
 
