@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class SQLController {
     private static final String COUNT_PROJECTS = statement("sql/query/count_projects.sql");
     private static final String CREATE_PROJECT = statement("sql/create_project.sql");
+    private static final String DELETE_PROJECT = statement("sql/delete_project.sql");
     private static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
     private static final String GET_PROJECT = statement("sql/query/get_project.sql");
     private static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
@@ -78,6 +79,10 @@ public class SQLController {
 
     public @Nullable Layout getLayout(int projectId) throws SQLException {
         return executeQuery(GET_LAYOUT, this::getLayout, projectId);
+    }
+
+    public boolean deleteProject(int projectId, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(DELETE_PROJECT, projectId, ownerId) > 0;
     }
 
     public List<Project> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) throws SQLException {
