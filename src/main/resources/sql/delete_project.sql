@@ -1,0 +1,1 @@
+DELETE FROM projects WHERE id = ? AND owner = coalesce(?, owner)
