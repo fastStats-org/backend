@@ -1,0 +1,1 @@
+UPDATE projects SET slug = ? WHERE id = ? AND owner = coalesce(?, owner)
