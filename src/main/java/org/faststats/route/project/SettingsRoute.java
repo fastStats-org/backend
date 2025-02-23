@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 @NullMarked
+@Deprecated(forRemoval = true)
 public class SettingsRoute {
     public static void register(Javalin javalin) {
         javalin.put("/project/settings/{projectId}", SettingsRoute::settings);
