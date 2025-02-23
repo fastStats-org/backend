@@ -11,10 +11,10 @@ import java.util.concurrent.CompletableFuture;
 @NullMarked
 public class IconSettingsRoute {
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/icon/{projectId}/{icon}", IconSettingsRoute::settings);
+        javalin.put("/project/settings/icon/{projectId}/{icon}", IconSettingsRoute::handle);
     }
 
-    private static void settings(Context context) {
+    private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var icon = context.pathParam("icon");

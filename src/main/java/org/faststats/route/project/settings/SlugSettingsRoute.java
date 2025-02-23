@@ -11,10 +11,10 @@ import java.util.concurrent.CompletableFuture;
 @NullMarked
 public class SlugSettingsRoute {
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/slug/{projectId}/{slug}", SlugSettingsRoute::settings);
+        javalin.put("/project/settings/slug/{projectId}/{slug}", SlugSettingsRoute::handle);
     }
 
-    private static void settings(Context context) {
+    private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var ownerId = context.queryParam("ownerId");

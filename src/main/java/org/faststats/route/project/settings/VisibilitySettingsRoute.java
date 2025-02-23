@@ -11,10 +11,10 @@ import java.util.concurrent.CompletableFuture;
 @NullMarked
 public class VisibilitySettingsRoute {
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/private/{projectId}/{private}", VisibilitySettingsRoute::settings);
+        javalin.put("/project/settings/private/{projectId}/{private}", VisibilitySettingsRoute::handle);
     }
 
-    private static void settings(Context context) {
+    private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var isPrivate = Boolean.parseBoolean(context.pathParam("private"));
