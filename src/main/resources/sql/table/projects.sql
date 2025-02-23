@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS projects
     slug          TEXT    NOT NULL UNIQUE,
     private       BOOLEAN NOT NULL DEFAULT 0,
     icon          TEXT,
-    preview_chart INTEGER,
+    preview_chart TEXT,
     url           TEXT,
     UNIQUE (owner, name)
 )
