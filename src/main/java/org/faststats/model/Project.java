@@ -29,4 +29,8 @@ public record Project(
         if (projectUrl != null) object.addProperty("projectUrl", projectUrl);
         return object;
     }
+
+    public Project withLayout(@Nullable Layout layout) {
+        return new Project(name, ownerId, slug, id, isPrivate, layout, icon, previewChart, projectUrl);
+    }
 }
