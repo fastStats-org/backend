@@ -77,7 +77,7 @@ public class SQLController {
     }
 
     private String generateUniqueSlug(String name) throws SQLException {
-        var base = name.replaceAll("([A-Z0-9])", "-$1").replaceAll("[^a-zA-Z0-9-]", "-")
+        var base = name.replaceAll("([A-Z])", "-$1").replaceAll("[^a-zA-Z0-9]", "-")
                 .replaceAll("-+", "-").replaceAll("^-|-$", "").toLowerCase();
         var unique = base;
         var counter = 1;
