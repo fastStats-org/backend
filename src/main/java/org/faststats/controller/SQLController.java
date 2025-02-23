@@ -149,7 +149,11 @@ public class SQLController {
         try (var preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             for (var i = 0; i < parameters.length; i++)
                 preparedStatement.setObject(i + 1, parameters[i]);
-            return preparedStatement.executeUpdate();
+            var result = preparedStatement.executeUpdate();
+            try (var generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) return generatedKeys.getInt(1);
+            }
+            return result;
         }
     }
 
