@@ -35,6 +35,7 @@ class SQLController {
     @Deprecated(forRemoval = true)
     protected static final String UPDATE_PROJECT = statement("sql/update/update_project.sql");
     protected static final String UPDATE_SLUG = statement("sql/update/update_slug.sql");
+    protected static final String UPDATE_VISIBILITY = statement("sql/update/update_visibility.sql");
 
     protected final Connection connection;
 

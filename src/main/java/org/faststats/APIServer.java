@@ -11,6 +11,7 @@ import org.faststats.route.project.RenameRoute;
 import org.faststats.route.project.SlugRoute;
 import org.faststats.route.project.settings.IconSettingsRoute;
 import org.faststats.route.project.settings.SlugSettingsRoute;
+import org.faststats.route.project.settings.VisibilitySettingsRoute;
 
 public class APIServer {
     private final Javalin javalin = Javalin.create(config -> {
@@ -30,6 +31,7 @@ public class APIServer {
 
         IconSettingsRoute.register(javalin);
         SlugSettingsRoute.register(javalin);
+        VisibilitySettingsRoute.register(javalin);
     }
 
     public void start() {

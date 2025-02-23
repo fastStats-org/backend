@@ -35,6 +35,10 @@ public class DatabaseController extends SQLController {
         return executeUpdate(UPDATE_ICON, icon, projectId, ownerId) > 0;
     }
 
+    public boolean updateVisibility(int projectId, boolean isPrivate, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(UPDATE_VISIBILITY, isPrivate, projectId, ownerId) > 0;
+    }
+
     @Deprecated(forRemoval = true)
     public boolean updateProject(int projectId, ProjectSettings settings, @Nullable String ownerId) throws SQLException {
         return !settings.isEmpty() && settings.isValid() && executeUpdate(UPDATE_PROJECT,
