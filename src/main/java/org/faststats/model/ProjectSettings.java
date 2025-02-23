@@ -5,6 +5,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
+@Deprecated(forRemoval = true)
 public record ProjectSettings(
         @Nullable Boolean isPrivate,
         @Nullable Layout layout,
@@ -21,11 +22,7 @@ public record ProjectSettings(
 
     public boolean isValid() {
         return (previewChart == null || layout == null || layout.charts().containsKey(previewChart))
-               && (slug == null || isValidSlug(slug));
-    }
-
-    public static boolean isValidSlug(String slug) {
-        return slug.matches("^(?=.{3,32}$)[a-z0-9]+(-[a-z0-9]+)*$");
+               && (slug == null || Project.isValidSlug(slug));
     }
 
     public static @Nullable ProjectSettings fromJson(JsonObject settings) {

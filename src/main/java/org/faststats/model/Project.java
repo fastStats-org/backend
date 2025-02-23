@@ -33,4 +33,8 @@ public record Project(
     public Project withLayout(@Nullable Layout layout) {
         return new Project(name, ownerId, slug, id, isPrivate, layout, icon, previewChart, projectUrl);
     }
+
+    public static boolean isValidSlug(String slug) {
+        return slug.matches("^(?=.{3,32}$)[a-z0-9]+(-[a-z0-9]+)*$");
+    }
 }
