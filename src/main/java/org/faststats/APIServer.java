@@ -10,6 +10,7 @@ import org.faststats.route.project.ProjectsRoute;
 import org.faststats.route.project.RenameRoute;
 import org.faststats.route.project.SettingsRoute;
 import org.faststats.route.project.SlugRoute;
+import org.faststats.route.project.settings.SlugSettingsRoute;
 
 public class APIServer {
     private final Javalin javalin = Javalin.create(config -> {
@@ -27,6 +28,7 @@ public class APIServer {
         RenameRoute.register(javalin);
         SettingsRoute.register(javalin);
         SlugRoute.register(javalin);
+        SlugSettingsRoute.register(javalin);
     }
 
     public void start() {
