@@ -69,7 +69,8 @@ public class SQLController {
     }
 
     public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
-        return executeQuery(GET_PROJECT, this::getProject, slug, owner);
+        var project = executeQuery(GET_PROJECT, this::getProject, slug, owner);
+        return project != null ? project.withLayout(getLayout(project.id())) : null;
     }
 
     public @Nullable Layout getLayout(int projectId) throws SQLException {
