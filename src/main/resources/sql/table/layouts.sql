@@ -1,6 +1,10 @@
-CREATE TABLE IF NOT EXISTS layouts
+CREATE TABLE IF NOT EXISTS layout_options
 (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    options_id INTEGER NOT NULL UNIQUE,
-    FOREIGN KEY (options_id) REFERENCES layout_options (id) ON DELETE CASCADE
+    id    INTEGER PRIMARY KEY NOT NULL,
+    name  TEXT                NOT NULL,
+    type  TEXT                NOT NULL,
+    color TEXT                NOT NULL,
+    icon  TEXT,
+    size  INTEGER,
+    FOREIGN KEY (id) REFERENCES projects (id) ON DELETE CASCADE
 )
