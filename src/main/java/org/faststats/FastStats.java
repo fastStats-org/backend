@@ -9,7 +9,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class FastStats {
     public static final Config CONFIG = new GsonFile<>(IO.of("data", "config.json"), new Config(
-            3000, 5000, "mongodb://user:password@mongodb:27017/", "*"
+            3000, 5000, "", "*"
     )).validate().save().getRoot();
 
     public static final DatabaseController DATABASE = new DatabaseController();
