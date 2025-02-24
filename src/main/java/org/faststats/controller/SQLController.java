@@ -32,9 +32,8 @@ class SQLController {
     protected static final String RENAME_PROJECT = statement("sql/update/rename_project.sql");
     protected static final String SLUG_USED = statement("sql/query/slug_used.sql");
     protected static final String UPDATE_ICON = statement("sql/update/update_icon.sql");
+    protected static final String RENAME_CHART = statement("sql/update/rename_chart.sql");
     protected static final String UPDATE_PREVIEW_CHART = statement("sql/update/update_preview_chart.sql");
-    @Deprecated(forRemoval = true)
-    protected static final String UPDATE_PROJECT = statement("sql/update/update_project.sql");
     protected static final String UPDATE_SLUG = statement("sql/update/update_slug.sql");
     protected static final String UPDATE_URL = statement("sql/update/update_url.sql");
     protected static final String UPDATE_VISIBILITY = statement("sql/update/update_visibility.sql");
