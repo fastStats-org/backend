@@ -1,2 +1,2 @@
-### get the data of project with id 1 by a specific user/org
+### get the data of project with the specified slug by the user/org
 GET http://localhost:3000/project/cool-project?ownerId=AVeryCoolDude
