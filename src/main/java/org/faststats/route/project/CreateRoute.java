@@ -26,17 +26,14 @@ public class CreateRoute {
                 var ownerId = body.get("ownerId").getAsString();
                 var name = body.get("name").getAsString();
                 var project = FastStats.DATABASE.createProject(name, ownerId, isPrivate);
-
-                if (project != null) {
-                    context.header("Content-Type", "application/json");
-                    context.result(project.toString());
-                    context.status(200);
-                } else {
-                    context.status(409);
-                }
-            } catch (IllegalStateException | JsonSyntaxException | SQLException e) {
+                context.header("Content-Type", "application/json");
+                context.result(project.toJson().toString());
+                context.status(200);
+            } catch (IllegalStateException | JsonSyntaxException e) {
                 context.result(e.getMessage());
                 context.status(400);
+            } catch (SQLException e) {
+                context.status(409);
             }
         }));
     }
