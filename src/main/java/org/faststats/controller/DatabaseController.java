@@ -2,7 +2,6 @@ package org.faststats.controller;
 
 import org.faststats.model.Layout;
 import org.faststats.model.Project;
-import org.faststats.model.ProjectSettings;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -49,13 +48,6 @@ public class DatabaseController extends SQLController {
 
     public boolean updateVisibility(int projectId, boolean isPrivate, @Nullable String ownerId) throws SQLException {
         return executeUpdate(UPDATE_VISIBILITY, isPrivate, projectId, ownerId) > 0;
-    }
-
-    @Deprecated(forRemoval = true)
-    public boolean updateProject(int projectId, ProjectSettings settings, @Nullable String ownerId) throws SQLException {
-        return !settings.isEmpty() && settings.isValid() && executeUpdate(UPDATE_PROJECT,
-                settings.isPrivate(), settings.icon(), settings.previewChart(),
-                settings.url(), settings.slug(), projectId, ownerId) > 0;
     }
 
     public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
