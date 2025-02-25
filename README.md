@@ -101,7 +101,7 @@ HEAD http://localhost:3000/project/slug/my-cool-project
 
 ---
 
-## **Update Project Icon**
+## Update Project Icon
 
 Updates the icon for a specific project.
 
@@ -131,7 +131,7 @@ Content-Type: application/json
 
 ---
 
-## **Update Preview Chart Settings**
+## Update Preview Chart Settings
 
 Updates the preview chart settings for a specific project.
 
@@ -320,7 +320,7 @@ Lists projects based on filters such as public/private visibility, user, and pag
 
 ---
 
-## **Retrieve a Project**
+## Retrieve a Project
 
 Retrieve a project by its ID.
 
@@ -373,7 +373,7 @@ Retrieve a project by its ID.
 
 ---
 
-## **Delete a Project**
+## Delete a Project
 
 Deletes a project by its ID.
 
