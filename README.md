@@ -17,7 +17,7 @@ Creates a new project with a specified owner and name.
 - **Response Codes**:
     - **200**: Successfully created project
     - **400**: Malformed body
-    - **409**: Duplicate project or slug
+    - **409**: Duplicate project
 - **Body**:
     - Use JSON to specify the initial visibility of the project.
     - if `private` is `true` the project will not be visible
@@ -54,30 +54,29 @@ Content-Type: application/json
 Renames an existing project by its ID.
 
 - **Method**: `PUT`
-- **URL**: `http://localhost:3000/project/rename/{projectId}/{newName}`
+- **URL**: `http://localhost:3000/project/rename/{projectId}/{name}`
 - **Response Codes**:
     - **204**: Successfully renamed project
-    - **304**: Name didn't change
     - **400**: Malformed project id
     - **409**: Duplicate or unknown project
 - **Query Parameters** (optional):
     - **ownerId**: only rename the project if it is owned by the specified user/org
 - **Details**:
     - Replace `{projectId}` with the ID of the project to rename.
-    - Replace `{newName}` with the new name for the project.
+    - Replace `{name}` with the new name for the project.
 
 ### Example
 
 - Rename project with id 1 by the specified user
 
   ```http
-  POST http://localhost:3000/project/rename/1/test test test?ownerId=test
+  PUT http://localhost:3000/project/rename/1/test test test?ownerId=test
   ```
 
 - Rename project with id 1
 
   ```http
-  POST http://localhost:3000/project/rename/1/test test test
+  PUT http://localhost:3000/project/rename/1/test test test
   ```
 
 ---
@@ -102,78 +101,152 @@ HEAD http://localhost:3000/project/slug/my-cool-project
 
 ---
 
-## Update Project Settings
+## **Update Project Icon**
 
-Updates the settings for a project, such as visibility and layout configurations.
+Updates the icon for a specific project.
 
 - **Method**: `PUT`
-- **URL**: `http://localhost:3000/project/settings/{projectId}`
+- **URL**: `http://localhost:3000/project/settings/icon/{projectId}`
 - **Headers**:
     - `Content-Type: application/json`
 - **Response Codes**:
-    - **204**: Successfully updated project
-    - **304**: Settings didn't change
+    - **204**: Successfully updated project icon
+    - **304**: Project not found or no changes were made
     - **400**: Malformed project id or body
-    - **404**: Project not found
 - **Query Parameters** (optional):
     - **ownerId**: only update the project if it is owned by the specified user/org
 - **Body**:
-    - Use JSON to specify settings like `private` visibility and the layout configuration of charts.
+    - Use JSON to specify the new icon for the project.
 
 ### Example
 
-> [!IMPORTANT]
-> This route is not finished yet<br>
-> the `private` setting does work but `layout` doesn't
+```http
+PUT http://localhost:3000/project/settings/icon/1?ownerId=test
+Content-Type: application/json
 
-- Update settings of a project with id 1 by the specified user
+{
+  "icon": "rocket"
+}
+```
+
+---
+
+## **Update Preview Chart Settings**
+
+Updates the preview chart settings for a specific project.
+
+- **Method**: `PUT`
+- **URL**: `http://localhost:3000/project/settings/preview/{projectId}`
+- **Headers**:
+    - `Content-Type: application/json`
+- **Response Codes**:
+    - **204**: Successfully updated preview chart settings
+    - **304**: Project not found or no changes were made
+    - **400**: Malformed project id or body
+- **Query Parameters** (optional):
+    - **ownerId**: only update the project if it is owned by the specified user/org
+- **Body**:
+    - Use JSON to specify the new settings for the preview chart.
+
+### Example
+
+```http
+PUT http://localhost:3000/project/settings/preview/1?ownerId=test
+Content-Type: application/json
+
+{
+  "chart": "total_servers"
+}
+```
+
+---
+
+## Update Project URL Settings
+
+Updates the URL settings for a specific project.
+
+- **Method**: `PUT`
+- **URL**: `http://localhost:3000/project/settings/url/{projectId}`
+- **Headers**:
+    - `Content-Type: application/json`
+- **Response Codes**:
+    - **204**: Successfully updated project URL settings
+    - **304**: Project not found or no changes were made
+    - **400**: Malformed project id or body
+- **Query Parameters** (optional):
+    - **ownerId**: only update the project if it is owned by the specified user/org
+- **Body**:
+    - Use JSON to specify the new URL settings for the project.
+
+### Example
+
+```http
+PUT http://localhost:3000/project/settings/url/1?ownerId=test
+Content-Type: application/json
+
+{
+  "url": "https://new-project-url.example.com"
+}
+```
+
+---
+
+## Update Visibility Settings
+
+Updates the visibility settings for a specific project.
+
+- **Method**: `PUT`
+- **URL**: `http://localhost:3000/project/settings/private/{projectId}/{private}`
+- **Response Codes**:
+    - **204**: Successfully updated visibility settings
+    - **304**: Project not found or no changes were made
+    - **400**: Malformed project id
+- **Query Parameters** (optional):
+    - **ownerId**: only update the project if it is owned by the specified user/org
+
+### Example
+
+- Update a project with id 1 by a specific user/org to private
 
   ```http
-  PUT http://localhost:3000/project/settings/1?ownerId=test
-  Content-Type: application/json
-  
-  {
-   "private": true,
-   "project_url": "https://project.example.com",
-   "icon": "gem",
-   "slug": "test",
-   "layout": {
-     "total_servers": {
-       "name": "Total Servers",
-       "type": "line_chart",
-       "color": "#1da1f2"
-     },
-     "total_players": {
-       "name": "Total Players",
-       "type": "line_chart",
-       "color": "#1da1f2"
-     },
-     "online_mode": {
-       "name": "Online Mode",
-       "type": "pie_chart",
-       "color": "#ffffff"
-     },
-     "server_software": {
-       "name": "Server Software",
-       "type": "pie_chart",
-       "color": "#123456"
-     }
-   }
-  }
+  PUT http://localhost:3000/project/settings/private/1/true?ownerId=test
   ```
 
-- Update settings of a project with id 1
+- Update a project with id 1 to public
 
   ```http
-  PUT http://localhost:3000/project/settings/1
-  Content-Type: application/json
-  
-  {
-    "private": false
-  }
+  PUT http://localhost:3000/project/settings/private/1/false
   ```
 
 ---
+
+## Update Project Slug
+
+Updates the slug for a specific project.
+
+- **Method**: `PUT`
+- **URL**: `http://localhost:3000/project/settings/slug/{projectId}/{slug}`
+- **Response Codes**:
+    - **204**: Successfully updated project slug
+    - **304**: Project not found or no changes were made
+    - **400**: Malformed project id or slug
+- **Query Parameters** (optional):
+    - **ownerId**: only update the project if it is owned by the specified user/org
+- **Slug Pattern**: `^(?=.{3,32}$)[a-z0-9]+(-[a-z0-9]+)*$`
+
+### Example
+
+- Update the slug of a project with id 1:
+
+  ```http
+  PUT http://localhost:3000/project/settings/slug/1/new-slug
+  ```
+
+- Update the slug of a project with id 1 for a specific owner:
+
+  ```http
+  PUT http://localhost:3000/project/settings/slug/1/new-slug?ownerId=test
+  ```
 
 ## List Projects
 
@@ -247,7 +320,7 @@ Lists projects based on filters such as public/private visibility, user, and pag
 
 ---
 
-## 5. **Retrieve a Project**
+## **Retrieve a Project**
 
 Retrieve a project by its ID.
 
@@ -300,7 +373,7 @@ Retrieve a project by its ID.
 
 ---
 
-## 6. **Delete a Project**
+## **Delete a Project**
 
 Deletes a project by its ID.
 
