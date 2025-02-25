@@ -1,5 +1,7 @@
 package org.faststats.route.project.settings;
 
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
@@ -16,18 +18,19 @@ public class IconSettingsRoute {
     private static final Logger LOGGER = LoggerFactory.getLogger(IconSettingsRoute.class);
 
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/icon/{projectId}/{icon}", IconSettingsRoute::handle);
+        javalin.put("/project/settings/icon/{projectId}", IconSettingsRoute::handle);
     }
 
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var icon = context.pathParam("icon");
                 var ownerId = context.queryParam("ownerId");
+                var body = JsonParser.parseString(context.body()).getAsJsonObject();
+                var icon = body.has("icon") ? body.get("icon").getAsString() : null;
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var updated = FastStats.DATABASE.updateIcon(projectId, icon.isBlank() ? null : icon, ownerId);
+                var updated = FastStats.DATABASE.updateIcon(projectId, icon, ownerId);
                 context.status(updated ? 204 : 304);
-            } catch (SQLException e) {
+            } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
                 context.result(e.getMessage());
                 context.status(400);
             }

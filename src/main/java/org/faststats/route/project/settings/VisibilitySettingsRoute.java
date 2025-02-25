@@ -27,7 +27,7 @@ public class VisibilitySettingsRoute {
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
                 var updated = FastStats.DATABASE.updateVisibility(projectId, isPrivate, ownerId);
                 context.status(updated ? 204 : 304);
-            } catch (SQLException e) {
+            } catch (NumberFormatException | SQLException e) {
                 context.result(e.getMessage());
                 context.status(400);
             }

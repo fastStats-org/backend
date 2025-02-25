@@ -1,5 +1,7 @@
 package org.faststats.route.project.settings;
 
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
@@ -16,18 +18,19 @@ public class URLSettingsRoute {
     private static final Logger LOGGER = LoggerFactory.getLogger(URLSettingsRoute.class);
 
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/url/{projectId}/{url}", URLSettingsRoute::handle);
+        javalin.put("/project/settings/url/{projectId}", URLSettingsRoute::handle);
     }
 
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var url = context.pathParam("url");
                 var ownerId = context.queryParam("ownerId");
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var updated = FastStats.DATABASE.updateUrl(projectId, url.isBlank() ? null : url, ownerId);
+                var body = JsonParser.parseString(context.body()).getAsJsonObject();
+                var url = body.has("url") ? body.get("url").getAsString() : null;
+                var updated = FastStats.DATABASE.updateUrl(projectId, url, ownerId);
                 context.status(updated ? 204 : 304);
-            } catch (SQLException e) {
+            } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
                 context.result(e.getMessage());
                 context.status(400);
             }

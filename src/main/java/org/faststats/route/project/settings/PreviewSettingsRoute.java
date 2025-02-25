@@ -1,5 +1,7 @@
 package org.faststats.route.project.settings;
 
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
@@ -16,18 +18,19 @@ public class PreviewSettingsRoute {
     private static final Logger LOGGER = LoggerFactory.getLogger(PreviewSettingsRoute.class);
 
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/preview/{projectId}/{chart}", PreviewSettingsRoute::handle);
+        javalin.put("/project/settings/preview/{projectId}", PreviewSettingsRoute::handle);
     }
 
     private static void handle(Context context) {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
-                var chart = context.pathParam("chart");
                 var ownerId = context.queryParam("ownerId");
+                var body = JsonParser.parseString(context.body()).getAsJsonObject();
+                var chart = body.has("chart") ? body.get("chart").getAsString() : null;
                 var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var updated = FastStats.DATABASE.updatePreviewChart(projectId, chart.isBlank() ? null : chart, ownerId);
+                var updated = FastStats.DATABASE.updatePreviewChart(projectId, chart, ownerId);
                 context.status(updated ? 204 : 304);
-            } catch (SQLException e) {
+            } catch (NumberFormatException |JsonSyntaxException | IllegalStateException | SQLException e) {
                 context.result(e.getMessage());
                 context.status(400);
             }
