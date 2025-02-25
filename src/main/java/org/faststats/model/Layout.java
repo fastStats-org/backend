@@ -1,5 +1,6 @@
 package org.faststats.model;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -27,6 +28,9 @@ public record Layout(Map<String, Options> charts) {
         }
 
         public static Options fromJson(JsonObject options) {
+            Preconditions.checkArgument(options.has("name"), "Name is required");
+            Preconditions.checkArgument(options.has("type"), "Type is required");
+            Preconditions.checkArgument(options.has("color"), "Color is required");
             var name = options.get("name").getAsString();
             var type = options.get("type").getAsString();
             var color = options.get("color").getAsString();

@@ -1,5 +1,6 @@
 package org.faststats.route.project;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
@@ -25,8 +26,8 @@ public class CreateRoute {
         context.future(() -> CompletableFuture.runAsync(() -> {
             try {
                 var body = JsonParser.parseString(context.body()).getAsJsonObject();
-                if (!body.has("name") || !body.has("ownerId")) throw new IllegalStateException();
-
+                Preconditions.checkState(body.has("name"), "Name is required");
+                Preconditions.checkState(body.has("ownerId"), "Owner ID is required");
                 var isPrivate = body.has("private") && body.get("private").getAsBoolean();
                 var ownerId = body.get("ownerId").getAsString();
                 var name = body.get("name").getAsString();
