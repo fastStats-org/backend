@@ -6,6 +6,8 @@ import org.faststats.controller.DatabaseController;
 import org.faststats.model.Config;
 import org.jspecify.annotations.NullMarked;
 
+import java.util.concurrent.Executors;
+
 @NullMarked
 public class FastStats {
     public static final Config CONFIG = new GsonFile<>(IO.of("data", "config.json"), new Config(
@@ -29,7 +31,10 @@ public class FastStats {
     }
 
     private void start() {
-        API_SERVER.start();
-        METRICS_SERVER.start();
+        try (var executor = Executors.newFixedThreadPool(2)) {
+            executor.submit(API_SERVER::start);
+            executor.submit(METRICS_SERVER::start);
+            executor.shutdown();
+        }
     }
 }
