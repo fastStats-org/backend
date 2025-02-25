@@ -37,9 +37,12 @@ public class LayoutSettingsRoute {
 
                 var success = FastStats.DATABASE.createChart(projectId, chart, options, ownerId);
                 context.status(success ? 204 : 304);
-            } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
+            } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
                 context.result(e.getMessage());
                 context.status(400);
+            } catch (SQLException e) {
+                context.result(e.getMessage());
+                context.status(409);
             }
         }).orTimeout(5, TimeUnit.SECONDS).exceptionally(throwable -> {
             LOGGER.error("Failed to handle request", throwable);
