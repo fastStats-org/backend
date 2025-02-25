@@ -4,12 +4,17 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @NullMarked
 public class RenameRoute {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RenameRoute.class);
+
     public static void register(Javalin javalin) {
         javalin.put("/project/rename/{projectId}/{name}", RenameRoute::handle);
     }
@@ -29,6 +34,10 @@ public class RenameRoute {
                 context.result(e.getMessage());
                 context.status(409);
             }
+        }).orTimeout(5, TimeUnit.SECONDS).exceptionally(throwable -> {
+            LOGGER.error("Failed to handle request", throwable);
+            context.status(500).result(throwable.getMessage());
+            return null;
         }));
     }
 }
