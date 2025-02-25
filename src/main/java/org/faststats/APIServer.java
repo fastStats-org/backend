@@ -10,6 +10,7 @@ import org.faststats.route.project.ProjectsRoute;
 import org.faststats.route.project.RenameRoute;
 import org.faststats.route.project.SlugRoute;
 import org.faststats.route.project.settings.IconSettingsRoute;
+import org.faststats.route.project.settings.LayoutSettingsRoute;
 import org.faststats.route.project.settings.PreviewSettingsRoute;
 import org.faststats.route.project.settings.SlugSettingsRoute;
 import org.faststats.route.project.settings.URLSettingsRoute;
@@ -32,6 +33,7 @@ public class APIServer {
         SlugRoute.register(javalin);
 
         IconSettingsRoute.register(javalin);
+        LayoutSettingsRoute.register(javalin);
         PreviewSettingsRoute.register(javalin);
         SlugSettingsRoute.register(javalin);
         URLSettingsRoute.register(javalin);
