@@ -6,7 +6,7 @@ import org.faststats.route.metric.MetricsRoute;
 public class MetricsServer {
     private final Javalin javalin = Javalin.create(config -> {
         config.showJavalinBanner = false;
-        config.useVirtualThreads = true;
+        config.useVirtualThreads = false;
     });
 
     public void registerRoutes() {

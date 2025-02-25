@@ -18,7 +18,7 @@ import org.faststats.route.project.settings.VisibilitySettingsRoute;
 public class APIServer {
     private final Javalin javalin = Javalin.create(config -> {
         config.showJavalinBanner = false;
-        config.useVirtualThreads = true;
+        config.useVirtualThreads = false;
     });
 
     public void registerRoutes() {
