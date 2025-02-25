@@ -35,7 +35,8 @@ public class DatabaseController extends SQLController {
     }
 
     public boolean createChart(int projectId, String chart, Layout.Options options, @Nullable String ownerId) throws SQLException {
-        return false;
+        return executeUpdate(CREATE_CHART, projectId, chart, options.name(), options.type(),
+                options.color(), options.icon(), options.size(), ownerId, projectId) > 0;
     }
 
     public boolean renameChart(int projectId, String chart, String name, @Nullable String ownerId) throws SQLException {

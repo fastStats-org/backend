@@ -1,0 +1,10 @@
+PUT http://localhost:3000/project/settings/layout/new/1?ownerId=tewst
+Content-Type: application/json
+
+{
+  "chart": "test_12",
+  "name": "Test",
+  "type": "line",
+  "color": "green",
+  "icon": "person"
+}
