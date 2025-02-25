@@ -320,6 +320,53 @@ Lists projects based on filters such as public/private visibility, user, and pag
 
 ---
 
+## Count Projects
+
+Returns the total number of projects by a specific owner or global.
+
+- **Method**: `GET`
+- **URL**: `http://localhost:3000/projects/count`
+- **Response Codes**:
+    - **200**: Successfully retrieved projects count
+- **Query Parameters** (optional):
+    - **ownerId**: count only the projects owned by the specified user/org
+- **Details**:
+    - If `ownerId` is not provided, the count will include all projects.
+
+### Example
+
+- Count all projects
+
+  ```http
+  GET http://localhost:3000/projects/count
+  ```
+
+- Count projects of a specific user
+
+  ```http
+  GET http://localhost:3000/projects/count?ownerId=AVeryCoolDude
+  ```
+
+### Example Response
+
+- All projects
+
+  ```json
+  {
+    "count": 24423
+  }
+  ```
+
+- For a specific user
+
+  ```json
+  {
+    "count": 2
+  }
+  ```
+
+---
+
 ## Retrieve a Project
 
 Retrieve a project by its ID.
