@@ -1,36 +1,13 @@
 services:
   backend:
-    depends_on:
-      - mongodb
     stdin_open: true
     tty: true
     build: .
     environment:
-      - MONGODB_URL=mongodb://user:password@mongodb:27017/
       - API_PORT=3000 # REST server for internal use
       - METRICS_PORT=5000 # public metrics server
     ports:
       - "5000:5000"
     restart: always
-    links:
-      - mongodb
     volumes:
-      - .:/src
-  mongodb:
-    image: mongodb/mongodb-community-server:latest
-    restart: always
-    volumes:
-      - mongodb:/data/db
-    # ports:
-    #   - "27017:27017"
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
-    environment:
-      MONGODB_INITDB_ROOT_USERNAME: user
-      MONGODB_INITDB_ROOT_PASSWORD: password
-volumes:
-  mongodb:
+      - .:/app
