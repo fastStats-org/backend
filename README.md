@@ -39,10 +39,10 @@ Content-Type: application/json
 
 ```json
 {
-  "private": false,
-  "projectId": 211,
-  "projectName": "MyCoolNewProject",
+  "id": 211,
+  "name": "MyCoolNewProject",
   "ownerId": "AVeryCoolDude",
+  "private": false,
   "slug": "my-cool-new-project"
 }
 ```
@@ -299,20 +299,20 @@ Lists projects based on filters such as public/private visibility, user, and pag
 ```json
 [
   {
-    "private": false,
-    "projectId": 1,
-    "projectName": "MyCoolNewsProjects",
-    "ownerId": "AVeryCoolDude",
-    "project_url": "https://project.example.com",
     "icon": "gem",
-    "slug": "cool-project"
+    "id": 1,
+    "name": "MyCoolNewsProjects",
+    "ownerId": "AVeryCoolDude",
+    "private": false,
+    "slug": "cool-project",
+    "url": "https://project.example.com"
   },
   {
-    "private": true,
-    "projectId": 4,
-    "projectName": "test test test",
-    "ownerId": "AVeryCoolDude",
     "icon": "white-flag",
+    "id": 4,
+    "name": "test test test",
+    "ownerId": "AVeryCoolDude",
+    "private": true,
     "slug": "test"
   }
 ]
@@ -400,13 +400,11 @@ Retrieve a project by its ID.
 
 ```json
 {
-  "private": false,
-  "projectId": 1,
-  "projectName": "MyCoolNewsProjects",
-  "ownerId": "AVeryCoolDude",
-  "preview_chart": "total_servers",
-  "project_url": "https://project.example.com",
   "icon": "gem",
+  "id": 1,
+  "name": "MyCoolNewsProjects",
+  "ownerId": "AVeryCoolDude",
+  "private": false,
   "slug": "cool-project",
   "layout": {
     "total_servers": {
@@ -414,7 +412,9 @@ Retrieve a project by its ID.
       "type": "line_chart",
       "color": "#1da1f2"
     }
-  }
+  },
+  "previewChart": "total_servers",
+  "url": "https://project.example.com"
 }
 ```
 

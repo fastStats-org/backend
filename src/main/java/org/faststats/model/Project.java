@@ -18,11 +18,11 @@ public record Project(
 ) {
     public JsonObject toJson() {
         var object = new JsonObject();
-        object.addProperty("projectName", name);
+        object.addProperty("id", id);
+        object.addProperty("name", name);
         object.addProperty("ownerId", ownerId);
-        object.addProperty("slug", slug);
-        object.addProperty("projectId", id);
         object.addProperty("private", isPrivate);
+        object.addProperty("slug", slug);
         if (layout != null) object.add("layout", layout.toJson());
         if (icon != null) object.addProperty("icon", icon);
         if (previewChart != null) object.addProperty("previewChart", previewChart);
