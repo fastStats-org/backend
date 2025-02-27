@@ -22,8 +22,8 @@ public record Metric(
 ) {
 
     public static Metric fromJson(JsonObject metric) {
-        Preconditions.checkArgument(metric.has("projectId"), "Project ID is required");
-        Preconditions.checkArgument(metric.has("consumerId"), "Consumer ID is required");
+        Preconditions.checkState(metric.has("projectId"), "Project ID is required");
+        Preconditions.checkState(metric.has("consumerId"), "Consumer ID is required");
         var projectId = metric.get("projectId").getAsInt();
         var consumerId = UUID.fromString(metric.get("consumerId").getAsString());
         var osName = metric.has("osName") ? metric.get("osName").getAsString() : null;

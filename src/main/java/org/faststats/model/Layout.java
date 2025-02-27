@@ -28,9 +28,9 @@ public record Layout(Map<String, Options> charts) {
         }
 
         public static Options fromJson(JsonObject options) {
-            Preconditions.checkArgument(options.has("name"), "Name is required");
-            Preconditions.checkArgument(options.has("type"), "Type is required");
-            Preconditions.checkArgument(options.has("color"), "Color is required");
+            Preconditions.checkState(options.has("name"), "Name is required");
+            Preconditions.checkState(options.has("type"), "Type is required");
+            Preconditions.checkState(options.has("color"), "Color is required");
             var name = options.get("name").getAsString();
             var type = options.get("type").getAsString();
             var color = options.get("color").getAsString();
