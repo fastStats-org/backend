@@ -6,38 +6,28 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+
+import static org.faststats.route.RouteHandler.async;
 
 @NullMarked
 public class URLSettingsRoute {
-    private static final Logger LOGGER = LoggerFactory.getLogger(URLSettingsRoute.class);
-
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/url/{projectId}", URLSettingsRoute::handle);
+        javalin.put("/project/settings/url/{projectId}", async(URLSettingsRoute::handle));
     }
 
     private static void handle(Context context) {
-        context.future(() -> CompletableFuture.runAsync(() -> {
-            try {
-                var ownerId = context.queryParam("ownerId");
-                var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var body = JsonParser.parseString(context.body()).getAsJsonObject();
-                var url = body.has("url") ? body.get("url").getAsString() : null;
-                var updated = FastStats.DATABASE.updateUrl(projectId, url, ownerId);
-                context.status(updated ? 204 : 304);
-            } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
-                context.result(e.getMessage());
-                context.status(400);
-            }
-        }).orTimeout(5, TimeUnit.SECONDS).exceptionally(throwable -> {
-            LOGGER.error("Failed to handle request", throwable);
-            context.result(throwable.getMessage()).status(500);
-            return null;
-        }));
+        try {
+            var ownerId = context.queryParam("ownerId");
+            var projectId = Integer.parseInt(context.pathParam("projectId"));
+            var body = JsonParser.parseString(context.body()).getAsJsonObject();
+            var url = body.has("url") ? body.get("url").getAsString() : null;
+            var updated = FastStats.DATABASE.updateUrl(projectId, url, ownerId);
+            context.status(updated ? 204 : 304);
+        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
+            context.result(e.getMessage());
+            context.status(400);
+        }
     }
 }

@@ -6,22 +6,18 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.model.Metric;
 import org.jspecify.annotations.NullMarked;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
+
+import static org.faststats.route.RouteHandler.async;
 
 @NullMarked
 public class MetricsRoute {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsRoute.class);
-
     public static void register(Javalin javalin) {
-        javalin.post("/metrics", MetricsRoute::handle);
+        javalin.post("/metrics", async(MetricsRoute::handle));
         javalin.options("/metrics", context -> {
             context.header("Access-Control-Allow-Headers", "Content-Type, Content-Encoding");
             context.header("Access-Control-Allow-Methods", "POST");
@@ -31,20 +27,14 @@ public class MetricsRoute {
     }
 
     private static void handle(Context context) {
-        context.future(() -> CompletableFuture.runAsync(() -> {
-            try {
-                var data = decompressData(context.bodyAsBytes());
-                Metric.fromJson(data);
+        try {
+            var data = decompressData(context.bodyAsBytes());
+            Metric.fromJson(data);
 
-                context.status(200);
-            } catch (IOException | IllegalStateException e) {
-                context.status(400);
-            }
-        }).orTimeout(5, TimeUnit.SECONDS).exceptionally(throwable -> {
-            LOGGER.error("Failed to handle request", throwable);
-            context.result(throwable.getMessage()).status(500);
-            return null;
-        }));
+            context.status(200);
+        } catch (IOException | IllegalStateException e) {
+            context.status(400);
+        }
     }
 
     private static JsonObject decompressData(byte[] data) throws IOException {
