@@ -40,7 +40,7 @@ public class DatabaseController extends SQLController {
     }
 
     public boolean renameChart(int projectId, String chart, String name, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(RENAME_CHART, name, chart, projectId, ownerId) > 0;
+        return executeUpdate(SET_CHART_NAME, name, chart, projectId, ownerId) > 0;
     }
 
     public boolean setChartId(int projectId, String chart, String id, @Nullable String ownerId) throws SQLException {
