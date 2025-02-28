@@ -1,4 +1,4 @@
-PUT http://localhost:3000/project/settings/layout/new/1?ownerId=tewst
+POST http://localhost:3000/project/layout/new/1?ownerId=tewst
 Content-Type: application/json
 
 {
