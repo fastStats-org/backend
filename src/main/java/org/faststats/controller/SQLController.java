@@ -32,6 +32,9 @@ class SQLController {
     protected static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
     protected static final String RENAME_CHART = statement("sql/update/rename_chart.sql");
     protected static final String RENAME_PROJECT = statement("sql/update/rename_project.sql");
+    protected static final String SET_CHART_COLOR = statement("sql/update/set_chart_color.sql");
+    protected static final String SET_CHART_ID = statement("sql/update/set_chart_id.sql");
+    protected static final String SET_CHART_TYPE = statement("sql/update/set_chart_type.sql");
     protected static final String SLUG_USED = statement("sql/query/slug_used.sql");
     protected static final String UPDATE_ICON = statement("sql/update/update_icon.sql");
     protected static final String UPDATE_PREVIEW_CHART = statement("sql/update/update_preview_chart.sql");

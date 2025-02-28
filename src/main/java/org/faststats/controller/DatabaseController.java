@@ -43,6 +43,18 @@ public class DatabaseController extends SQLController {
         return executeUpdate(RENAME_CHART, name, chart, projectId, ownerId) > 0;
     }
 
+    public boolean setChartId(int projectId, String chart, String id, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(SET_CHART_ID, id, chart, projectId, ownerId) > 0;
+    }
+
+    public boolean setChartType(int projectId, String chart, String type, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(SET_CHART_TYPE, type, chart, projectId, ownerId) > 0;
+    }
+
+    public boolean setChartColor(int projectId, String chart, String color, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(SET_CHART_COLOR, color, chart, projectId, ownerId) > 0;
+    }
+
     public boolean updatePreviewChart(int projectId, @Nullable String chart, @Nullable String ownerId) throws SQLException {
         return executeUpdate(UPDATE_PREVIEW_CHART, chart, projectId, ownerId) > 0;
     }
