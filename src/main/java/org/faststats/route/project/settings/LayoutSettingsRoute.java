@@ -8,66 +8,74 @@ import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.faststats.model.Layout;
 import org.jspecify.annotations.NullMarked;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.SQLException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+
+import static org.faststats.route.RouteHandler.async;
 
 @NullMarked
 public class LayoutSettingsRoute {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LayoutSettingsRoute.class);
-
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/layout/new/{projectId}", LayoutSettingsRoute::create);
-        javalin.put("/project/settings/layout/rename/{projectId}/{chart}/{name}", LayoutSettingsRoute::rename);
+        javalin.post("/project/layout/new/{projectId}", async(LayoutSettingsRoute::create));
+        javalin.put("/project/settings/layout/color/{projectId}/{chart}/{color}", async(LayoutSettingsRoute::setColor));
+        javalin.put("/project/settings/layout/id/{projectId}/{chart}/{id}", async(LayoutSettingsRoute::setId));
+        javalin.put("/project/settings/layout/name/{projectId}/{chart}/{name}", async(LayoutSettingsRoute::setName));
+        javalin.put("/project/settings/layout/type/{projectId}/{chart}/{type}", async(LayoutSettingsRoute::setType));
     }
 
     private static void create(Context context) {
-        context.future(() -> CompletableFuture.runAsync(() -> {
-            try {
-                var ownerId = context.queryParam("ownerId");
-                var projectId = Integer.parseInt(context.pathParam("projectId"));
+        try {
+            var ownerId = context.queryParam("ownerId");
+            var projectId = Integer.parseInt(context.pathParam("projectId"));
 
-                var body = JsonParser.parseString(context.body()).getAsJsonObject();
-                Preconditions.checkState(body.has("chart"), "Chart is required");
-                var chart = body.get("chart").getAsString();
-                var options = Layout.Options.fromJson(body);
+            var body = JsonParser.parseString(context.body()).getAsJsonObject();
+            Preconditions.checkState(body.has("chart"), "Chart is required");
+            var chart = body.get("chart").getAsString();
+            var options = Layout.Options.fromJson(body);
 
-                var success = FastStats.DATABASE.createChart(projectId, chart, options, ownerId);
-                context.status(success ? 204 : 304);
-            } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
-                context.result(e.getMessage());
-                context.status(400);
-            } catch (SQLException e) {
-                context.result(e.getMessage());
-                context.status(409);
-            }
-        }).orTimeout(5, TimeUnit.SECONDS).exceptionally(throwable -> {
-            LOGGER.error("Failed to handle request", throwable);
-            context.result(throwable.getMessage()).status(500);
-            return null;
-        }));
+            var success = FastStats.DATABASE.createChart(projectId, chart, options, ownerId);
+            context.status(success ? 204 : 304);
+        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
+            context.result(e.getMessage());
+            context.status(400);
+        } catch (SQLException e) {
+            context.result(e.getMessage());
+            context.status(409);
+        }
     }
 
-    private static void rename(Context context) {
-        context.future(() -> CompletableFuture.runAsync(() -> {
-            try {
-                var ownerId = context.queryParam("ownerId");
-                var chart = context.pathParam("chart");
-                var name = context.pathParam("name");
-                var projectId = Integer.parseInt(context.pathParam("projectId"));
-                var updated = FastStats.DATABASE.renameChart(projectId, chart, name, ownerId);
-                context.status(updated ? 204 : 304);
-            } catch (NumberFormatException | SQLException e) {
-                context.result(e.getMessage());
-                context.status(400);
-            }
-        }).orTimeout(5, TimeUnit.SECONDS).exceptionally(throwable -> {
-            LOGGER.error("Failed to handle request", throwable);
-            context.result(throwable.getMessage()).status(500);
-            return null;
-        }));
+    private static void setComponent(Context context, String component, Setter setter) {
+        try {
+            var ownerId = context.queryParam("ownerId");
+            var chart = context.pathParam("chart");
+            var value = context.pathParam(component);
+            var projectId = Integer.parseInt(context.pathParam("projectId"));
+            context.status(setter.set(projectId, chart, value, ownerId) ? 204 : 304);
+        } catch (NumberFormatException | SQLException e) {
+            context.result(e.getMessage());
+            context.status(400);
+        }
+    }
+
+    private static void setColor(Context context) {
+        setComponent(context, "color", FastStats.DATABASE::setChartColor);
+    }
+
+    private static void setId(Context context) {
+        setComponent(context, "id", FastStats.DATABASE::setChartId);
+    }
+
+    private static void setName(Context context) {
+        setComponent(context, "name", FastStats.DATABASE::renameChart);
+    }
+
+    private static void setType(Context context) {
+        setComponent(context, "type", FastStats.DATABASE::setChartType);
+    }
+
+    @FunctionalInterface
+    private interface Setter {
+        boolean set(int projectId, String chart, String parameter, @Nullable String ownerId) throws SQLException;
     }
 }
