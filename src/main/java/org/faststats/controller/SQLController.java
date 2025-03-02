@@ -88,7 +88,7 @@ class SQLController {
             var type = resultSet.getString("type");
             var color = resultSet.getString("color");
             var icon = resultSet.getString("icon");
-            var size = resultSet.getInt("size");
+            var size = (Integer) resultSet.getObject("size");
             charts.put(name, new Layout.Options(name, type, color, icon, size));
         } while (resultSet.next());
         return new Layout(charts);
