@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS projects
     icon          TEXT,
     preview_chart TEXT,
     url           TEXT,
+    FOREIGN KEY (id, preview_chart) REFERENCES layouts (id, chart),
     UNIQUE (owner, name)
 )
