@@ -104,14 +104,23 @@ class SQLController {
 
     @SuppressWarnings("SqlSourceToSinkFlow")
     protected int executeUpdate(String query, @Nullable Object... parameters) throws SQLException {
+        try (var preparedStatement = connection.prepareStatement(query)) {
+            for (var i = 0; i < parameters.length; i++)
+                preparedStatement.setObject(i + 1, parameters[i]);
+            return preparedStatement.executeUpdate();
+        }
+    }
+
+    @SuppressWarnings("SqlSourceToSinkFlow")
+    protected int executeUpdateGetKey(String query, @Nullable Object... parameters) throws SQLException {
         try (var preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             for (var i = 0; i < parameters.length; i++)
                 preparedStatement.setObject(i + 1, parameters[i]);
-            var result = preparedStatement.executeUpdate();
+            if (preparedStatement.executeUpdate() == 0) throw new SQLException("No rows affected");
             try (var generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) return generatedKeys.getInt(1);
             }
-            return result;
+            throw new SQLException("Statement returns no generated keys");
         }
     }
 

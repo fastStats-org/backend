@@ -17,7 +17,7 @@ public class DatabaseController extends SQLController {
 
     public Project createProject(String name, String owner, boolean isPrivate) throws SQLException {
         var slug = generateUniqueSlug(name);
-        var id = executeUpdate(CREATE_PROJECT, owner, name, slug, isPrivate);
+        var id = executeUpdateGetKey(CREATE_PROJECT, owner, name, slug, isPrivate);
         return new Project(name, owner, slug, id, isPrivate, null, null, null, null);
     }
 
