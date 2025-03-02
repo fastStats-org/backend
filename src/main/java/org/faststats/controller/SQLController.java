@@ -84,12 +84,13 @@ class SQLController {
         if (!resultSet.next()) return null;
         var charts = new HashMap<String, Layout.Options>();
         do {
+            var chart = resultSet.getString("chart");
             var name = resultSet.getString("name");
             var type = resultSet.getString("type");
             var color = resultSet.getString("color");
             var icon = resultSet.getString("icon");
             var size = (Integer) resultSet.getObject("size");
-            charts.put(name, new Layout.Options(name, type, color, icon, size));
+            charts.put(chart, new Layout.Options(name, type, color, icon, size));
         } while (resultSet.next());
         return new Layout(charts);
     }
