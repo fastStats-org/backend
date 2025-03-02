@@ -23,7 +23,7 @@ public class ProjectRoute {
 
             if (project != null) {
                 context.header("Content-Type", "application/json");
-                context.result(project.toString());
+                context.result(project.toJson().toString());
                 context.status(200);
             } else {
                 context.status(404);
