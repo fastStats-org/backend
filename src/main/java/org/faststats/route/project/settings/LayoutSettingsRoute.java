@@ -67,7 +67,7 @@ public class LayoutSettingsRoute {
     }
 
     private static void setName(Context context) {
-        setComponent(context, "name", FastStats.DATABASE::renameChart);
+        setComponent(context, "name", FastStats.DATABASE::setChartName);
     }
 
     private static void setType(Context context) {
