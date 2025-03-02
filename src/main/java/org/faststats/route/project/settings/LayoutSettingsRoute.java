@@ -19,8 +19,10 @@ public class LayoutSettingsRoute {
     public static void register(Javalin javalin) {
         javalin.post("/project/layout/new/{projectId}", async(LayoutSettingsRoute::create));
         javalin.put("/project/settings/layout/color/{projectId}/{chart}/{color}", async(LayoutSettingsRoute::setColor));
+        javalin.put("/project/settings/layout/icon/{projectId}/{chart}/{icon}", async(LayoutSettingsRoute::setIcon));
         javalin.put("/project/settings/layout/id/{projectId}/{chart}/{id}", async(LayoutSettingsRoute::setId));
         javalin.put("/project/settings/layout/name/{projectId}/{chart}/{name}", async(LayoutSettingsRoute::setName));
+        javalin.put("/project/settings/layout/size/{projectId}/{chart}/{size}", async(LayoutSettingsRoute::setSize));
         javalin.put("/project/settings/layout/type/{projectId}/{chart}/{type}", async(LayoutSettingsRoute::setType));
     }
 
@@ -62,12 +64,21 @@ public class LayoutSettingsRoute {
         setComponent(context, "color", FastStats.DATABASE::setChartColor);
     }
 
+    private static void setIcon(Context context) {
+        setComponent(context, "icon", FastStats.DATABASE::setChartIcon);
+    }
+
     private static void setId(Context context) {
         setComponent(context, "id", FastStats.DATABASE::setChartId);
     }
 
     private static void setName(Context context) {
         setComponent(context, "name", FastStats.DATABASE::setChartName);
+    }
+
+    private static void setSize(Context context) {
+        setComponent(context, "size", (projectId, chart, parameter, ownerId) ->
+                FastStats.DATABASE.setChartSize(projectId, chart, Integer.parseInt(parameter), ownerId));
     }
 
     private static void setType(Context context) {
