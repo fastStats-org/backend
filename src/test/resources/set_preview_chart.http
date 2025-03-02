@@ -1,0 +1,6 @@
+PUT http://localhost:3000/project/settings/preview/1?ownerId=FastStats
+Content-Type: application/json
+
+{
+  "chart": "test_12"
+}
