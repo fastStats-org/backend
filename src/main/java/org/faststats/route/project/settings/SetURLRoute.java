@@ -12,18 +12,18 @@ import java.sql.SQLException;
 import static org.faststats.route.RouteHandler.async;
 
 @NullMarked
-public class PreviewSettingsRoute {
+public class SetURLRoute {
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/preview/{projectId}", async(PreviewSettingsRoute::handle));
+        javalin.put("/project/settings/url/{projectId}", async(SetURLRoute::handle));
     }
 
     private static void handle(Context context) {
         try {
             var ownerId = context.queryParam("ownerId");
-            var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            var chart = body.has("chart") ? body.get("chart").getAsString() : null;
             var projectId = Integer.parseInt(context.pathParam("projectId"));
-            var updated = FastStats.DATABASE.updatePreviewChart(projectId, chart, ownerId);
+            var body = JsonParser.parseString(context.body()).getAsJsonObject();
+            var url = body.has("url") ? body.get("url").getAsString() : null;
+            var updated = FastStats.DATABASE.updateUrl(projectId, url, ownerId);
             context.status(updated ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
             context.result(e.getMessage());

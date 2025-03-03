@@ -12,9 +12,9 @@ import java.sql.SQLException;
 import static org.faststats.route.RouteHandler.async;
 
 @NullMarked
-public class IconSettingsRoute {
+public class SetIconRoute {
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/icon/{projectId}", async(IconSettingsRoute::handle));
+        javalin.put("/project/settings/icon/{projectId}", async(SetIconRoute::handle));
     }
 
     private static void handle(Context context) {

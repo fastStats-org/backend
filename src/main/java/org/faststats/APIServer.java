@@ -6,13 +6,13 @@ import org.faststats.route.project.CreateLayoutRoute;
 import org.faststats.route.project.CreateRoute;
 import org.faststats.route.project.DeleteRoute;
 import org.faststats.route.project.ProjectRoute;
-import org.faststats.route.project.RenameRoute;
 import org.faststats.route.project.SlugRoute;
-import org.faststats.route.project.settings.IconSettingsRoute;
-import org.faststats.route.project.settings.PreviewSettingsRoute;
-import org.faststats.route.project.settings.SlugSettingsRoute;
-import org.faststats.route.project.settings.URLSettingsRoute;
-import org.faststats.route.project.settings.VisibilitySettingsRoute;
+import org.faststats.route.project.settings.SetIconRoute;
+import org.faststats.route.project.settings.SetNameRoute;
+import org.faststats.route.project.settings.SetPreviewRoute;
+import org.faststats.route.project.settings.SetSlugRoute;
+import org.faststats.route.project.settings.SetURLRoute;
+import org.faststats.route.project.settings.SetVisibilityRoute;
 import org.faststats.route.project.settings.layout.LayoutSettingsRoute;
 import org.faststats.route.projects.CountRoute;
 import org.faststats.route.projects.ListRoute;
@@ -28,18 +28,18 @@ public class APIServer {
         CreateRoute.register(javalin);
         DeleteRoute.register(javalin);
         ProjectRoute.register(javalin);
-        RenameRoute.register(javalin);
         SlugRoute.register(javalin);
 
         CountRoute.register(javalin);
         ListRoute.register(javalin);
 
-        IconSettingsRoute.register(javalin);
         LayoutSettingsRoute.register(javalin);
-        PreviewSettingsRoute.register(javalin);
-        SlugSettingsRoute.register(javalin);
-        URLSettingsRoute.register(javalin);
-        VisibilitySettingsRoute.register(javalin);
+        SetIconRoute.register(javalin);
+        SetNameRoute.register(javalin);
+        SetPreviewRoute.register(javalin);
+        SetSlugRoute.register(javalin);
+        SetURLRoute.register(javalin);
+        SetVisibilityRoute.register(javalin);
 
         NoticeRoute.register(javalin);
     }
