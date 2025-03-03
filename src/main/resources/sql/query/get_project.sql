@@ -1,1 +1,4 @@
-SELECT * FROM projects WHERE slug = ? AND owner = coalesce(?, owner)
+SELECT *
+FROM projects
+WHERE slug = ?
+  AND (private = false OR owner = coalesce(?, owner))
