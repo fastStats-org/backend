@@ -1,5 +1,8 @@
 package org.faststats.route.project.settings;
 
+import com.google.common.base.Preconditions;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
@@ -10,19 +13,21 @@ import java.sql.SQLException;
 import static org.faststats.route.RouteHandler.async;
 
 @NullMarked
-public class SlugSettingsRoute {
+public class SetSlugRoute {
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/slug/{projectId}/{slug}", async(SlugSettingsRoute::handle));
+        javalin.put("/project/settings/slug/{projectId}", async(SetSlugRoute::handle));
     }
 
     private static void handle(Context context) {
         try {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
-            var slug = context.pathParam("slug");
+            var body = JsonParser.parseString(context.body()).getAsJsonObject();
+            Preconditions.checkState(body.has("slug"), "Slug is required");
+            var slug = body.get("slug").getAsString();
             var updated = FastStats.DATABASE.updateSlug(projectId, slug, ownerId);
             context.status(updated ? 204 : 304);
-        } catch (IllegalArgumentException | SQLException e) {
+        } catch (IllegalArgumentException | JsonSyntaxException | IllegalStateException | SQLException e) {
             context.result(e.getMessage());
             context.status(400);
         }
