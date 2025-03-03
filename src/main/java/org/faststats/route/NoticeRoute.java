@@ -1,4 +1,4 @@
-package org.faststats.route.project;
+package org.faststats.route;
 
 import io.javalin.Javalin;
 
