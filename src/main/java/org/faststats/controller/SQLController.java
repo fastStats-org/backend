@@ -30,19 +30,19 @@ class SQLController {
     protected static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
     protected static final String GET_PROJECT = statement("sql/query/get_project.sql");
     protected static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
-    protected static final String RENAME_PROJECT = statement("sql/update/rename_project.sql");
     protected static final String SET_CHART_COLOR = statement("sql/update/set_chart_color.sql");
     protected static final String SET_CHART_ICON = statement("sql/update/set_chart_icon.sql");
     protected static final String SET_CHART_ID = statement("sql/update/set_chart_id.sql");
     protected static final String SET_CHART_NAME = statement("sql/update/set_chart_name.sql");
     protected static final String SET_CHART_SIZE = statement("sql/update/set_chart_size.sql");
     protected static final String SET_CHART_TYPE = statement("sql/update/set_chart_type.sql");
+    protected static final String SET_PROJECT_ICON = statement("sql/update/set_project_icon.sql");
+    protected static final String SET_PROJECT_NAME = statement("sql/update/set_project_name.sql");
+    protected static final String SET_PROJECT_PREVIEW_CHART = statement("sql/update/set_project_preview_chart.sql");
+    protected static final String SET_PROJECT_SLUG = statement("sql/update/set_project_slug.sql");
+    protected static final String SET_PROJECT_URL = statement("sql/update/set_project_url.sql");
+    protected static final String SET_PROJECT_VISIBILITY = statement("sql/update/set_project_visibility.sql");
     protected static final String SLUG_USED = statement("sql/query/slug_used.sql");
-    protected static final String UPDATE_ICON = statement("sql/update/update_icon.sql");
-    protected static final String UPDATE_PREVIEW_CHART = statement("sql/update/update_preview_chart.sql");
-    protected static final String UPDATE_SLUG = statement("sql/update/update_slug.sql");
-    protected static final String UPDATE_URL = statement("sql/update/update_url.sql");
-    protected static final String UPDATE_VISIBILITY = statement("sql/update/update_visibility.sql");
 
     protected final Connection connection;
 

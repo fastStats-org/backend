@@ -22,16 +22,16 @@ public class DatabaseController extends SQLController {
     }
 
     public boolean renameProject(int projectId, String name, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(RENAME_PROJECT, name, projectId, ownerId) > 0;
+        return executeUpdate(SET_PROJECT_NAME, name, projectId, ownerId) > 0;
     }
 
     public boolean updateSlug(int projectId, String slug, @Nullable String ownerId) throws SQLException {
         if (!Project.isValidSlug(slug)) throw new IllegalArgumentException("Invalid slug: " + slug);
-        return executeUpdate(UPDATE_SLUG, slug, projectId, ownerId) > 0;
+        return executeUpdate(SET_PROJECT_SLUG, slug, projectId, ownerId) > 0;
     }
 
     public boolean updateIcon(int projectId, @Nullable String icon, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(UPDATE_ICON, icon, projectId, ownerId) > 0;
+        return executeUpdate(SET_PROJECT_ICON, icon, projectId, ownerId) > 0;
     }
 
     public boolean createChart(int projectId, String chart, Layout.Options options, @Nullable String ownerId) throws SQLException {
@@ -64,15 +64,15 @@ public class DatabaseController extends SQLController {
     }
 
     public boolean updatePreviewChart(int projectId, @Nullable String chart, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(UPDATE_PREVIEW_CHART, chart, projectId, ownerId) > 0;
+        return executeUpdate(SET_PROJECT_PREVIEW_CHART, chart, projectId, ownerId) > 0;
     }
 
     public boolean updateUrl(int projectId, @Nullable String url, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(UPDATE_URL, url, projectId, ownerId) > 0;
+        return executeUpdate(SET_PROJECT_URL, url, projectId, ownerId) > 0;
     }
 
     public boolean updateVisibility(int projectId, boolean isPrivate, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(UPDATE_VISIBILITY, isPrivate, projectId, ownerId) > 0;
+        return executeUpdate(SET_PROJECT_VISIBILITY, isPrivate, projectId, ownerId) > 0;
     }
 
     public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
