@@ -1,4 +1,4 @@
-package org.faststats.route.project.layout;
+package org.faststats.route.project;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonParser;
