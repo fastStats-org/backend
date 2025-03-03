@@ -37,4 +37,8 @@ public record Project(
     public static boolean isValidSlug(String slug) {
         return slug.matches("^(?=.{3,32}$)[a-z0-9]+(-[a-z0-9]+)*$");
     }
+
+    public static boolean isValidChartId(String id) {
+        return id.matches("^(?!.*__)[a-z0-9][a-z0-9_]{2,30}[a-z0-9]$");
+    }
 }
