@@ -1,0 +1,15 @@
+### rename project with id 1 if it is owned by a specific user/org
+PUT http://localhost:3000/project/settings/name/1?ownerId=test
+Content-Type: application/json
+
+{
+  "name": "test test test"
+}
+
+### rename project with id 1
+PUT http://localhost:3000/project/settings/name/1
+Content-Type: application/json
+
+{
+  "name": "test test test"
+}
