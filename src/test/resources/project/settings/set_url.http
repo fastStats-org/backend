@@ -1,0 +1,6 @@
+PUT http://localhost:3000/project/settings/url/1?ownerId=FastStats
+Content-Type: application/json
+
+{
+  "url": "https://test.project.com"
+}
