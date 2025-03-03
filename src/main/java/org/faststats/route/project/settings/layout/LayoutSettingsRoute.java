@@ -55,7 +55,7 @@ public class LayoutSettingsRoute {
             var value = FastStats.nullable(body, component, transformer);
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             context.status(setter.set(projectId, chart, value, ownerId) ? 204 : 304);
-        } catch (NumberFormatException | SQLException e) {
+        } catch (IllegalArgumentException | IllegalStateException | SQLException e) {
             context.result(e.getMessage());
             context.status(400);
         }
