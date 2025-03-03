@@ -1,5 +1,6 @@
 package org.faststats.route.project.settings;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
@@ -20,9 +21,9 @@ public class SetPreviewRoute {
     private static void handle(Context context) {
         try {
             var ownerId = context.queryParam("ownerId");
-            var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            var chart = body.has("chart") ? body.get("chart").getAsString() : null;
             var projectId = Integer.parseInt(context.pathParam("projectId"));
+            var body = JsonParser.parseString(context.body()).getAsJsonObject();
+            var chart = FastStats.nullable(body, "chart", JsonElement::getAsString);
             var updated = FastStats.DATABASE.updatePreviewChart(projectId, chart, ownerId);
             context.status(updated ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {

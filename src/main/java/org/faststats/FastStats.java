@@ -1,12 +1,16 @@
 package org.faststats;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import core.file.format.GsonFile;
 import core.io.IO;
 import org.faststats.controller.DatabaseController;
 import org.faststats.model.Config;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 
 @NullMarked
 public class FastStats {
@@ -36,5 +40,17 @@ public class FastStats {
             executor.submit(METRICS_SERVER::start);
             executor.shutdown();
         }
+    }
+
+    public static <T> T nonnull(@Nullable JsonObject object, String key, Function<JsonElement, T> transformer) throws IllegalStateException {
+        var element = nullable(object, key, transformer);
+        if (element != null) return element;
+        throw new IllegalStateException("'" + key + "' is required but not defined or null");
+    }
+
+    public static <T> @Nullable T nullable(@Nullable JsonObject object, String key, Function<JsonElement, T> transformer) {
+        var element = object != null ? object.get(key) : null;
+        if (element == null || element.isJsonNull()) return null;
+        return transformer.apply(element);
     }
 }

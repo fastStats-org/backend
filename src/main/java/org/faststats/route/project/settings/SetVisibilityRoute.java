@@ -1,6 +1,6 @@
 package org.faststats.route.project.settings;
 
-import com.google.common.base.Preconditions;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
@@ -23,8 +23,7 @@ public class SetVisibilityRoute {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            Preconditions.checkState(body.has("private"), "Visibility is required");
-            var isPrivate = body.get("private").getAsBoolean();
+            var isPrivate = FastStats.nonnull(body, "private", JsonElement::getAsBoolean);
             var updated = FastStats.DATABASE.updateVisibility(projectId, isPrivate, ownerId);
             context.status(updated ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {

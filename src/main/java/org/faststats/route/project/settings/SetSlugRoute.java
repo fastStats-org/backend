@@ -1,6 +1,6 @@
 package org.faststats.route.project.settings;
 
-import com.google.common.base.Preconditions;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
@@ -23,8 +23,7 @@ public class SetSlugRoute {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            Preconditions.checkState(body.has("slug"), "Slug is required");
-            var slug = body.get("slug").getAsString();
+            var slug = FastStats.nonnull(body, "slug", JsonElement::getAsString);
             var updated = FastStats.DATABASE.updateSlug(projectId, slug, ownerId);
             context.status(updated ? 204 : 304);
         } catch (IllegalArgumentException | JsonSyntaxException | IllegalStateException | SQLException e) {

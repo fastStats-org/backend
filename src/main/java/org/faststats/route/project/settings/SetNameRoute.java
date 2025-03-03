@@ -1,6 +1,6 @@
 package org.faststats.route.project.settings;
 
-import com.google.common.base.Preconditions;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
@@ -23,8 +23,7 @@ public class SetNameRoute {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            Preconditions.checkState(body.has("name"), "Name is required");
-            var name = body.get("name").getAsString();
+            var name = FastStats.nonnull(body, "name", JsonElement::getAsString);
             var renamed = FastStats.DATABASE.renameProject(projectId, name, ownerId);
             context.status(renamed ? 204 : 409);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {

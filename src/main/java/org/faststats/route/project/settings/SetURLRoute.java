@@ -1,5 +1,6 @@
 package org.faststats.route.project.settings;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
@@ -22,7 +23,7 @@ public class SetURLRoute {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            var url = body.has("url") ? body.get("url").getAsString() : null;
+            var url = FastStats.nullable(body, "url", JsonElement::getAsString);
             var updated = FastStats.DATABASE.updateUrl(projectId, url, ownerId);
             context.status(updated ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
