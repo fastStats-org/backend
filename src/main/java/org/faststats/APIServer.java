@@ -3,10 +3,10 @@ package org.faststats;
 import io.javalin.Javalin;
 import org.faststats.route.project.CreateRoute;
 import org.faststats.route.project.DeleteRoute;
-import org.faststats.route.project.ListRoute;
+import org.faststats.route.projects.ListRoute;
 import org.faststats.route.project.NoticeRoute;
 import org.faststats.route.project.ProjectRoute;
-import org.faststats.route.project.ProjectsRoute;
+import org.faststats.route.projects.CountRoute;
 import org.faststats.route.project.RenameRoute;
 import org.faststats.route.project.SlugRoute;
 import org.faststats.route.project.layout.CreateLayoutRoute;
@@ -28,12 +28,13 @@ public class APIServer {
 
         CreateRoute.register(javalin);
         DeleteRoute.register(javalin);
-        ListRoute.register(javalin);
         NoticeRoute.register(javalin);
         ProjectRoute.register(javalin);
-        ProjectsRoute.register(javalin);
         RenameRoute.register(javalin);
         SlugRoute.register(javalin);
+
+        CountRoute.register(javalin);
+        ListRoute.register(javalin);
 
         IconSettingsRoute.register(javalin);
         LayoutSettingsRoute.register(javalin);

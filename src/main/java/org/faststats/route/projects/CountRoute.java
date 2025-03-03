@@ -1,4 +1,4 @@
-package org.faststats.route.project;
+package org.faststats.route.projects;
 
 import com.google.gson.JsonObject;
 import io.javalin.Javalin;
@@ -9,9 +9,9 @@ import java.sql.SQLException;
 
 import static org.faststats.route.RouteHandler.async;
 
-public class ProjectsRoute {
+public class CountRoute {
     public static void register(Javalin javalin) {
-        javalin.get("/projects/count/", async(ProjectsRoute::handle));
+        javalin.get("/projects/count/", async(CountRoute::handle));
     }
 
     private static void handle(Context context) {
