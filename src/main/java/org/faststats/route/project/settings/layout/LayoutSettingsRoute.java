@@ -1,4 +1,4 @@
-package org.faststats.route.project.settings;
+package org.faststats.route.project.settings.layout;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
