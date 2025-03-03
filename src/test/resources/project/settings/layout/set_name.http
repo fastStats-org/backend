@@ -1,0 +1,6 @@
+PUT http://localhost:3000/project/settings/layout/name/1/test?ownerId=FastStats
+Content-Type: application/json
+
+{
+  "name": "Test"
+}
