@@ -14,7 +14,7 @@ import java.util.function.Function;
 @NullMarked
 public class FastStats {
     public static final Config CONFIG = new GsonFile<>(IO.of("data", "config.json"), new Config(
-            3000, 5000, "", "*"
+            4000, 5000, "", "*"
     )).validate().save().getRoot();
 
     public static final DatabaseController DATABASE = new DatabaseController();
