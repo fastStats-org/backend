@@ -4,7 +4,7 @@ services:
     tty: true
     build: .
     ports:
-      - "5000:5000" # should match the metrics port from config
+      - "5000:5000" # the second port must match the metrics port from config
     restart: always
     volumes:
       - ./data:/app/data
