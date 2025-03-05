@@ -45,8 +45,6 @@ public class APIServer {
     }
 
     public void start() {
-        var env = System.getenv("API_PORT");
-        var port = env != null ? Integer.decode(env) : FastStats.CONFIG.apiPort();
-        javalin.start(port);
+        javalin.start(FastStats.CONFIG.apiPort());
     }
 }

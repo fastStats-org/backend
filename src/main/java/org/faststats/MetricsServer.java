@@ -14,8 +14,6 @@ public class MetricsServer {
     }
 
     public void start() {
-        var env = System.getenv("METRICS_PORT");
-        var port = env != null ? Integer.decode(env) : FastStats.CONFIG.metricsPort();
-        javalin.start(port);
+        javalin.start(FastStats.CONFIG.metricsPort());
     }
 }

@@ -3,9 +3,6 @@ services:
     stdin_open: true
     tty: true
     build: .
-    environment:
-      - API_PORT=3000 # REST server for internal use
-      - METRICS_PORT=5000 # public metrics server
     ports:
       - "5000:5000"
     restart: always
