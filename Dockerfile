@@ -1,9 +1,9 @@
 FROM gradle:jdk21-alpine AS build
 
-WORKDIR /home/gradle/src
+WORKDIR /home/gradle
 
-COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts /home/gradle/src/
-COPY --chown=gradle:gradle src /home/gradle/src/src/
+COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts /home/gradle/
+COPY --chown=gradle:gradle src /home/gradle/src/
 
 RUN gradle shadowJar
 FROM openjdk:21-slim
@@ -11,5 +11,5 @@ FROM openjdk:21-slim
 RUN mkdir /app
 WORKDIR /app
 
-COPY --from=build /home/gradle/src/build/libs/*.jar /app/backend.jar
+COPY --from=build /home/gradle/build/libs/*.jar /app/backend.jar
 ENTRYPOINT ["java", "-Xms256M", "-Xmx512M", "-jar", "/app/backend.jar"]
