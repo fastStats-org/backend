@@ -9,7 +9,6 @@ import org.faststats.model.Config;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 @NullMarked
@@ -35,11 +34,8 @@ public class FastStats {
     }
 
     private void start() {
-        try (var executor = Executors.newFixedThreadPool(2)) {
-            executor.submit(API_SERVER::start);
-            executor.submit(METRICS_SERVER::start);
-            executor.shutdown();
-        }
+        API_SERVER.start();
+        METRICS_SERVER.start();
     }
 
     public static <T> T nonnull(@Nullable JsonObject object, String key, Function<JsonElement, T> transformer) throws IllegalStateException {
