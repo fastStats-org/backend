@@ -54,29 +54,42 @@ Content-Type: application/json
 Renames an existing project by its ID.
 
 - **Method**: `PUT`
-- **URL**: `http://localhost:3000/project/rename/{projectId}/{name}`
+- **URL**: `http://localhost:3000/project/settings/name/{projectId}`
+- **Headers**:
+    - `Content-Type: application/json`
 - **Response Codes**:
     - **204**: Successfully renamed project
-    - **400**: Malformed project id
+    - **400**: Malformed project id or body
     - **409**: Duplicate or unknown project
 - **Query Parameters** (optional):
     - **ownerId**: only rename the project if it is owned by the specified user/org
 - **Details**:
     - Replace `{projectId}` with the ID of the project to rename.
-    - Replace `{name}` with the new name for the project.
+- **Body**:
+    - Use JSON to specify the new name of the project.
 
 ### Example
 
 - Rename project with id 1 by the specified user
 
   ```http
-  PUT http://localhost:3000/project/rename/1/test test test?ownerId=test
+  PUT http://localhost:3000/project/rename/1?ownerId=test
+  Content-Type: application/json
+  
+  {
+    "name": "test test test"
+  }
   ```
 
 - Rename project with id 1
 
   ```http
-  PUT http://localhost:3000/project/rename/1/test test test
+  PUT http://localhost:3000/project/rename/1
+  Content-Type: application/json
+  
+  {
+    "name": "test test test"
+  }
   ```
 
 ---
