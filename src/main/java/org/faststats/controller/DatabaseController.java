@@ -7,6 +7,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @NullMarked
 public class DatabaseController extends SQLController {
@@ -82,6 +84,13 @@ public class DatabaseController extends SQLController {
 
     public boolean deleteProject(int projectId, @Nullable String ownerId) throws SQLException {
         return executeUpdate(DELETE_PROJECT, projectId, ownerId) > 0;
+    }
+
+    public int getServerId(UUID uuid) throws SQLException {
+        return Objects.requireNonNull(executeQuery(GET_SERVER_ID, result -> {
+            if (result.next()) return result.getInt(1);
+            throw new SQLException("Expected one row, but got none");
+        }, uuid));
     }
 
     public List<Project> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) throws SQLException {
