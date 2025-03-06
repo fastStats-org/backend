@@ -23,31 +23,31 @@ public class LayoutSettingsRoute {
         javalin.put("/project/settings/layout/type/{projectId}/{chart}", async(LayoutSettingsRoute::setType));
     }
 
-    private static void setColor(@NonNull Context context) {
+    private static void setColor(@NonNull Context context) throws SQLException {
         setComponent(context, "color", JsonElement::getAsString, FastStats.DATABASE::setChartColor);
     }
 
-    private static void setIcon(@NonNull Context context) {
+    private static void setIcon(@NonNull Context context) throws SQLException {
         setComponent(context, "icon", JsonElement::getAsString, FastStats.DATABASE::setChartIcon);
     }
 
-    private static void setId(@NonNull Context context) {
+    private static void setId(@NonNull Context context) throws SQLException {
         setComponent(context, "id", JsonElement::getAsString, FastStats.DATABASE::setChartId);
     }
 
-    private static void setName(@NonNull Context context) {
+    private static void setName(@NonNull Context context) throws SQLException {
         setComponent(context, "name", JsonElement::getAsString, FastStats.DATABASE::setChartName);
     }
 
-    private static void setSize(@NonNull Context context) {
+    private static void setSize(@NonNull Context context) throws SQLException {
         setComponent(context, "size", JsonElement::getAsInt, FastStats.DATABASE::setChartSize);
     }
 
-    private static void setType(@NonNull Context context) {
+    private static void setType(@NonNull Context context) throws SQLException {
         setComponent(context, "type", JsonElement::getAsString, FastStats.DATABASE::setChartType);
     }
 
-    private static <T> void setComponent(@NonNull Context context, @NonNull String component, @NonNull Function<JsonElement, T> transformer, @NonNull Setter<T> setter) {
+    private static <T> void setComponent(@NonNull Context context, @NonNull String component, @NonNull Function<JsonElement, T> transformer, @NonNull Setter<T> setter) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var chart = context.pathParam("chart");
@@ -55,7 +55,7 @@ public class LayoutSettingsRoute {
             var value = FastStats.nullable(body, component, transformer);
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             context.status(setter.set(projectId, chart, value, ownerId) ? 204 : 304);
-        } catch (IllegalArgumentException | IllegalStateException | SQLException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             context.result(e.getMessage());
             context.status(400);
         }
