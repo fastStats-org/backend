@@ -18,7 +18,7 @@ public class SetURLRoute {
         javalin.put("/project/settings/url/{projectId}", async(SetURLRoute::handle));
     }
 
-    private static void handle(Context context) {
+    private static void handle(Context context) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
@@ -26,7 +26,7 @@ public class SetURLRoute {
             var url = FastStats.nullable(body, "url", JsonElement::getAsString);
             var updated = FastStats.DATABASE.updateUrl(projectId, url, ownerId);
             context.status(updated ? 204 : 304);
-        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
+        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());
             context.status(400);
         }

@@ -18,7 +18,7 @@ public class SetVisibilityRoute {
         javalin.put("/project/settings/private/{projectId}", async(SetVisibilityRoute::handle));
     }
 
-    private static void handle(Context context) {
+    private static void handle(Context context) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
@@ -26,7 +26,7 @@ public class SetVisibilityRoute {
             var isPrivate = FastStats.nonnull(body, "private", JsonElement::getAsBoolean);
             var updated = FastStats.DATABASE.updateVisibility(projectId, isPrivate, ownerId);
             context.status(updated ? 204 : 304);
-        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
+        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());
             context.status(400);
         }

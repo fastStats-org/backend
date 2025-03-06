@@ -18,7 +18,7 @@ public class SetIconRoute {
         javalin.put("/project/settings/icon/{projectId}", async(SetIconRoute::handle));
     }
 
-    private static void handle(Context context) {
+    private static void handle(Context context) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
@@ -26,7 +26,7 @@ public class SetIconRoute {
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var updated = FastStats.DATABASE.updateIcon(projectId, icon, ownerId);
             context.status(updated ? 204 : 304);
-        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException | SQLException e) {
+        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());
             context.status(400);
         }
