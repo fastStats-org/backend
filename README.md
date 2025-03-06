@@ -156,6 +156,7 @@ Updates the preview chart settings for a specific project.
     - **204**: Successfully updated preview chart settings
     - **304**: Project not found or no changes were made
     - **400**: Malformed project id or body
+    - **404**: Project doesn't contain the given chart
 - **Query Parameters** (optional):
     - **ownerId**: only update the project if it is owned by the specified user/org
 - **Body**:
