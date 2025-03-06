@@ -10,11 +10,6 @@ import java.util.List;
 
 @NullMarked
 public class DatabaseController extends SQLController {
-
-    public static void main(String[] args) throws SQLException {
-        var database = new DatabaseController();
-    }
-
     public Project createProject(String name, String owner, boolean isPrivate) throws SQLException {
         var slug = generateUniqueSlug(name);
         var id = executeUpdateGetKey(CREATE_PROJECT, owner, name, slug, isPrivate);
