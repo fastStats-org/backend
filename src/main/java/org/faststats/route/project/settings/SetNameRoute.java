@@ -26,7 +26,7 @@ public class SetNameRoute {
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
             var name = FastStats.nonnull(body, "name", JsonElement::getAsString);
-            var renamed = FastStats.DATABASE.renameProject(projectId, name, ownerId);
+            var renamed = FastStats.DATABASE.setProjectName(projectId, name, ownerId);
             context.status(renamed ? 204 : 409);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());

@@ -24,7 +24,7 @@ public class SetURLRoute {
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
             var url = FastStats.nullable(body, "url", JsonElement::getAsString);
-            var updated = FastStats.DATABASE.updateUrl(projectId, url, ownerId);
+            var updated = FastStats.DATABASE.setProjectUrl(projectId, url, ownerId);
             context.status(updated ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());

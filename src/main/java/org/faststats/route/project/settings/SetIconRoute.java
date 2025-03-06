@@ -24,7 +24,7 @@ public class SetIconRoute {
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
             var icon = FastStats.nullable(body, "icon", JsonElement::getAsString);
             var projectId = Integer.parseInt(context.pathParam("projectId"));
-            var updated = FastStats.DATABASE.updateIcon(projectId, icon, ownerId);
+            var updated = FastStats.DATABASE.setProjectIcon(projectId, icon, ownerId);
             context.status(updated ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());

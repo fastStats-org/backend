@@ -16,16 +16,16 @@ public class DatabaseController extends SQLController {
         return new Project(name, owner, slug, id, isPrivate, null, null, null, null);
     }
 
-    public boolean renameProject(int projectId, String name, @Nullable String ownerId) throws SQLException {
+    public boolean setProjectName(int projectId, String name, @Nullable String ownerId) throws SQLException {
         return executeUpdate(SET_PROJECT_NAME, name, projectId, ownerId) > 0;
     }
 
-    public boolean updateSlug(int projectId, String slug, @Nullable String ownerId) throws SQLException {
+    public boolean setProjectSlug(int projectId, String slug, @Nullable String ownerId) throws SQLException {
         if (!Project.isValidSlug(slug)) throw new IllegalArgumentException("Invalid slug: " + slug);
         return executeUpdate(SET_PROJECT_SLUG, slug, projectId, ownerId) > 0;
     }
 
-    public boolean updateIcon(int projectId, @Nullable String icon, @Nullable String ownerId) throws SQLException {
+    public boolean setProjectIcon(int projectId, @Nullable String icon, @Nullable String ownerId) throws SQLException {
         return executeUpdate(SET_PROJECT_ICON, icon, projectId, ownerId) > 0;
     }
 
@@ -59,15 +59,15 @@ public class DatabaseController extends SQLController {
         return executeUpdate(SET_CHART_COLOR, color, chart, projectId, ownerId) > 0;
     }
 
-    public boolean updatePreviewChart(int projectId, @Nullable String chart, @Nullable String ownerId) throws SQLException {
+    public boolean setProjectPreviewChart(int projectId, @Nullable String chart, @Nullable String ownerId) throws SQLException {
         return executeUpdate(SET_PROJECT_PREVIEW_CHART, chart, projectId, ownerId) > 0;
     }
 
-    public boolean updateUrl(int projectId, @Nullable String url, @Nullable String ownerId) throws SQLException {
+    public boolean setProjectUrl(int projectId, @Nullable String url, @Nullable String ownerId) throws SQLException {
         return executeUpdate(SET_PROJECT_URL, url, projectId, ownerId) > 0;
     }
 
-    public boolean updateVisibility(int projectId, boolean isPrivate, @Nullable String ownerId) throws SQLException {
+    public boolean setProjectVisibility(int projectId, boolean isPrivate, @Nullable String ownerId) throws SQLException {
         return executeUpdate(SET_PROJECT_VISIBILITY, isPrivate, projectId, ownerId) > 0;
     }
 

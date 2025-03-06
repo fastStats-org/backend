@@ -26,7 +26,7 @@ public class SetSlugRoute {
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
             var slug = FastStats.nonnull(body, "slug", JsonElement::getAsString);
-            var updated = FastStats.DATABASE.updateSlug(projectId, slug, ownerId);
+            var updated = FastStats.DATABASE.setProjectSlug(projectId, slug, ownerId);
             context.status(updated ? 204 : 304);
         } catch (IllegalArgumentException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());
