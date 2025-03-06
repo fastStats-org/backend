@@ -21,9 +21,11 @@ public class DeleteRoute {
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var deleted = FastStats.DATABASE.deleteProject(projectId, ownerId);
             context.status(deleted ? 204 : 404);
-        } catch (NumberFormatException | SQLException e) {
+        } catch (NumberFormatException e) {
             context.result(e.getMessage());
             context.status(400);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
