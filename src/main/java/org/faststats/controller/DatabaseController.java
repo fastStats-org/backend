@@ -52,7 +52,7 @@ public class DatabaseController extends SQLController {
     }
 
     public boolean setChartId(int projectId, String chart, String id, @Nullable String ownerId) throws SQLException {
-        if (!Project.isValidChartId(id)) throw new IllegalArgumentException("Invalid id: " + id);
+        if (!Project.isValidChartId(id)) throw new IllegalArgumentException("Invalid chart id: " + id);
         return executeUpdate(SET_CHART_ID, id, chart, projectId, ownerId) > 0;
     }
 
