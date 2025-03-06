@@ -15,7 +15,7 @@ public class DeleteRoute {
         javalin.delete("/project/delete/{projectId}", async(DeleteRoute::handle));
     }
 
-    private static void handle(Context context) {
+    private static void handle(Context context) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
@@ -24,8 +24,6 @@ public class DeleteRoute {
         } catch (NumberFormatException e) {
             context.result(e.getMessage());
             context.status(400);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 }

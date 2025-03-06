@@ -13,12 +13,8 @@ public class SlugRoute {
         javalin.head("/project/slug/{slug}", async(SlugRoute::handle));
     }
 
-    private static void handle(Context context) {
-        try {
-            var slug = context.pathParam("slug");
-            context.status(FastStats.DATABASE.isSlugUsed(slug) ? 409 : 204);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private static void handle(Context context) throws SQLException {
+        var slug = context.pathParam("slug");
+        context.status(FastStats.DATABASE.isSlugUsed(slug) ? 409 : 204);
     }
 }

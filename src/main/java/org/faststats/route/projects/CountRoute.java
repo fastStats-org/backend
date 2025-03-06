@@ -14,16 +14,12 @@ public class CountRoute {
         javalin.get("/projects/count/", async(CountRoute::handle));
     }
 
-    private static void handle(Context context) {
-        try {
-            var ownerId = context.queryParam("ownerId");
-            var object = new JsonObject();
-            object.addProperty("projects", FastStats.DATABASE.countProjects(ownerId));
-            context.header("Content-Type", "application/json");
-            context.result(object.toString());
-            context.status(200);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private static void handle(Context context) throws SQLException {
+        var ownerId = context.queryParam("ownerId");
+        var object = new JsonObject();
+        object.addProperty("projects", FastStats.DATABASE.countProjects(ownerId));
+        context.header("Content-Type", "application/json");
+        context.result(object.toString());
+        context.status(200);
     }
 }
