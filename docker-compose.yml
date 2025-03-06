@@ -4,6 +4,7 @@ services:
     tty: true
     build: .
     ports:
+      # - "3000:3000" # internal api, uncomment only for testing purposes
       - "5000:5000" # the second port must match the metrics port from config
     restart: always
     volumes:
