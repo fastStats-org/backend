@@ -441,6 +441,7 @@ Deletes a project by its ID.
 - **URL**: `http://localhost:3000/project/delete/{projectId}`
 - **Response Codes**:
     - **204**: Successfully deleted project
+    - **400**: Malformed project id
     - **404**: Project not found
 - **Query Parameters**
     - **ownerId**: only delete the project if it is owned by the specified user/org
