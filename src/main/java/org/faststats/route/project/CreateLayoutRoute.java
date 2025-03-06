@@ -8,10 +8,12 @@ import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.faststats.model.Layout;
 import org.jspecify.annotations.NullMarked;
+import org.sqlite.SQLiteException;
 
 import java.sql.SQLException;
 
 import static org.faststats.route.RouteHandler.async;
+import static org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE;
 
 @NullMarked
 public class CreateLayoutRoute {
@@ -19,7 +21,7 @@ public class CreateLayoutRoute {
         javalin.post("/project/layout/new/{projectId}", async(CreateLayoutRoute::handle));
     }
 
-    private static void handle(Context context) {
+    private static void handle(Context context) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
@@ -34,8 +36,8 @@ public class CreateLayoutRoute {
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());
             context.status(400);
-        } catch (SQLException e) {
-            context.result(e.getMessage());
+        } catch (SQLiteException e) {
+            if (e.getResultCode() != SQLITE_CONSTRAINT_UNIQUE) throw e;
             context.status(409);
         }
     }

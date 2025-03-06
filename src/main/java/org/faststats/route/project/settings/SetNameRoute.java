@@ -7,10 +7,12 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
 import org.jspecify.annotations.NullMarked;
+import org.sqlite.SQLiteException;
 
 import java.sql.SQLException;
 
 import static org.faststats.route.RouteHandler.async;
+import static org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE;
 
 @NullMarked
 public class SetNameRoute {
@@ -18,7 +20,7 @@ public class SetNameRoute {
         javalin.put("/project/settings/name/{projectId}", async(SetNameRoute::handle));
     }
 
-    private static void handle(Context context) {
+    private static void handle(Context context) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
@@ -29,8 +31,8 @@ public class SetNameRoute {
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());
             context.status(400);
-        } catch (SQLException e) {
-            context.result(e.getMessage());
+        } catch (SQLiteException e) {
+            if (e.getResultCode() != SQLITE_CONSTRAINT_UNIQUE) throw e;
             context.status(409);
         }
     }
