@@ -14,9 +14,9 @@ import java.util.Map;
 public record Layout(Map<String, Options> charts) {
     public JsonArray toJson() {
         var layout = new JsonArray();
-        charts.forEach((id, options) -> {
+        charts.forEach((chart, options) -> {
             var json = options.toJson();
-            json.addProperty("id", id);
+            json.addProperty("chart", chart);
             layout.add(json);
         });
         return layout;
