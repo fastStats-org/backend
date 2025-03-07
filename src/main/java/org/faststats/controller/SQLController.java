@@ -56,7 +56,9 @@ class SQLController {
             executeUpdate(statement("sql/table/metrics.sql"));
             executeUpdate(statement("sql/table/projects.sql"));
             executeUpdate(statement("sql/table/servers.sql"));
+            executeUpdate(statement("sql/index/layouts.sql"));
             executeUpdate(statement("sql/index/metrics.sql"));
+            executeUpdate(statement("sql/index/projects.sql"));
             executeUpdate(statement("sql/pragma/foreign_keys.sql"));
         } catch (SQLException e) {
             throw new RuntimeException("Failed to connect or setup database", e);
