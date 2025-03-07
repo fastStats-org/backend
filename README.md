@@ -420,13 +420,14 @@ Retrieve a project by its ID.
   "ownerId": "AVeryCoolDude",
   "private": false,
   "slug": "cool-project",
-  "layout": {
-    "total_servers": {
+  "layout": [
+    {
+      "chart": "total_servers",
       "name": "Total Servers",
       "type": "line_chart",
       "color": "#1da1f2"
     }
-  },
+  ],
   "previewChart": "total_servers",
   "url": "https://project.example.com"
 }
