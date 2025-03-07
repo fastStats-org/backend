@@ -16,12 +16,13 @@ public record Layout(Map<String, Options> charts) {
         return layout;
     }
 
-    public record Options(String name, String type, String color, @Nullable String icon, @Nullable Integer size) {
+    public record Options(String name, String type, String color, int index, @Nullable String icon, @Nullable Integer size) {
         public JsonObject toJson() {
             var options = new JsonObject();
             if (icon != null) options.addProperty("icon", icon);
             if (size != null) options.addProperty("size", size);
             options.addProperty("color", color);
+            options.addProperty("index", index);
             options.addProperty("name", name);
             options.addProperty("type", type);
             return options;
@@ -31,12 +32,14 @@ public record Layout(Map<String, Options> charts) {
             Preconditions.checkState(options.has("name"), "Name is required");
             Preconditions.checkState(options.has("type"), "Type is required");
             Preconditions.checkState(options.has("color"), "Color is required");
+            Preconditions.checkState(options.has("index"), "Index is required");
             var name = options.get("name").getAsString();
             var type = options.get("type").getAsString();
             var color = options.get("color").getAsString();
+            var index = options.get("index").getAsInt();
             var icon = options.has("icon") ? options.get("icon").getAsString() : null;
             var size = options.has("size") ? options.get("size").getAsInt() : null;
-            return new Options(name, type, color, icon, size);
+            return new Options(name, type, color, index, icon, size);
         }
     }
 
