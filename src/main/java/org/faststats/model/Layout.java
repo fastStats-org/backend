@@ -1,6 +1,7 @@
 package org.faststats.model;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.jspecify.annotations.NullMarked;
@@ -11,9 +12,13 @@ import java.util.Map;
 
 @NullMarked
 public record Layout(Map<String, Options> charts) {
-    public JsonObject toJson() {
-        var layout = new JsonObject();
-        charts.forEach((id, options) -> layout.add(id, options.toJson()));
+    public JsonArray toJson() {
+        var layout = new JsonArray();
+        charts.forEach((id, options) -> {
+            var json = options.toJson();
+            json.addProperty("id", id);
+            layout.add(json);
+        });
         return layout;
     }
 
