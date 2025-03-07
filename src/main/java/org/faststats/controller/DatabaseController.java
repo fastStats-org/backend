@@ -54,6 +54,10 @@ public class DatabaseController extends SQLController {
         return executeUpdate(SET_CHART_ID, id, chart, projectId, ownerId) > 0;
     }
 
+    public boolean setChartIndex(int projectId, String chart, int index, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(SET_CHART_INDEX, index, chart, projectId, ownerId) > 0;
+    }
+
     public boolean setChartType(int projectId, String chart, String type, @Nullable String ownerId) throws SQLException {
         return executeUpdate(SET_CHART_TYPE, type, chart, projectId, ownerId) > 0;
     }
