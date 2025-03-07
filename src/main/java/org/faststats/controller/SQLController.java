@@ -70,10 +70,8 @@ class SQLController {
         var projects = new ArrayList<Project>();
         while (resultSet.next()) {
             var project = readProject(resultSet);
-            if (project.previewChart() != null) {
-                var layout = new Layout(Set.of(readLayoutOption(resultSet)));
-                projects.add(project.withLayout(layout));
-            } else projects.add(project);
+            if (project.previewChart() == null) projects.add(project);
+            else projects.add(project.withLayout(new Layout(Set.of(readLayoutOption(resultSet)))));
         }
         return projects;
     }
