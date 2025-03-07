@@ -29,8 +29,8 @@ public class MetricsRoute {
     private static void handle(Context context) {
         try {
             var data = decompressData(context.bodyAsBytes());
-            Metric.fromJson(data);
-
+            var metric = Metric.fromJson(data);
+            //FastStats.DATABASE.insertMetric(metric);
             context.status(200);
         } catch (IOException | IllegalStateException e) {
             context.status(400);

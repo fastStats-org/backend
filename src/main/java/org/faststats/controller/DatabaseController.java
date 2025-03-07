@@ -92,6 +92,11 @@ public class DatabaseController extends SQLController {
         return executeUpdate(DELETE_PROJECT, projectId, ownerId) > 0;
     }
 
+    // public boolean insertMetric(Metric metric) throws SQLException {
+    //     var serverId = metric.consumerId(); // get id from uuid
+    //     return executeUpdate(INSERT_METRIC, serverId, metric.projectId()) > 0;
+    // }
+
     public int getServerId(UUID uuid) throws SQLException {
         return Objects.requireNonNull(executeQuery(GET_SERVER_ID, result -> {
             if (result.next()) return result.getInt(1);
