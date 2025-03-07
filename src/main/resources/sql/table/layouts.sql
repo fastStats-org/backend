@@ -8,5 +8,7 @@ CREATE TABLE IF NOT EXISTS layouts
     icon  TEXT,
     size  INTEGER,
     UNIQUE (id, chart),
+    "index" INTEGER NOT NULL,
+    UNIQUE ("id", "chart"),
     FOREIGN KEY (id) REFERENCES projects (id) ON DELETE CASCADE
 )
