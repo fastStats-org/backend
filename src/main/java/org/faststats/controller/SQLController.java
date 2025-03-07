@@ -36,6 +36,7 @@ class SQLController {
     protected static final String SET_CHART_DIMENSIONS = statement("sql/update/set_chart_dimensions.sql");
     protected static final String SET_CHART_ICON = statement("sql/update/set_chart_icon.sql");
     protected static final String SET_CHART_ID = statement("sql/update/set_chart_id.sql");
+    protected static final String SET_CHART_INDEX = statement("sql/update/set_chart_index.sql");
     protected static final String SET_CHART_NAME = statement("sql/update/set_chart_name.sql");
     protected static final String SET_CHART_TYPE = statement("sql/update/set_chart_type.sql");
     protected static final String SET_PROJECT_ICON = statement("sql/update/set_project_icon.sql");
