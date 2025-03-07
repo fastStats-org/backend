@@ -1,6 +1,7 @@
 package org.faststats.model;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -16,11 +17,18 @@ public record Layout(Map<String, Options> charts) {
         return layout;
     }
 
-    public record Options(String name, String type, String color, int index, @Nullable String icon, @Nullable Integer size) {
+    public record Options(
+            String name,
+            String type,
+            String color,
+            Dimensions dimensions,
+            int index,
+            @Nullable String icon
+    ) {
         public JsonObject toJson() {
             var options = new JsonObject();
             if (icon != null) options.addProperty("icon", icon);
-            if (size != null) options.addProperty("size", size);
+            options.add("dimensions", dimensions.toJson());
             options.addProperty("color", color);
             options.addProperty("index", index);
             options.addProperty("name", name);
@@ -33,13 +41,33 @@ public record Layout(Map<String, Options> charts) {
             Preconditions.checkState(options.has("type"), "Type is required");
             Preconditions.checkState(options.has("color"), "Color is required");
             Preconditions.checkState(options.has("index"), "Index is required");
+            Preconditions.checkState(options.has("dimensions"), "Dimensions are required");
             var name = options.get("name").getAsString();
             var type = options.get("type").getAsString();
             var color = options.get("color").getAsString();
             var index = options.get("index").getAsInt();
             var icon = options.has("icon") ? options.get("icon").getAsString() : null;
-            var size = options.has("size") ? options.get("size").getAsInt() : null;
-            return new Options(name, type, color, index, icon, size);
+            var dimensions = Dimensions.fromJson(options.getAsJsonObject("dimensions"));
+            return new Options(name, type, color, dimensions, index, icon);
+        }
+    }
+
+    public record Dimensions(int width, int height) {
+        public JsonObject toJson() {
+            var dimensions = new JsonObject();
+            dimensions.addProperty("width", width);
+            dimensions.addProperty("height", height);
+            return dimensions;
+        }
+
+        public static Dimensions fromJson(JsonElement element) {
+            Preconditions.checkState(element.isJsonObject(), "Expected json object");
+            var dimensions = element.getAsJsonObject();
+            Preconditions.checkState(dimensions.has("width"), "Width is required");
+            Preconditions.checkState(dimensions.has("height"), "Height is required");
+            var width = dimensions.get("width").getAsInt();
+            var height = dimensions.get("height").getAsInt();
+            return new Dimensions(width, height);
         }
     }
 

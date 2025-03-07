@@ -32,10 +32,10 @@ class SQLController {
     protected static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
     protected static final String GET_SERVER_ID = statement("sql/query/get_server_id.sql");
     protected static final String SET_CHART_COLOR = statement("sql/update/set_chart_color.sql");
+    protected static final String SET_CHART_DIMENSIONS = statement("sql/update/set_chart_dimensions.sql");
     protected static final String SET_CHART_ICON = statement("sql/update/set_chart_icon.sql");
     protected static final String SET_CHART_ID = statement("sql/update/set_chart_id.sql");
     protected static final String SET_CHART_NAME = statement("sql/update/set_chart_name.sql");
-    protected static final String SET_CHART_SIZE = statement("sql/update/set_chart_size.sql");
     protected static final String SET_CHART_TYPE = statement("sql/update/set_chart_type.sql");
     protected static final String SET_PROJECT_ICON = statement("sql/update/set_project_icon.sql");
     protected static final String SET_PROJECT_NAME = statement("sql/update/set_project_name.sql");
@@ -91,8 +91,10 @@ class SQLController {
             var color = resultSet.getString("color");
             var index = resultSet.getInt("index");
             var icon = resultSet.getString("icon");
-            var size = (Integer) resultSet.getObject("size");
-            charts.put(chart, new Layout.Options(name, type, color, index, icon, size));
+            var width = resultSet.getInt("width");
+            var height = resultSet.getInt("height");
+            var dimensions = new Layout.Dimensions(width, height);
+            charts.put(chart, new Layout.Options(name, type, color, dimensions, index, icon));
         } while (resultSet.next());
         return new Layout(charts);
     }
