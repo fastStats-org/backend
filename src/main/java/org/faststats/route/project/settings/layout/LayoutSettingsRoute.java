@@ -23,8 +23,8 @@ public class LayoutSettingsRoute {
         javalin.put("/project/settings/layout/dimensions/{projectId}/{chart}", async(LayoutSettingsRoute::setDimensions));
         javalin.put("/project/settings/layout/icon/{projectId}/{chart}", async(LayoutSettingsRoute::setIcon));
         javalin.put("/project/settings/layout/id/{projectId}/{chart}", async(LayoutSettingsRoute::setId));
-        javalin.put("/project/settings/layout/index/{projectId}/{chart}", async(LayoutSettingsRoute::setIndex));
         javalin.put("/project/settings/layout/name/{projectId}/{chart}", async(LayoutSettingsRoute::setName));
+        javalin.put("/project/settings/layout/position/{projectId}/{chart}", async(LayoutSettingsRoute::setPosition));
         javalin.put("/project/settings/layout/type/{projectId}/{chart}", async(LayoutSettingsRoute::setType));
     }
 
@@ -44,12 +44,12 @@ public class LayoutSettingsRoute {
         setComponent(context, o -> nullable(o, "id", JsonElement::getAsString), FastStats.DATABASE::setChartId);
     }
 
-    private static void setIndex(@NonNull Context context) throws SQLException {
-        setComponent(context, o -> nonnull(o, "index", JsonElement::getAsInt), FastStats.DATABASE::setChartIndex);
-    }
-
     private static void setName(@NonNull Context context) throws SQLException {
         setComponent(context, o -> nullable(o, "name", JsonElement::getAsString), FastStats.DATABASE::setChartName);
+    }
+
+    private static void setPosition(@NonNull Context context) throws SQLException {
+        setComponent(context, o -> nonnull(o, "position", JsonElement::getAsInt), FastStats.DATABASE::setChartPosition);
     }
 
     private static void setType(@NonNull Context context) throws SQLException {

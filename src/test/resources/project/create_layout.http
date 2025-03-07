@@ -10,6 +10,6 @@ Content-Type: application/json
     "width": 1,
     "height": 2
   },
-  "index": 1,
+  "position": 1,
   "icon": "person"
 }

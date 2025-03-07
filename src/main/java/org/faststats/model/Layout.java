@@ -35,7 +35,7 @@ public record Layout(Map<String, Options> charts) {
             if (icon != null) options.addProperty("icon", icon);
             options.add("dimensions", dimensions.toJson());
             options.addProperty("color", color);
-            options.addProperty("index", index);
+            options.addProperty("position", position);
             options.addProperty("name", name);
             options.addProperty("type", type);
             return options;
@@ -45,15 +45,15 @@ public record Layout(Map<String, Options> charts) {
             Preconditions.checkState(options.has("name"), "Name is required");
             Preconditions.checkState(options.has("type"), "Type is required");
             Preconditions.checkState(options.has("color"), "Color is required");
-            Preconditions.checkState(options.has("index"), "Index is required");
+            Preconditions.checkState(options.has("position"), "Position is required");
             Preconditions.checkState(options.has("dimensions"), "Dimensions are required");
             var name = options.get("name").getAsString();
             var type = options.get("type").getAsString();
             var color = options.get("color").getAsString();
-            var index = options.get("index").getAsInt();
+            var position = options.get("position").getAsInt();
             var icon = options.has("icon") ? options.get("icon").getAsString() : null;
             var dimensions = Dimensions.fromJson(options.getAsJsonObject("dimensions"));
-            return new Options(name, type, color, dimensions, index, icon);
+            return new Options(name, type, color, dimensions, position, icon);
         }
     }
 
