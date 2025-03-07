@@ -1,6 +1,5 @@
 package org.faststats.route.project;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
@@ -27,11 +26,9 @@ public class CreateLayoutRoute {
             var projectId = Integer.parseInt(context.pathParam("projectId"));
 
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            Preconditions.checkState(body.has("chart"), "Chart is required");
-            var chart = body.get("chart").getAsString();
             var options = Layout.Options.fromJson(body);
 
-            var success = FastStats.DATABASE.createChart(projectId, chart, options, ownerId);
+            var success = FastStats.DATABASE.createChart(projectId, options, ownerId);
             context.status(success ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             context.result(e.getMessage());

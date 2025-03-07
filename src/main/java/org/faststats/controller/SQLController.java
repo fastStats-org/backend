@@ -17,8 +17,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @NullMarked
@@ -66,14 +67,18 @@ class SQLController {
     }
 
     protected List<Project> readProjects(ResultSet resultSet) throws SQLException {
-        Project project;
         var projects = new ArrayList<Project>();
-        while ((project = readProject(resultSet)) != null) projects.add(project);
+        while (resultSet.next()) {
+            var project = readProject(resultSet);
+            if (project.previewChart() != null) {
+                var layout = new Layout(Set.of(readLayoutOption(resultSet)));
+                projects.add(project.withLayout(layout));
+            } else projects.add(project);
+        }
         return projects;
     }
 
-    protected @Nullable Project readProject(ResultSet resultSet) throws SQLException {
-        if (!resultSet.next()) return null;
+    protected Project readProject(ResultSet resultSet) throws SQLException {
         var id = resultSet.getInt("id");
         var owner = resultSet.getString("owner");
         var name = resultSet.getString("name");
@@ -85,21 +90,22 @@ class SQLController {
         return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
     }
 
+    protected Layout.Options readLayoutOption(ResultSet resultSet) throws SQLException {
+        var chart = resultSet.getString("chart");
+        var name = resultSet.getString("name");
+        var type = resultSet.getString("type");
+        var color = resultSet.getString("color");
+        var position = resultSet.getInt("position");
+        var icon = resultSet.getString("icon");
+        var width = resultSet.getInt("width");
+        var height = resultSet.getInt("height");
+        var dimensions = new Layout.Dimensions(width, height);
+        return new Layout.Options(chart, name, type, color, dimensions, position, icon);
+    }
+
     protected @Nullable Layout readLayout(ResultSet resultSet) throws SQLException {
-        if (!resultSet.next()) return null;
-        var charts = new HashMap<String, Layout.Options>();
-        do {
-            var chart = resultSet.getString("chart");
-            var name = resultSet.getString("name");
-            var type = resultSet.getString("type");
-            var color = resultSet.getString("color");
-            var index = resultSet.getInt("index");
-            var icon = resultSet.getString("icon");
-            var width = resultSet.getInt("width");
-            var height = resultSet.getInt("height");
-            var dimensions = new Layout.Dimensions(width, height);
-            charts.put(chart, new Layout.Options(name, type, color, dimensions, index, icon));
-        } while (resultSet.next());
+        var charts = new HashSet<Layout.Options>();
+        while (resultSet.next()) charts.add(readLayoutOption(resultSet));
         return new Layout(charts);
     }
 

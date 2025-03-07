@@ -32,8 +32,8 @@ public class DatabaseController extends SQLController {
         return executeUpdate(SET_PROJECT_ICON, icon, projectId, ownerId) > 0;
     }
 
-    public boolean createChart(int projectId, String chart, Layout.Options options, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(CREATE_CHART, projectId, chart, options.name(), options.type(),
+    public boolean createChart(int projectId, Layout.Options options, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(CREATE_CHART, projectId, options.chart(), options.name(), options.type(),
                 options.color(), options.dimensions().width(), options.dimensions().height(),
                 options.position(), options.icon(), ownerId, projectId) > 0;
     }
@@ -80,7 +80,7 @@ public class DatabaseController extends SQLController {
     }
 
     public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
-        var project = executeQuery(GET_PROJECT, this::readProject, slug, owner);
+        var project = executeQuery(GET_PROJECT, result -> result.next() ? readProject(result) : null, slug, owner);
         return project != null ? project.withLayout(getLayout(project.id())) : null;
     }
 
