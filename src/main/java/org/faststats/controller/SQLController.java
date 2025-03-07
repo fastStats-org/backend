@@ -77,26 +77,26 @@ class SQLController {
     }
 
     protected Project readProject(ResultSet resultSet) throws SQLException {
-        var id = resultSet.getInt("id");
-        var owner = resultSet.getString("owner");
-        var name = resultSet.getString("name");
-        var slug = resultSet.getString("slug");
-        var isPrivate = resultSet.getBoolean("private");
-        var icon = resultSet.getString("icon");
-        var previewChart = resultSet.getString("preview_chart");
-        var projectUrl = resultSet.getString("url");
+        var id = resultSet.getInt("project_id");
+        var owner = resultSet.getString("project_owner");
+        var name = resultSet.getString("project_name");
+        var slug = resultSet.getString("project_slug");
+        var isPrivate = resultSet.getBoolean("project_private");
+        var icon = resultSet.getString("project_icon");
+        var previewChart = resultSet.getString("project_preview_chart");
+        var projectUrl = resultSet.getString("project_url");
         return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
     }
 
     protected Layout.Options readLayoutOption(ResultSet resultSet) throws SQLException {
-        var chart = resultSet.getString("chart");
-        var name = resultSet.getString("name");
-        var type = resultSet.getString("type");
-        var color = resultSet.getString("color");
-        var position = resultSet.getInt("position");
-        var icon = resultSet.getString("icon");
-        var width = resultSet.getInt("width");
-        var height = resultSet.getInt("height");
+        var chart = resultSet.getString("layout_chart");
+        var name = resultSet.getString("layout_name");
+        var type = resultSet.getString("layout_type");
+        var color = resultSet.getString("layout_color");
+        var position = resultSet.getInt("layout_position");
+        var icon = resultSet.getString("layout_icon");
+        var width = resultSet.getInt("layout_width");
+        var height = resultSet.getInt("layout_height");
         var dimensions = new Layout.Dimensions(width, height);
         return new Layout.Options(chart, name, type, color, dimensions, position, icon);
     }

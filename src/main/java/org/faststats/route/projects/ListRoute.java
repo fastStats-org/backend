@@ -18,7 +18,7 @@ public class ListRoute {
         javalin.get("/projects/list/{offset}/{limit}", async(ListRoute::handle));
     }
 
-    private static void handle(Context context) {
+    private static void handle(Context context) throws SQLException {
         try {
             var param = context.queryParam("publicOnly");
             var publicOnly = param != null ? Boolean.parseBoolean(param) : null;
@@ -33,7 +33,7 @@ public class ListRoute {
             context.header("Content-Type", "application/json");
             context.result(projects.toString());
             context.status(200);
-        } catch (IllegalStateException | JsonSyntaxException | SQLException | NumberFormatException e) {
+        } catch (IllegalStateException | JsonSyntaxException | NumberFormatException e) {
             context.result(e.getMessage());
             context.status(400);
         }

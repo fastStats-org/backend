@@ -15,7 +15,7 @@ public class ProjectRoute {
         javalin.get("/project/{slug}", async(ProjectRoute::handle));
     }
 
-    private static void handle(Context context) {
+    private static void handle(Context context) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var slug = context.pathParam("slug");
@@ -28,7 +28,7 @@ public class ProjectRoute {
             } else {
                 context.status(404);
             }
-        } catch (NumberFormatException | SQLException e) {
+        } catch (NumberFormatException e) {
             context.result(e.getMessage());
             context.status(400);
         }
