@@ -17,10 +17,16 @@ import static org.sqlite.SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE;
 @NullMarked
 public class SetSlugRoute {
     public static void register(Javalin javalin) {
-        javalin.put("/project/settings/slug/{projectId}", async(SetSlugRoute::handle));
+        javalin.head("/project/settings/slug/{slug}", async(SetSlugRoute::checkSlug));
+        javalin.put("/project/settings/slug/{projectId}", async(SetSlugRoute::setSlug));
     }
 
-    private static void handle(Context context) throws SQLException {
+    private static void checkSlug(Context context) throws SQLException {
+        var slug = context.pathParam("slug");
+        context.status(FastStats.DATABASE.isSlugUsed(slug) ? 409 : 204);
+    }
+
+    private static void setSlug(Context context) throws SQLException {
         try {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));

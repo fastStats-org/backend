@@ -99,7 +99,7 @@ Renames an existing project by its ID.
 Checks if a project slug is available for use.
 
 - **Method**: `HEAD`
-- **URL**: `http://localhost:3000/project/slug/{slug}`
+- **URL**: `http://localhost:3000/project/settings/slug/{slug}`
 - **Response Codes**:
     - **204**: Slug is available
     - **409**: Slug is already in use
@@ -109,7 +109,7 @@ Checks if a project slug is available for use.
 ### Example
 
 ```http
-HEAD http://localhost:3000/project/slug/my-cool-project
+HEAD http://localhost:3000/project/settings/slug/my-cool-project
 ```
 
 ---

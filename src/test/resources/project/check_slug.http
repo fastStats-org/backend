@@ -1,2 +1,2 @@
 ### check whether the given slug is already in use
-HEAD http://localhost:3000/project/slug/cool-project
+HEAD http://localhost:3000/project/settings/slug/cool-project
