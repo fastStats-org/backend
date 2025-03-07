@@ -6,7 +6,7 @@ Content-Type: application/json
   "name": "Test",
   "type": "line",
   "color": "green",
-  "dimension": {
+  "dimensions": {
     "width": 1,
     "height": 2
   },
