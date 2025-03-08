@@ -55,6 +55,12 @@ public class DatabaseController extends SQLController {
         return executeUpdate(SET_CHART_ID, id, chart, projectId, ownerId) > 0;
     }
 
+    public boolean updateChartPositions(int projectId, String chart, int position, @Nullable String ownerId) throws SQLException {
+        if (!setChartPosition(projectId, chart, position, ownerId)) return false;
+        executeUpdate(INCREMENT_CHART_POSITIONS, projectId, position, chart, ownerId);
+        return true;
+    }
+
     public boolean setChartPosition(int projectId, String chart, int position, @Nullable String ownerId) throws SQLException {
         return executeUpdate(SET_CHART_POSITION, position, chart, projectId, ownerId) > 0;
     }

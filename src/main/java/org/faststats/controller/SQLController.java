@@ -32,6 +32,7 @@ class SQLController {
     protected static final String GET_PROJECT = statement("sql/query/get_project.sql");
     protected static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
     protected static final String GET_SERVER_ID = statement("sql/query/get_server_id.sql");
+    protected static final String INCREMENT_CHART_POSITIONS = statement("sql/update/increment_chart_positions.sql");
     protected static final String INSERT_METRIC = statement("sql/update/insert_metric.sql");
     protected static final String SET_CHART_COLOR = statement("sql/update/set_chart_color.sql");
     protected static final String SET_CHART_DIMENSIONS = statement("sql/update/set_chart_dimensions.sql");

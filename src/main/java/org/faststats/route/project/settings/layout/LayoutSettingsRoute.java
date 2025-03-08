@@ -49,7 +49,7 @@ public class LayoutSettingsRoute {
     }
 
     private static void setPosition(@NonNull Context context) throws SQLException {
-        setComponent(context, o -> nonnull(o, "position", JsonElement::getAsInt), FastStats.DATABASE::setChartPosition);
+        setComponent(context, o -> nonnull(o, "position", JsonElement::getAsInt), FastStats.DATABASE::updateChartPositions);
     }
 
     private static void setType(@NonNull Context context) throws SQLException {
