@@ -109,8 +109,8 @@ class SQLController {
     }
 
     @SuppressWarnings("SqlSourceToSinkFlow")
-    protected <T> @Nullable T executeQuery(String query, ThrowingFunction<ResultSet, T> mapper, @Nullable Object... parameters) throws SQLException {
-        try (var preparedStatement = connection.prepareStatement(query)) {
+    protected <T> @Nullable T executeQuery(String sql, ThrowingFunction<ResultSet, T> mapper, @Nullable Object... parameters) throws SQLException {
+        try (var preparedStatement = connection.prepareStatement(sql)) {
             for (var i = 0; i < parameters.length; i++)
                 preparedStatement.setObject(i + 1, parameters[i]);
             try (var resultSet = preparedStatement.executeQuery()) {
@@ -120,16 +120,16 @@ class SQLController {
     }
 
     @SuppressWarnings("SqlSourceToSinkFlow")
-    protected int executeUpdate(String query, @Nullable Object... parameters) throws SQLException {
-        try (var statement = connection.prepareStatement(query)) {
+    protected int executeUpdate(String sql, @Nullable Object... parameters) throws SQLException {
+        try (var statement = connection.prepareStatement(sql)) {
             for (var i = 0; i < parameters.length; i++) statement.setObject(i + 1, parameters[i]);
             return statement.executeUpdate();
         }
     }
 
     @SuppressWarnings("SqlSourceToSinkFlow")
-    protected int executeUpdateGetKey(String query, @Nullable Object... parameters) throws SQLException {
-        try (var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+    protected int executeUpdateGetKey(String sql, @Nullable Object... parameters) throws SQLException {
+        try (var statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (var i = 0; i < parameters.length; i++) statement.setObject(i + 1, parameters[i]);
             if (statement.executeUpdate() == 0) throw new SQLException("No rows affected");
             try (var generatedKeys = statement.getGeneratedKeys()) {
