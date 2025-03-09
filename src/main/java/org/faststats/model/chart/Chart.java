@@ -1,22 +1,26 @@
 package org.faststats.model.chart;
 
 import com.google.gson.JsonObject;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Set;
 
+@NullMarked
 public record Chart(
-        String key,
+        String chart,
         int value,
-        long timestamp
+        @Nullable String key,
+        @Nullable Long timestamp
 ) {
 
     public JsonObject toJson() {
         var object = new JsonObject();
-        object.addProperty("key", key);
+        object.addProperty("chart", chart);
+        if (key != null) object.addProperty("key", key);
         object.addProperty("value", value);
-        object.addProperty("timestamp", timestamp);
+        if (timestamp != null) object.addProperty("timestamp", timestamp);
         return object;
     }
 

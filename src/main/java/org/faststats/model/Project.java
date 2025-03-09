@@ -3,11 +3,10 @@ package org.faststats.model;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.faststats.model.chart.Chart;
-import org.faststats.route.metric.ChartDataGen;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -50,10 +49,19 @@ public record Project(
 
     public Project withCharts(@Nullable Set<Chart> charts) {
         // if (Objects.equals(charts, this.charts)) return this;
-        charts = new HashSet<>();
-        charts.addAll(ChartDataGen.generateRandomChartData(5, "random"));
-        charts.addAll(ChartDataGen.generateTimeSeriesData(7, previewChart != null ? previewChart : "players"));
-        charts.addAll(ChartDataGen.generateMultiSeriesData(2, 3));
+        if (charts == null) charts = new LinkedHashSet<>();
+
+        charts.add(new Chart("online_mode", 100, "offline", null));
+        charts.add(new Chart("online_mode", 200, "online", null));
+
+        charts.add(new Chart("players", 5, null, 1L));
+        charts.add(new Chart("players", 6, null, 2L));
+        charts.add(new Chart("players", 10, null, 3L));
+
+        charts.add(new Chart("servers", 12, null, 1L));
+        charts.add(new Chart("servers", 14, null, 2L));
+        charts.add(new Chart("servers", 16, null, 3L));
+
         return new Project(name, ownerId, slug, id, isPrivate, layout, icon, previewChart, projectUrl, charts);
     }
 
