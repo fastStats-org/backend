@@ -1,6 +1,0 @@
-PUT http://localhost:3000/project/settings/layout/position/1/test_12?ownerId=FastStats
-Content-Type: application/json
-
-{
-  "position": 5
-}

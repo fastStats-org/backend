@@ -1,0 +1,9 @@
+PUT http://localhost:3000/project/settings/layout/positions/1?ownerId=FastStats
+Content-Type: application/json
+
+{
+  "test_1": 2,
+  "test_3": 3,
+  "test_4": 4,
+  "test_12": 12
+}

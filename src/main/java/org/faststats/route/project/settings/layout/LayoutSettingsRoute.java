@@ -13,7 +13,6 @@ import org.jspecify.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.function.Function;
 
-import static org.faststats.FastStats.nonnull;
 import static org.faststats.FastStats.nullable;
 import static org.faststats.route.RouteHandler.async;
 
@@ -24,7 +23,7 @@ public class LayoutSettingsRoute {
         javalin.put("/project/settings/layout/icon/{projectId}/{chart}", async(LayoutSettingsRoute::setIcon));
         javalin.put("/project/settings/layout/id/{projectId}/{chart}", async(LayoutSettingsRoute::setId));
         javalin.put("/project/settings/layout/name/{projectId}/{chart}", async(LayoutSettingsRoute::setName));
-        javalin.put("/project/settings/layout/position/{projectId}/{chart}", async(LayoutSettingsRoute::setPosition));
+        javalin.put("/project/settings/layout/positions/{projectId}", async(LayoutSettingsRoute::setPosition));
         javalin.put("/project/settings/layout/type/{projectId}/{chart}", async(LayoutSettingsRoute::setType));
     }
 
@@ -49,7 +48,15 @@ public class LayoutSettingsRoute {
     }
 
     private static void setPosition(@NonNull Context context) throws SQLException {
-        setComponent(context, o -> nonnull(o, "position", JsonElement::getAsInt), FastStats.DATABASE::updateChartPositions);
+        try {
+            var projectId = Integer.parseInt(context.pathParam("projectId"));
+            var ownerId = context.queryParam("ownerId");
+            var positions = Layout.readPositions(JsonParser.parseString(context.body()).getAsJsonObject());
+            context.status(FastStats.DATABASE.setChartPositions(projectId, positions, ownerId) ? 204 : 304);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            context.result(e.getMessage());
+            context.status(400);
+        }
     }
 
     private static void setType(@NonNull Context context) throws SQLException {

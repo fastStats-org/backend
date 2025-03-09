@@ -6,7 +6,9 @@ import com.google.gson.JsonObject;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @NullMarked
@@ -77,5 +79,11 @@ public record Layout(Set<Options> charts) {
         var charts = new HashSet<Options>();
         layout.forEach(entry -> charts.add(Options.fromJson(entry.getAsJsonObject())));
         return charts.isEmpty() ? null : new Layout(charts);
+    }
+
+    public static Map<String, Integer> readPositions(JsonObject object) {
+        var positions = new HashMap<String, Integer>();
+        object.entrySet().forEach(entry -> positions.put(entry.getKey(), entry.getValue().getAsInt()));
+        return positions;
     }
 }

@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -55,14 +56,12 @@ public class DatabaseController extends SQLController {
         return executeUpdate(SET_CHART_ID, id, chart, projectId, ownerId) > 0;
     }
 
-    public boolean updateChartPositions(int projectId, String chart, int position, @Nullable String ownerId) throws SQLException {
-        if (!setChartPosition(projectId, chart, position, ownerId)) return false;
-        executeUpdate(INCREMENT_CHART_POSITIONS, projectId, position, chart, ownerId);
-        return true;
-    }
-
-    public boolean setChartPosition(int projectId, String chart, int position, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(SET_CHART_POSITION, position, chart, projectId, ownerId) > 0;
+    public boolean setChartPositions(int projectId, Map<String, Integer> positions, @Nullable String ownerId) throws SQLException {
+        var success = false;
+        for (var entry : positions.entrySet()) {
+            success |= executeUpdate(SET_CHART_POSITION, entry.getValue(), entry.getKey(), projectId, ownerId) > 0;
+        }
+        return success;
     }
 
     public boolean setChartType(int projectId, String chart, String type, @Nullable String ownerId) throws SQLException {
