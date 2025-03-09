@@ -1,15 +1,5 @@
 ### delete layout of project with id 1 if it is owned by a specific user/org
-DELETE http://localhost:3000/project/layout/delete/1?ownerId=FastStats
-Content-Type: application/json
-
-{
-  "chart": "test_12"
-}
+DELETE http://localhost:3000/project/layout/delete/1/test_12?ownerId=FastStats
 
 ### delete layout of project with id 1
-DELETE http://localhost:3000/project/layout/delete/1
-Content-Type: application/json
-
-{
-  "chart": "test"
-}
+DELETE http://localhost:3000/project/layout/delete/1/test
