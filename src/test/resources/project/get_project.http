@@ -1,2 +1,2 @@
 ### get the data of project with the specified slug by the user/org
-GET http://localhost:3000/project/cool-project?ownerId=AVeryCoolDude
+GET http://localhost:3000/project/backend?ownerId=FastStats
