@@ -18,8 +18,8 @@ public record Chart(
     public JsonObject toJson() {
         var object = new JsonObject();
         object.addProperty("chart", chart);
-        if (key != null) object.addProperty("key", key);
         object.addProperty("value", value);
+        if (key != null) object.addProperty("key", key);
         if (timestamp != null) object.addProperty("timestamp", timestamp);
         return object;
     }

@@ -1,14 +1,13 @@
 package org.faststats.model;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.faststats.model.chart.Chart;
+import org.faststats.model.chart.ChartData;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @NullMarked
 public record Project(
@@ -21,7 +20,7 @@ public record Project(
         @Nullable String icon,
         @Nullable String previewChart,
         @Nullable String projectUrl,
-        @Nullable Set<Chart> charts
+        @Nullable ChartData data
 ) {
     public JsonObject toJson() {
         var object = new JsonObject();
@@ -34,11 +33,7 @@ public record Project(
         if (icon != null) object.addProperty("icon", icon);
         if (previewChart != null) object.addProperty("previewChart", previewChart);
         if (projectUrl != null) object.addProperty("url", projectUrl);
-        if (charts != null) {
-            var array = new JsonArray();
-            charts.forEach(chart -> array.add(chart.toJson()));
-            object.add("charts", array);
-        }
+        if (data != null) object.add("data", data.toJson());
         return object;
     }
 
@@ -47,26 +42,26 @@ public record Project(
         return new Project(name, ownerId, slug, id, isPrivate, layout, icon, previewChart, projectUrl, null);
     }
 
-    public Project withCharts(@Nullable Set<Chart> charts) {
+    public Project withData(@Nullable ChartData data) {
         // if (Objects.equals(charts, this.charts)) return this;
-        if (charts == null) charts = new LinkedHashSet<>();
+        if (data == null) data = new ChartData(new LinkedHashSet<>(), 1000, 2000);
 
-        charts.add(new Chart("online_mode", 100, "Offline", null));
-        charts.add(new Chart("online_mode", 200, "Online", null));
+        data.charts().add(new Chart("online_mode", 100, "Offline", null));
+        data.charts().add(new Chart("online_mode", 200, "Online", null));
 
-        charts.add(new Chart("os", 12, "MacOS", null));
-        charts.add(new Chart("os", 25, "Windows Server", null));
-        charts.add(new Chart("os", 2987345, "Linux", null));
+        data.charts().add(new Chart("os", 12, "MacOS", null));
+        data.charts().add(new Chart("os", 25, "Windows Server", null));
+        data.charts().add(new Chart("os", 2987345, "Linux", null));
 
-        charts.add(new Chart("players", 5, null, 1L));
-        charts.add(new Chart("players", 6, null, 2L));
-        charts.add(new Chart("players", 10, null, 3L));
+        data.charts().add(new Chart("players", 5, null, 1L));
+        data.charts().add(new Chart("players", 6, null, 2L));
+        data.charts().add(new Chart("players", 10, null, 3L));
 
-        charts.add(new Chart("servers", 12, null, 1L));
-        charts.add(new Chart("servers", 14, null, 2L));
-        charts.add(new Chart("servers", 16, null, 3L));
+        data.charts().add(new Chart("servers", 12, null, 1L));
+        data.charts().add(new Chart("servers", 14, null, 2L));
+        data.charts().add(new Chart("servers", 16, null, 3L));
 
-        return new Project(name, ownerId, slug, id, isPrivate, layout, icon, previewChart, projectUrl, charts);
+        return new Project(name, ownerId, slug, id, isPrivate, layout, icon, previewChart, projectUrl, data);
     }
 
     public static boolean isValidSlug(String slug) {

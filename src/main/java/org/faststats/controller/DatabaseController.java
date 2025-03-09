@@ -3,7 +3,7 @@ package org.faststats.controller;
 import com.google.common.base.Preconditions;
 import org.faststats.model.Layout;
 import org.faststats.model.Project;
-import org.faststats.model.chart.Chart;
+import org.faststats.model.chart.ChartData;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @NullMarked
@@ -88,10 +87,10 @@ public class DatabaseController extends SQLController {
 
     public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
         var project = executeQuery(GET_PROJECT, result -> result.next() ? readProject(result) : null, slug, owner);
-        return project != null ? project.withLayout(getLayout(project.id())).withCharts(getCharts(project.id())) : null;
+        return project != null ? project.withLayout(getLayout(project.id())).withData(getData(project.id())) : null;
     }
 
-    private @Nullable Set<Chart> getCharts(int projectId) throws SQLException {
+    private @Nullable ChartData getData(int projectId) throws SQLException {
         return null;
     }
 

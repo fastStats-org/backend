@@ -73,7 +73,7 @@ class SQLController {
             if (project.previewChart() == null) projects.add(project);
             else projects.add(project
                     .withLayout(new Layout(Set.of(readLayoutOption(resultSet))))
-                    .withCharts(null));
+                    .withData(null));
         }
         return projects;
     }
