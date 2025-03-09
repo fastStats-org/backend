@@ -51,8 +51,12 @@ public record Project(
         // if (Objects.equals(charts, this.charts)) return this;
         if (charts == null) charts = new LinkedHashSet<>();
 
-        charts.add(new Chart("online_mode", 100, "offline", null));
-        charts.add(new Chart("online_mode", 200, "online", null));
+        charts.add(new Chart("online_mode", 100, "Offline", null));
+        charts.add(new Chart("online_mode", 200, "Online", null));
+
+        charts.add(new Chart("os", 12, "MacOS", null));
+        charts.add(new Chart("os", 25, "Windows Server", null));
+        charts.add(new Chart("os", 2987345, "Linux", null));
 
         charts.add(new Chart("players", 5, null, 1L));
         charts.add(new Chart("players", 6, null, 2L));
