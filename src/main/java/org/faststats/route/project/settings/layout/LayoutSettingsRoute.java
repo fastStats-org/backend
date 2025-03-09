@@ -51,7 +51,10 @@ public class LayoutSettingsRoute {
         try {
             var projectId = Integer.parseInt(context.pathParam("projectId"));
             var ownerId = context.queryParam("ownerId");
-            var positions = Layout.readPositions(JsonParser.parseString(context.body()).getAsJsonObject());
+            var body = JsonParser.parseString(context.body()).getAsJsonObject();
+            System.out.println(body); // todo: remove debugging
+            var positions = Layout.readPositions(body);
+            System.out.println(positions); // todo: remove debugging
             context.status(FastStats.DATABASE.setChartPositions(projectId, positions, ownerId) ? 204 : 304);
         } catch (IllegalArgumentException | IllegalStateException e) {
             context.result(e.getMessage());
