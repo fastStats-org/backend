@@ -3,6 +3,7 @@ package org.faststats.controller;
 import com.google.common.base.Preconditions;
 import org.faststats.model.Layout;
 import org.faststats.model.Project;
+import org.faststats.model.chart.Chart;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @NullMarked
@@ -17,7 +19,7 @@ public class DatabaseController extends SQLController {
     public Project createProject(String name, String owner, boolean isPrivate) throws SQLException {
         var slug = generateUniqueSlug(name);
         var id = executeUpdateGetKey(CREATE_PROJECT, owner, name, slug, isPrivate);
-        return new Project(name, owner, slug, id, isPrivate, null, null, null, null);
+        return new Project(name, owner, slug, id, isPrivate, null, null, null, null, null);
     }
 
     public boolean setProjectName(int projectId, String name, @Nullable String ownerId) throws SQLException {
@@ -86,7 +88,11 @@ public class DatabaseController extends SQLController {
 
     public @Nullable Project getProject(String slug, @Nullable String owner) throws SQLException {
         var project = executeQuery(GET_PROJECT, result -> result.next() ? readProject(result) : null, slug, owner);
-        return project != null ? project.withLayout(getLayout(project.id())) : null;
+        return project != null ? project.withLayout(getLayout(project.id())).withCharts(getCharts(project.id())) : null;
+    }
+
+    private @Nullable Set<Chart> getCharts(int projectId) throws SQLException {
+        return null;
     }
 
     public @Nullable Layout getLayout(int projectId) throws SQLException {

@@ -71,7 +71,9 @@ class SQLController {
         while (resultSet.next()) {
             var project = readProject(resultSet);
             if (project.previewChart() == null) projects.add(project);
-            else projects.add(project.withLayout(new Layout(Set.of(readLayoutOption(resultSet)))));
+            else projects.add(project
+                    .withLayout(new Layout(Set.of(readLayoutOption(resultSet))))
+                    .withCharts(null));
         }
         return projects;
     }
@@ -85,7 +87,7 @@ class SQLController {
         var icon = resultSet.getString("project_icon");
         var previewChart = resultSet.getString("project_preview_chart");
         var projectUrl = resultSet.getString("project_url");
-        return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
+        return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl, null);
     }
 
     protected Layout.Options readLayoutOption(ResultSet resultSet) throws SQLException {

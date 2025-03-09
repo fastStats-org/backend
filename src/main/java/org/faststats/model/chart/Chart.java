@@ -1,14 +1,23 @@
 package org.faststats.model.chart;
 
-import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Set;
 
-public class Chart {
-    public static Chart fromJson(Type type, JsonElement chart) {
-        return new Chart();
+public record Chart(
+        String key,
+        int value,
+        long timestamp
+) {
+
+    public JsonObject toJson() {
+        var object = new JsonObject();
+        object.addProperty("key", key);
+        object.addProperty("value", value);
+        object.addProperty("timestamp", timestamp);
+        return object;
     }
 
     public enum Type {
