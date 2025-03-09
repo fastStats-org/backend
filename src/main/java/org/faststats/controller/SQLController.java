@@ -28,6 +28,7 @@ class SQLController {
     protected static final String CREATE_CHART = statement("sql/update/create_chart.sql");
     protected static final String CREATE_PROJECT = statement("sql/update/create_project.sql");
     protected static final String DELETE_PROJECT = statement("sql/update/delete_project.sql");
+    protected static final String DELETE_CHART = statement("sql/update/delete_chart.sql");
     protected static final String GET_LAYOUT = statement("sql/query/get_layout.sql");
     protected static final String GET_PROJECT = statement("sql/query/get_project.sql");
     protected static final String GET_PROJECTS = statement("sql/query/get_projects.sql");

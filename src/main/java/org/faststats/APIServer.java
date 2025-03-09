@@ -4,6 +4,7 @@ import io.javalin.Javalin;
 import org.faststats.route.NoticeRoute;
 import org.faststats.route.project.CreateLayoutRoute;
 import org.faststats.route.project.CreateRoute;
+import org.faststats.route.project.DeleteLayoutRoute;
 import org.faststats.route.project.DeleteRoute;
 import org.faststats.route.project.ProjectRoute;
 import org.faststats.route.project.settings.SetIconRoute;
@@ -25,6 +26,7 @@ public class APIServer {
     public void registerRoutes() {
         CreateLayoutRoute.register(javalin);
         CreateRoute.register(javalin);
+        DeleteLayoutRoute.register(javalin);
         DeleteRoute.register(javalin);
         ProjectRoute.register(javalin);
 
