@@ -97,8 +97,8 @@ public class DatabaseController extends SQLController {
         return executeUpdate(DELETE_PROJECT, projectId, ownerId) > 0;
     }
 
-    public boolean deleteChart(int projectId, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(DELETE_CHART, projectId, ownerId) > 0;
+    public boolean deleteChart(int projectId, String chart, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(DELETE_CHART, projectId, chart, ownerId) > 0;
     }
 
     // public boolean insertMetric(Metric metric) throws SQLException {

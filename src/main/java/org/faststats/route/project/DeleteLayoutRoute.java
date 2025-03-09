@@ -1,5 +1,8 @@
 package org.faststats.route.project;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.faststats.FastStats;
@@ -18,9 +21,11 @@ public class DeleteLayoutRoute {
         try {
             var ownerId = context.queryParam("ownerId");
             var projectId = Integer.parseInt(context.pathParam("projectId"));
-            var deleted = FastStats.DATABASE.deleteChart(projectId, ownerId);
+            var body = JsonParser.parseString(context.body()).getAsJsonObject();
+            var chart = FastStats.nonnull(body, "chart", JsonElement::getAsString);
+            var deleted = FastStats.DATABASE.deleteChart(projectId, chart, ownerId);
             context.status(deleted ? 204 : 404);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
             error(context, e, 400);
         }
     }
