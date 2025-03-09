@@ -8,6 +8,7 @@ import org.jspecify.annotations.NullMarked;
 import java.sql.SQLException;
 
 import static org.faststats.route.RouteHandler.async;
+import static org.faststats.route.RouteHandler.error;
 
 @NullMarked
 public class DeleteRoute {
@@ -22,8 +23,7 @@ public class DeleteRoute {
             var deleted = FastStats.DATABASE.deleteProject(projectId, ownerId);
             context.status(deleted ? 204 : 404);
         } catch (NumberFormatException e) {
-            context.result(e.getMessage());
-            context.status(400);
+            error(context, e, 400);
         }
     }
 }

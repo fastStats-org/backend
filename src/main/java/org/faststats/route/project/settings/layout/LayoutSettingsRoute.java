@@ -15,6 +15,7 @@ import java.util.function.Function;
 
 import static org.faststats.FastStats.nullable;
 import static org.faststats.route.RouteHandler.async;
+import static org.faststats.route.RouteHandler.error;
 
 public class LayoutSettingsRoute {
     public static void register(@NonNull Javalin javalin) {
@@ -54,8 +55,7 @@ public class LayoutSettingsRoute {
             var positions = Layout.readPositions(JsonParser.parseString(context.body()).getAsJsonObject());
             context.status(FastStats.DATABASE.setChartPositions(projectId, positions, ownerId) ? 204 : 304);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            context.result(e.getMessage());
-            context.status(400);
+            error(context, e, 400);
         }
     }
 
@@ -72,8 +72,7 @@ public class LayoutSettingsRoute {
             var value = transformer.apply(body);
             context.status(setter.set(projectId, chart, value, ownerId) ? 204 : 304);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            context.result(e.getMessage());
-            context.status(400);
+            error(context, e, 400);
         }
     }
 

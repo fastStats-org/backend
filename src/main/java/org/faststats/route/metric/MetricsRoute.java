@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 
 import static org.faststats.route.RouteHandler.async;
+import static org.faststats.route.RouteHandler.error;
 
 @NullMarked
 public class MetricsRoute {
@@ -33,7 +34,7 @@ public class MetricsRoute {
             //FastStats.DATABASE.insertMetric(metric);
             context.status(200);
         } catch (IOException | IllegalStateException e) {
-            context.status(400);
+            error(context, e, 400);
         }
     }
 

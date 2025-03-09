@@ -11,6 +11,7 @@ import org.jspecify.annotations.NullMarked;
 import java.sql.SQLException;
 
 import static org.faststats.route.RouteHandler.async;
+import static org.faststats.route.RouteHandler.error;
 
 @NullMarked
 public class SetVisibilityRoute {
@@ -27,8 +28,7 @@ public class SetVisibilityRoute {
             var updated = FastStats.DATABASE.setProjectVisibility(projectId, isPrivate, ownerId);
             context.status(updated ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
-            context.result(e.getMessage());
-            context.status(400);
+            error(context, e, 400);
         }
     }
 }

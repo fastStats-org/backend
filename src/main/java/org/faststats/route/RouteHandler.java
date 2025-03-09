@@ -1,5 +1,6 @@
 package org.faststats.route;
 
+import com.google.gson.JsonObject;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.slf4j.Logger;
@@ -18,13 +19,21 @@ public class RouteHandler {
                 handle.handle(context);
             } catch (SQLException e) {
                 LOGGER.error("An error occurred while performing an SQL statement", e);
-                context.result(e.getMessage()).status(500);
+                error(context, e, 500);
             }
         }).orTimeout(5, TimeUnit.SECONDS).exceptionally(throwable -> {
             LOGGER.error("Failed to handle request", throwable);
-            context.result(throwable.getMessage()).status(500);
+            error(context, throwable, 500);
             return null;
         }));
+    }
+
+    public static void error(Context context, Throwable throwable, int status) {
+        var result = new JsonObject();
+        result.addProperty("error", throwable.getMessage());
+        result.addProperty("body", context.body());
+        context.header("Content-Type", "application/json");
+        context.result(result.toString()).status(status);
     }
 
     public interface Handle {

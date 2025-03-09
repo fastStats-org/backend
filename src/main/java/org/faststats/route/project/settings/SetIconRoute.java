@@ -11,6 +11,7 @@ import org.jspecify.annotations.NullMarked;
 import java.sql.SQLException;
 
 import static org.faststats.route.RouteHandler.async;
+import static org.faststats.route.RouteHandler.error;
 
 @NullMarked
 public class SetIconRoute {
@@ -27,8 +28,7 @@ public class SetIconRoute {
             var updated = FastStats.DATABASE.setProjectIcon(projectId, icon, ownerId);
             context.status(updated ? 204 : 304);
         } catch (NumberFormatException | JsonSyntaxException | IllegalStateException e) {
-            context.result(e.getMessage());
-            context.status(400);
+            error(context, e, 400);
         }
     }
 }

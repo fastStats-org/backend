@@ -8,6 +8,7 @@ import org.jspecify.annotations.NullMarked;
 import java.sql.SQLException;
 
 import static org.faststats.route.RouteHandler.async;
+import static org.faststats.route.RouteHandler.error;
 
 @NullMarked
 public class ProjectRoute {
@@ -29,8 +30,7 @@ public class ProjectRoute {
                 context.status(404);
             }
         } catch (NumberFormatException e) {
-            context.result(e.getMessage());
-            context.status(400);
+            error(context, e, 400);
         }
     }
 }
