@@ -6,9 +6,9 @@ import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Set;
 
-public class Chart {
-    public static Chart fromJson(Type type, JsonElement chart) {
-        return new Chart();
+public class ChartData {
+    public static ChartData fromJson(Type type, JsonElement chart) {
+        return new ChartData();
     }
 
     public enum Type {

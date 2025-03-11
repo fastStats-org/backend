@@ -19,17 +19,12 @@ import static org.faststats.route.RouteHandler.error;
 
 public class LayoutSettingsRoute {
     public static void register(@NonNull Javalin javalin) {
-        javalin.put("/project/settings/layout/color/{projectId}/{chart}", async(LayoutSettingsRoute::setColor));
         javalin.put("/project/settings/layout/dimensions/{projectId}/{chart}", async(LayoutSettingsRoute::setDimensions));
         javalin.put("/project/settings/layout/icon/{projectId}/{chart}", async(LayoutSettingsRoute::setIcon));
         javalin.put("/project/settings/layout/id/{projectId}/{chart}", async(LayoutSettingsRoute::setId));
         javalin.put("/project/settings/layout/name/{projectId}/{chart}", async(LayoutSettingsRoute::setName));
         javalin.put("/project/settings/layout/positions/{projectId}", async(LayoutSettingsRoute::setPosition));
         javalin.put("/project/settings/layout/type/{projectId}/{chart}", async(LayoutSettingsRoute::setType));
-    }
-
-    private static void setColor(@NonNull Context context) throws SQLException {
-        setComponent(context, o -> nullable(o, "color", JsonElement::getAsString), FastStats.DATABASE::setChartColor);
     }
 
     private static void setDimensions(@NonNull Context context) throws SQLException {

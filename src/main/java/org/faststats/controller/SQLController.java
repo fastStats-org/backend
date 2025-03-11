@@ -1,5 +1,6 @@
 package org.faststats.controller;
 
+import com.google.gson.JsonParser;
 import org.faststats.model.Layout;
 import org.faststats.model.Project;
 import org.jspecify.annotations.NullMarked;
@@ -34,7 +35,6 @@ class SQLController {
     protected static final String GET_PROJECTS = statement("sql/query/get_projects.sql");
     protected static final String GET_SERVER_ID = statement("sql/query/get_server_id.sql");
     protected static final String INSERT_METRIC = statement("sql/update/insert_metric.sql");
-    protected static final String SET_CHART_COLOR = statement("sql/update/set_chart_color.sql");
     protected static final String SET_CHART_DIMENSIONS = statement("sql/update/set_chart_dimensions.sql");
     protected static final String SET_CHART_ICON = statement("sql/update/set_chart_icon.sql");
     protected static final String SET_CHART_ID = statement("sql/update/set_chart_id.sql");
@@ -89,21 +89,23 @@ class SQLController {
         return new Project(name, owner, slug, id, isPrivate, null, icon, previewChart, projectUrl);
     }
 
-    protected Layout.Options readLayoutOption(ResultSet resultSet) throws SQLException {
+    protected Layout.Chart readLayoutOption(ResultSet resultSet) throws SQLException {
         var chart = resultSet.getString("layout_chart");
         var name = resultSet.getString("layout_name");
         var type = resultSet.getString("layout_type");
-        var color = resultSet.getString("layout_color");
+        var staticInfo = resultSet.getBoolean("layout_static_info");
         var position = resultSet.getInt("layout_position");
         var icon = resultSet.getString("layout_icon");
         var width = resultSet.getInt("layout_width");
         var height = resultSet.getInt("layout_height");
+        var sources = Layout.Source.fromJson(JsonParser.parseString(resultSet.getString("layout_sources")).getAsJsonArray());
+        var extras = JsonParser.parseString(resultSet.getString("layout_extras")).getAsJsonObject();
         var dimensions = new Layout.Dimensions(width, height);
-        return new Layout.Options(chart, name, type, color, dimensions, position, icon);
+        return new Layout.Chart(chart, name, type, staticInfo, dimensions, position, icon, sources, extras);
     }
 
     protected @Nullable Layout readLayout(ResultSet resultSet) throws SQLException {
-        var charts = new HashSet<Layout.Options>();
+        var charts = new HashSet<Layout.Chart>();
         while (resultSet.next()) charts.add(readLayoutOption(resultSet));
         return new Layout(charts);
     }

@@ -33,10 +33,10 @@ public class DatabaseController extends SQLController {
         return executeUpdate(SET_PROJECT_ICON, icon, projectId, ownerId) > 0;
     }
 
-    public boolean createChart(int projectId, Layout.Options options, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(CREATE_CHART, projectId, options.chart(), options.name(), options.type(),
-                options.color(), options.dimensions().width(), options.dimensions().height(),
-                options.position(), options.icon(), ownerId, projectId) > 0;
+    public boolean createChart(int projectId, Layout.Chart chart, @Nullable String ownerId) throws SQLException {
+        return executeUpdate(CREATE_CHART, projectId, chart.chart(), chart.name(), chart.type(), chart.staticInfo(),
+                chart.dimensions().width(), chart.dimensions().height(), chart.position(), chart.icon(),
+                Layout.Source.toJson(chart.sources()).toString(), chart.extras().toString(), ownerId, projectId) > 0;
     }
 
     public boolean setChartIcon(int projectId, String chart, @Nullable String icon, @Nullable String ownerId) throws SQLException {
@@ -66,10 +66,6 @@ public class DatabaseController extends SQLController {
 
     public boolean setChartType(int projectId, String chart, String type, @Nullable String ownerId) throws SQLException {
         return executeUpdate(SET_CHART_TYPE, type, chart, projectId, ownerId) > 0;
-    }
-
-    public boolean setChartColor(int projectId, String chart, String color, @Nullable String ownerId) throws SQLException {
-        return executeUpdate(SET_CHART_COLOR, color, chart, projectId, ownerId) > 0;
     }
 
     public boolean setProjectPreviewChart(int projectId, @Nullable String chart, @Nullable String ownerId) throws SQLException {

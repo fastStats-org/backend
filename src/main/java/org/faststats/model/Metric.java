@@ -2,7 +2,7 @@ package org.faststats.model;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
-import org.faststats.model.chart.Chart;
+import org.faststats.model.chart.ChartData;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -18,7 +18,7 @@ public record Metric(
         @Nullable String osVersion,
         @Nullable Locale locale,
         @Nullable Integer processors,
-        Map<String, Chart> charts
+        Map<String, ChartData> charts
 ) {
 
     public static Metric fromJson(JsonObject metric) {
@@ -31,7 +31,7 @@ public record Metric(
         var osVersion = metric.has("osVersion") ? metric.get("osVersion").getAsString() : null;
         var locale = metric.has("locale") ? Locale.forLanguageTag(metric.get("locale").getAsString()) : null;
         var processors = metric.has("processors") ? metric.get("processors").getAsInt() : null;
-        var charts = new HashMap<String, Chart>();
+        var charts = new HashMap<String, ChartData>();
         // todo: add charts
         // var chartTypes = FastStats.DATABASE_M.getChartTypes(projectId);
         // metric.getAsJsonObject("charts").entrySet().forEach(entry -> {
