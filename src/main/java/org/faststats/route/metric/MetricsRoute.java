@@ -10,6 +10,8 @@ import org.jspecify.annotations.NullMarked;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.GZIPInputStream;
 
 import static org.faststats.route.RouteHandler.async;
@@ -43,5 +45,38 @@ public class MetricsRoute {
             var decompressed = new String(input.readAllBytes(), StandardCharsets.UTF_8);
             return JsonParser.parseString(decompressed).getAsJsonObject();
         }
+    }
+
+    private static final int MAX_REQUESTS_PER_IP = 10;
+
+    private static final Map<String, RequestTracker> requestCounts = new ConcurrentHashMap<>();
+
+    private static class RequestTracker {
+        private int count;
+        private final long timestamp;
+
+        public RequestTracker(int count) {
+            this.count = count;
+            this.timestamp = System.currentTimeMillis();
+        }
+
+        public int incrementAndGet() {
+            return ++count;
+        }
+
+        public boolean isExpired() {
+            return System.currentTimeMillis() - timestamp > 60000; // 60000ms = 1 minute
+        }
+    }
+
+    private static boolean isRequestLimitExceeded(String address) {
+        return requestCounts.compute(address, (key, tracker) -> {
+            if (tracker == null || tracker.isExpired()) {
+                tracker = new RequestTracker(0);
+            }
+            int newCount = tracker.incrementAndGet();
+
+            return tracker;
+        }).count > MAX_REQUESTS_PER_IP;
     }
 }

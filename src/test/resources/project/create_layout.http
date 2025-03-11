@@ -2,14 +2,32 @@ POST http://localhost:3000/project/layout/new/1?ownerId=FastStats
 Content-Type: application/json
 
 {
-  "chart": "test_12",
-  "name": "Test",
-  "type": "line",
-  "color": "green",
+  "chart": "online_mode",
+  "name": "Online Mode",
+  "type": "pie",
+  "static": true,
+  "sources": [
+    {
+      "key": "online",
+      "name": "Online",
+      "color": "green",
+      "value": "true"
+    },
+    {
+      "key": "offline",
+      "name": "Offline",
+      "color": "red",
+      "value": "false"
+    }
+  ],
   "dimensions": {
-    "width": 1,
-    "height": 2
+    "width": 2,
+    "height": 1
   },
   "position": 1,
-  "icon": "person"
+  "icon": "globe",
+  "extras": {
+    "donut": true,
+    "brush": false
+  }
 }

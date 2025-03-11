@@ -27,7 +27,7 @@ public class CreateLayoutRoute {
             var projectId = Integer.parseInt(context.pathParam("projectId"));
 
             var body = JsonParser.parseString(context.body()).getAsJsonObject();
-            var options = Layout.Options.fromJson(body);
+            var options = Layout.Chart.fromJson(body);
 
             var success = FastStats.DATABASE.createChart(projectId, options, ownerId);
             context.status(success ? 204 : 304);
