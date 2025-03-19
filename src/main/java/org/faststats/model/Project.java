@@ -1,7 +1,6 @@
 package org.faststats.model;
 
 import com.google.gson.JsonObject;
-import org.faststats.model.chart.Chart;
 import org.faststats.model.chart.ChartData;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -46,20 +45,20 @@ public record Project(
         // if (Objects.equals(charts, this.charts)) return this;
         if (data == null) data = new ChartData(new LinkedHashSet<>(), 1000, 2000);
 
-        data.charts().add(new Chart("online_mode", 100, "Offline", null));
-        data.charts().add(new Chart("online_mode", 200, "Online", null));
+        //data.charts().add(new Chart("online_mode", 100, "Offline", null));
+        //data.charts().add(new Chart("online_mode", 200, "Online", null));
 
-        data.charts().add(new Chart("os", 12, "MacOS", null));
-        data.charts().add(new Chart("os", 25, "Windows Server", null));
-        data.charts().add(new Chart("os", 2987345, "Linux", null));
+        //data.charts().add(new Chart("os", 12, "MacOS", null));
+        //data.charts().add(new Chart("os", 25, "Windows Server", null));
+        //data.charts().add(new Chart("os", 2987345, "Linux", null));
 
-        data.charts().add(new Chart("players", 5, null, 1L));
-        data.charts().add(new Chart("players", 6, null, 2L));
-        data.charts().add(new Chart("players", 10, null, 3L));
+        //data.charts().add(new Chart("players", 5, null, 1L));
+        //data.charts().add(new Chart("players", 6, null, 2L));
+        //data.charts().add(new Chart("players", 10, null, 3L));
 
-        data.charts().add(new Chart("servers", 12, null, 1L));
-        data.charts().add(new Chart("servers", 14, null, 2L));
-        data.charts().add(new Chart("servers", 16, null, 3L));
+        //data.charts().add(new Chart("servers", 12, null, 1L));
+        //data.charts().add(new Chart("servers", 14, null, 2L));
+        //data.charts().add(new Chart("servers", 16, null, 3L));
 
         return new Project(name, ownerId, slug, id, isPrivate, layout, icon, previewChart, projectUrl, data);
     }
