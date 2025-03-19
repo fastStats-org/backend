@@ -1,18 +1,22 @@
 package org.faststats.model.chart;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.jspecify.annotations.NullMarked;
+import org.faststats.model.Layout;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Set;
 
 public record ChartData(
-        Set<Chart> charts,
+        Set<Layout.Chart> charts,
         long from,
         long to
 ) {
+    public static ChartData fromJson(Type type, JsonElement chart) {
+        return new ChartData(Set.of(), System.currentTimeMillis(), 0);
+    }
 
     public JsonObject toJson() {
         var object = new JsonObject();
@@ -22,11 +26,6 @@ public record ChartData(
         object.addProperty("from", from);
         object.addProperty("to", to);
         return object;
-========
-public class ChartData {
-    public static ChartData fromJson(Type type, JsonElement chart) {
-        return new ChartData();
->>>>>>>> 8385886 (Refactor chart model and remove color property):src/main/java/org/faststats/model/chart/ChartData.java
     }
 
     public enum Type {
