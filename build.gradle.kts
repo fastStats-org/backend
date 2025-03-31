@@ -24,7 +24,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.12.1")
     implementation("com.google.guava:guava:33.4.6-jre")
     implementation("io.javalin:javalin:6.5.0")
-    implementation("net.thenextlvl.core:files:2.0.1")
+    implementation("net.thenextlvl.core:files:2.0.2")
     implementation("org.xerial:sqlite-jdbc:3.49.1.0")
 }
 
