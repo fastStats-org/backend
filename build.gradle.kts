@@ -22,7 +22,7 @@ repositories {
 dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.18")
     implementation("com.google.code.gson:gson:2.13.0")
-    implementation("com.google.guava:guava:33.4.7-jre")
+    implementation("com.google.guava:guava:33.4.8-jre")
     implementation("io.javalin:javalin:6.6.0")
     implementation("net.thenextlvl.core:files:2.0.2")
     implementation("org.xerial:sqlite-jdbc:3.49.1.0")
