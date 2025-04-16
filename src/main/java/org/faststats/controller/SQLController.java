@@ -112,7 +112,7 @@ class SQLController implements AutoCloseable {
     protected @Nullable Layout readLayout(ResultSet resultSet) throws SQLException {
         var charts = new HashSet<Layout.Chart>();
         while (resultSet.next()) charts.add(readLayoutOption(resultSet));
-        return new Layout(charts);
+        return charts.isEmpty() ? null : new Layout(charts);
     }
 
     @SuppressWarnings("SqlSourceToSinkFlow")
