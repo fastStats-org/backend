@@ -10,6 +10,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.function.Function;
 
 @NullMarked
@@ -27,6 +28,13 @@ public class FastStats {
         var fastStats = new FastStats();
         fastStats.registerRoutes();
         fastStats.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                DATABASE.close();
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to properly close database", e);
+            }
+        }, "shutdown-hook"));
     }
 
     private void registerRoutes() {

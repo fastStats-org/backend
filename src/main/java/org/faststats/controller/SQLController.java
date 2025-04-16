@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @NullMarked
-class SQLController {
+class SQLController implements AutoCloseable {
     protected static final String COUNT_PROJECTS = statement("sql/query/count_projects.sql");
     protected static final String CREATE_CHART = statement("sql/update/create_chart.sql");
     protected static final String CREATE_PROJECT = statement("sql/update/create_project.sql");
@@ -65,6 +65,11 @@ class SQLController {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to connect or setup database", e);
         }
+    }
+
+    @Override
+    public void close() throws SQLException {
+        connection.close();
     }
 
     protected List<Project> readProjects(ResultSet resultSet) throws SQLException {
