@@ -115,7 +115,8 @@ public class DatabaseController extends SQLController {
     }
 
     public List<Project> getProjects(int offset, int limit, @Nullable String ownerId, @Nullable Boolean publicOnly) throws SQLException {
-        var projects = executeQuery(GET_PROJECTS, this::readProjects, ownerId, publicOnly, limit, offset);
+        var isPrivate = publicOnly != null ? !publicOnly : null;
+        var projects = executeQuery(GET_PROJECTS, this::readProjects, ownerId, isPrivate, limit, offset);
         return projects != null ? projects : List.of();
     }
 
