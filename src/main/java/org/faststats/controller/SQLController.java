@@ -51,9 +51,9 @@ class SQLController {
 
     protected final Connection connection;
 
-    protected SQLController() {
+    protected SQLController(File file) {
         try {
-            this.connection = DriverManager.getConnection("jdbc:sqlite:" + new File("data", "saves.db"));
+            this.connection = DriverManager.getConnection("jdbc:sqlite:" + file);
             executeUpdate(statement("sql/table/layouts.sql"));
             executeUpdate(statement("sql/table/metrics.sql"));
             executeUpdate(statement("sql/table/projects.sql"));

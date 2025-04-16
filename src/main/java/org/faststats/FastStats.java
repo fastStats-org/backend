@@ -9,6 +9,7 @@ import org.faststats.model.Config;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
 import java.util.function.Function;
 
 @NullMarked
@@ -17,7 +18,7 @@ public class FastStats {
             3000, 5000, "", "*"
     )).validate().save().getRoot();
 
-    public static final DatabaseController DATABASE = new DatabaseController();
+    public static final DatabaseController DATABASE = new DatabaseController(new File("data", "saves.db"));
 
     private static final APIServer API_SERVER = new APIServer();
     private static final MetricsServer METRICS_SERVER = new MetricsServer();

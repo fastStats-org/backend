@@ -6,6 +6,7 @@ import org.faststats.model.Project;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,10 @@ import java.util.UUID;
 
 @NullMarked
 public class DatabaseController extends SQLController {
+    public DatabaseController(File file) {
+        super(file);
+    }
+
     public Project createProject(String name, String owner, boolean isPrivate) throws SQLException {
         var slug = generateUniqueSlug(name);
         var id = executeUpdateGetKey(CREATE_PROJECT, owner, name, slug, isPrivate);
