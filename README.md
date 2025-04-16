@@ -507,7 +507,7 @@ To run the project with Docker, follow these steps:
 
 2. **Start the Services**:
 
-    - Use the provided `docker-compose.yml` file to spin up the necessary containers (backend and MongoDB).
+    - Use the provided `docker-compose.yml` file to spin up the necessary containers (backend with SQLite).
     - Run the following command in the directory where the `docker-compose.yml` file is located:
 
    ```bash
@@ -516,17 +516,15 @@ To run the project with Docker, follow these steps:
 
 3. **Access the Application**:
 
-    - The backend service will be accessible at **http://localhost:3000**.
-    - MongoDB is configured as a dependency and will automatically be linked to the backend container.
+    - The backend service will be accessible at **http://localhost:5000**.
 
 4. **Environment Variables**:
 
-    - The `MONGODB_URL` environment variable is set to `mongodb://user:password@mongodb:27017/`.
-    - The backend server will run on port `3000`, mapped to the host machine.
+    - The backend server will run on port `5000`, mapped to the host machine.
 
 5. **Persistent Data**:
 
-    - The MongoDB data is stored in a Docker volume (`mongodb`) to ensure persistence across restarts.
+    - Backend data, including SQLite database files, is stored in a mounted volume from `./data` on the host to `/app/data` in the container.
 
 6. **Stop the Services**:
 
@@ -544,14 +542,12 @@ To run the project with Docker, follow these steps:
    docker-compose up --build
    ```
 
-8. **Health Check**:
+8. **Container Status**:
 
-    - The MongoDB service includes a `healthcheck` to verify that the database
-      is ready and responsive before the backend service starts.
-    - You can verify container health by running:
+    - You can verify container status by running:
 
    ```bash
    docker ps
    ```
 
-This setup ensures the backend and MongoDB are easily started, linked, and maintained using Docker Compose.
+This setup ensures the backend with SQLite is easily started and maintained using Docker Compose.
