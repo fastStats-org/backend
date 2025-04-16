@@ -73,9 +73,9 @@ Renames an existing project by its ID.
 - Rename project with id 1 by the specified user
 
   ```http
-  PUT http://localhost:3000/project/rename/1?ownerId=test
+  PUT http://localhost:3000/project/settings/name/1?ownerId=test
   Content-Type: application/json
-  
+
   {
     "name": "test test test"
   }
@@ -84,9 +84,9 @@ Renames an existing project by its ID.
 - Rename project with id 1
 
   ```http
-  PUT http://localhost:3000/project/rename/1
+  PUT http://localhost:3000/project/settings/name/1
   Content-Type: application/json
-  
+
   {
     "name": "test test test"
   }
@@ -210,26 +210,40 @@ Content-Type: application/json
 Updates the visibility settings for a specific project.
 
 - **Method**: `PUT`
-- **URL**: `http://localhost:3000/project/settings/private/{projectId}/{private}`
+- **URL**: `http://localhost:3000/project/settings/private/{projectId}`
+- **Headers**:
+    - `Content-Type: application/json`
 - **Response Codes**:
     - **204**: Successfully updated visibility settings
     - **304**: Project not found or no changes were made
-    - **400**: Malformed project id
+    - **400**: Malformed project id or body
 - **Query Parameters** (optional):
     - **ownerId**: only update the project if it is owned by the specified user/org
+- **Body**:
+    - Use JSON to specify the visibility of the project.
 
 ### Example
 
 - Update a project with id 1 by a specific user/org to private
 
   ```http
-  PUT http://localhost:3000/project/settings/private/1/true?ownerId=test
+  PUT http://localhost:3000/project/settings/private/1?ownerId=test
+  Content-Type: application/json
+
+  {
+    "private": true
+  }
   ```
 
 - Update a project with id 1 to public
 
   ```http
-  PUT http://localhost:3000/project/settings/private/1/false
+  PUT http://localhost:3000/project/settings/private/1
+  Content-Type: application/json
+
+  {
+    "private": false
+  }
   ```
 
 ---
@@ -239,13 +253,18 @@ Updates the visibility settings for a specific project.
 Updates the slug for a specific project.
 
 - **Method**: `PUT`
-- **URL**: `http://localhost:3000/project/settings/slug/{projectId}/{slug}`
+- **URL**: `http://localhost:3000/project/settings/slug/{projectId}`
+- **Headers**:
+    - `Content-Type: application/json`
 - **Response Codes**:
     - **204**: Successfully updated project slug
     - **304**: Project not found or no changes were made
-    - **400**: Malformed project id or slug
+    - **400**: Malformed project id or body
+    - **409**: Slug is already in use
 - **Query Parameters** (optional):
     - **ownerId**: only update the project if it is owned by the specified user/org
+- **Body**:
+    - Use JSON to specify the new slug for the project.
 - **Slug Pattern**: `^(?=.{3,32}$)[a-z0-9]+(-[a-z0-9]+)*$`
 
 ### Example
@@ -253,13 +272,23 @@ Updates the slug for a specific project.
 - Update the slug of a project with id 1:
 
   ```http
-  PUT http://localhost:3000/project/settings/slug/1/new-slug
+  PUT http://localhost:3000/project/settings/slug/1
+  Content-Type: application/json
+
+  {
+    "slug": "new-slug"
+  }
   ```
 
 - Update the slug of a project with id 1 for a specific owner:
 
   ```http
-  PUT http://localhost:3000/project/settings/slug/1/new-slug?ownerId=test
+  PUT http://localhost:3000/project/settings/slug/1?ownerId=test
+  Content-Type: application/json
+
+  {
+    "slug": "new-slug"
+  }
   ```
 
 ## List Projects
@@ -339,7 +368,7 @@ Lists projects based on filters such as public/private visibility, user, and pag
 Returns the total number of projects by a specific owner or global.
 
 - **Method**: `GET`
-- **URL**: `http://localhost:3000/projects/count`
+- **URL**: `http://localhost:3000/projects/count/`
 - **Response Codes**:
     - **200**: Successfully retrieved projects count
 - **Query Parameters** (optional):
@@ -352,13 +381,13 @@ Returns the total number of projects by a specific owner or global.
 - Count all projects
 
   ```http
-  GET http://localhost:3000/projects/count
+  GET http://localhost:3000/projects/count/
   ```
 
 - Count projects of a specific user
 
   ```http
-  GET http://localhost:3000/projects/count?ownerId=AVeryCoolDude
+  GET http://localhost:3000/projects/count/?ownerId=AVeryCoolDude
   ```
 
 ### Example Response
@@ -367,7 +396,7 @@ Returns the total number of projects by a specific owner or global.
 
   ```json
   {
-    "count": 24423
+    "projects": 24423
   }
   ```
 
@@ -375,7 +404,7 @@ Returns the total number of projects by a specific owner or global.
 
   ```json
   {
-    "count": 2
+    "projects": 2
   }
   ```
 
@@ -383,31 +412,31 @@ Returns the total number of projects by a specific owner or global.
 
 ## Retrieve a Project
 
-Retrieve a project by its ID.
+Retrieve a project by its slug.
 
 - **Method**: `GET`
-- **URL**: `http://localhost:3000/project/{projectId}`
+- **URL**: `http://localhost:3000/project/{slug}`
 - **Response Codes**:
     - **200**: Successfully retrieved project
-    - **400**: Malformed project id
+    - **400**: Malformed slug
     - **404**: Project not found
 - **Query Parameters** (optional):
     - **ownerId**: retrieve the project only if it is owned by the specified user/org
 - **Details**:
-    - Replace `{projectId}` with the ID of the project to retrieve.
+    - Replace `{slug}` with the slug of the project to retrieve.
 
 ### Example
 
-- Retrieve the project with id 1 if it is owned by a specific user
+- Retrieve the project with slug "cool-project" if it is owned by a specific user
 
   ```http
-  GET http://localhost:3000/project/1?ownerId=AVeryCoolDude
+  GET http://localhost:3000/project/cool-project?ownerId=AVeryCoolDude
   ```
 
-- Retrieve the project with id 1
+- Retrieve the project with slug "cool-project"
 
   ```http
-  GET http://localhost:3000/project/1
+  GET http://localhost:3000/project/cool-project
   ```  
 
 ### Example Response
